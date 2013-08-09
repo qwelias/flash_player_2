@@ -1,0 +1,64 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru">
+  <head>
+    <title>ayyoPlayerMovie</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="swfobject.js"></script>
+    <script type="text/javascript">
+      var swfVersionStr = "10.1.52";
+      var xiSwfUrlStr = "";
+
+var flashvars2 = {
+        token:"sessionid=636d26428c8045ccb69c12a83b1f3463,contentid=482",
+        url:"http://cdn.ayyo.ru/u9/f4/8a/Red_Bull_X_Fighters_2010_Rome_vbr7b.f4m",
+        screenshot:"http://media.ayyo.ru/movies/482/video_poster.jpg",
+        player_type:"movie",
+        free:"false",
+        first_run:"false",
+        streaming_enabled:"true",
+        streaming_price:"0",
+        hours_until_start:"136",
+        hours_until_stop:"48",
+	start_time: "617",
+        tooltip_play_button:"Смотреть",
+        tooltip_pause_button:"Пауза",
+        tooltip_license_icon:"У вас осталось N часов, чтобы посмотреть фильм",
+        tooltip_timer:"Посмотреть сколько осталось",
+        tooltip_timer_reverse:"Посмотреть продолжительность",
+        tooltip_HQ_icon_on:"Включить отличное качество",
+        tooltip_HQ_icon_off:"Включить стандартное качество",
+        tooltip_sound_icon_on:"Включить звук",
+        tooltip_sound_icon_off:"Выключить звук",
+        tooltip_fullscreen:"Развернуть на весь экран",
+        tooltip_unfullscreen:"Свернуть"
+      };
+
+      var params2 = {};
+
+      params2.quality = "best";
+      params2.bgcolor = "#000000";
+      params2.play = "true";
+      params2.loop = "true";
+      params2.wmode = "direct";
+      params2.scale = "noscale";
+      params2.menu = "false";
+      params2.devicefont = "false";
+      params2.salign = "lb";
+      params2.allowscriptaccess = "sameDomain";
+      params2.allowFullScreen = "true";
+      var attributes2 = {};
+      attributes2.id = "ayyoPlayerMovie";
+      attributes2.name = "ayyoPlayerMovie";
+      attributes2.align = "middle";
+      swfobject.createCSS("html", "height:100%; background-color: #000000;");
+      swfobject.createCSS("body", "margin:0; padding:0; overflow:hidden; height:100%;");
+      swfobject.embedSWF("player.swf", "flashContent2", "850", "477",  swfVersionStr, xiSwfUrlStr, flashvars2, params2, attributes2);
+
+//function recieveflashevent(val1,val2){
+//console.log("Event: "+val1+", "+val2);
+//}
+    </script>
+  </head>
+  <body>
+<div id="flashContent2"></div>
+  </body>
+</html>
