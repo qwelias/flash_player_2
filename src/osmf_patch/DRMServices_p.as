@@ -20,17 +20,31 @@
  *  
  *****************************************************/
 // Rustem EQUAL
-package osmf_patch
-{
+package osmf_patch {
+	import org.osmf.events.DRMEvent;
+	import org.osmf.events.MediaError;
+	import org.osmf.events.MediaErrorCodes;
+	import org.osmf.traits.DRMState;
+	import org.osmf.utils.OSMFStrings;
+
+	import flash.errors.IllegalOperationError;
+	import flash.events.DRMAuthenticationCompleteEvent;
+	import flash.events.DRMAuthenticationErrorEvent;
+	import flash.events.DRMErrorEvent;
+	import flash.events.DRMStatusEvent;
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	import flash.events.IOErrorEvent;
+	import flash.events.SecurityErrorEvent;
+	import flash.events.StatusEvent;
+	import flash.net.drm.DRMContentData;
+	import flash.net.drm.DRMManager;
+	import flash.net.drm.DRMVoucher;
+	import flash.net.drm.LoadVoucherSetting;
+	import flash.system.SystemUpdater;
+	import flash.system.SystemUpdaterType;
+	import flash.utils.ByteArray;
 	
-	import flash.errors.*;
-	import flash.events.*;
-	import flash.net.drm.*;
-	import flash.system.*;
-	import flash.utils.*;
-	import org.osmf.events.*;
-	import org.osmf.traits.*;
-	import org.osmf.utils.*;
 	
 	
 	/*import flash.errors.IllegalOperationError;
@@ -554,21 +568,21 @@ package osmf_patch
 			/**
 			 * @private 
 			 */ 
-			private static const DRM_AUTHENTICATION_FAILED:int				= 3301;
+			public static const DRM_AUTHENTICATION_FAILED:int				= 3301;
 			
 			/**
 			 * @private 
 			 */ 
-			private static const DRM_NEEDS_AUTHENTICATION:int				= 3330;
+			public static const DRM_NEEDS_AUTHENTICATION:int				= 3330;
 			
 			/**
 			 * @private 
 			 */ 
-			private static const DRM_CONTENT_NOT_YET_VALID:int				= 3331;
+			public static const DRM_CONTENT_NOT_YET_VALID:int				= 3331;
 			
 			
 			private var _drmState:String = DRMState.UNINITIALIZED;
-			private var lastToken:ByteArray
+			private var lastToken:ByteArray;
 			private var drmContentData:DRMContentData;
 			private var voucher:DRMVoucher;
 			private var drmManager:DRMManager;

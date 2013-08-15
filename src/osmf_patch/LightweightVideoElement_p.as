@@ -20,37 +20,7 @@
  *  
  *****************************************************/
 // Rustem OK
-package osmf_patch
-{
-	// Rustem
-	import __AS3__.vec.*;
-	
-	import flash.events.*;
-	import flash.media.*;
-	import flash.net.*;
-	import flash.net.drm.*;
-	import flash.system.*;
-	import flash.utils.*;
-	
-	import org.osmf.events.*;
-	import org.osmf.media.*;
-	import org.osmf.media.videoClasses.*;
-	import org.osmf.metadata.*;
-	import org.osmf.net.*;
-	import org.osmf.net.drm.*;
-	import org.osmf.traits.*;
-	import org.osmf.utils.*;
-	// Rustem/
-	
-	/*import flash.display.Stage;
-	import flash.events.Event;
-	import flash.events.NetStatusEvent;
-	import flash.events.StatusEvent;
-	import flash.media.Video;
-	import flash.net.NetStream;
-	import flash.utils.ByteArray;
-	
-	import org.osmf.events.AlternativeAudioEvent;
+package osmf_patch {
 	import org.osmf.events.DRMEvent;
 	import org.osmf.events.MediaError;
 	import org.osmf.events.MediaErrorCodes;
@@ -59,10 +29,11 @@ package osmf_patch
 	import org.osmf.media.DefaultTraitResolver;
 	import org.osmf.media.LoadableElementBase;
 	import org.osmf.media.MediaResourceBase;
-	import org.osmf.media.MediaType;
 	import org.osmf.media.URLResource;
 	import org.osmf.media.videoClasses.VideoSurface;
 	import org.osmf.metadata.CuePoint;
+	import org.osmf.metadata.Metadata;
+	import org.osmf.metadata.MetadataNamespaces;
 	import org.osmf.metadata.TimelineMetadata;
 	import org.osmf.net.DynamicStreamingResource;
 	import org.osmf.net.ModifiableTimeTrait;
@@ -98,21 +69,20 @@ package osmf_patch
 	import org.osmf.traits.SeekTrait;
 	import org.osmf.traits.TimeTrait;
 	import org.osmf.utils.OSMFSettings;
-	import org.osmf.utils.OSMFStrings;*/
-	
-	
-	/*CONFIG::FLASH_10_1
-	{
-	import flash.events.DRMAuthenticateEvent;
+	import org.osmf.utils.OSMFStrings;
+
 	import flash.events.DRMErrorEvent;
 	import flash.events.DRMStatusEvent;
-	import flash.net.drm.DRMContentData;	
+	import flash.events.Event;
+	import flash.events.NetStatusEvent;
+	import flash.events.StatusEvent;
+	import flash.media.Video;
+	import flash.net.NetStream;
+	import flash.net.drm.DRMContentData;
+	import flash.system.SystemUpdater;
 	import flash.system.SystemUpdaterType;
-	import flash.system.SystemUpdater;	
-	import org.osmf.net.drm.NetStreamDRMTrait;
-	import org.osmf.net.httpstreaming.HTTPStreamingNetLoader;
-	}*/
-	
+	import flash.utils.ByteArray;
+
 	/**
 	 * LightweightVideoElement is a media element specifically created for video playback.
 	 * It supports both streaming and progressive formats.
@@ -164,8 +134,7 @@ package osmf_patch
 	 *  @playerversion AIR 1.5
 	 *  @productversion OSMF 1.0	 	 	
 	 **/
-	public class LightweightVideoElement_p extends LoadableElementBase
-	{
+	public class LightweightVideoElement_p extends LoadableElementBase {
 		/**
 		 * Constructor.
 		 * 
@@ -181,21 +150,18 @@ package osmf_patch
 		 *  @playerversion AIR 1.5
 		 *  @productversion OSMF 1.0
 		 */
-		public function LightweightVideoElement_p(resource:MediaResourceBase=null, loader:NetLoader=null)
-		{
-			if (loader == null)
-			{
+		public function LightweightVideoElement_p(resource : MediaResourceBase = null, loader : NetLoader = null) {
+			if (loader == null) {
 				loader = new NetLoader();
 			}
-			
+
 			super(resource, loader);
-			
-			if (!(resource == null || resource is URLResource))			
-			{
+
+			if (!(resource == null || resource is URLResource)) {
 				throw new ArgumentError(OSMFStrings.getString(OSMFStrings.INVALID_PARAM));
 			}
 		}
-		
+
 		/**
 		 * The NetClient used by this object's NetStream.  Will be null until this 
 		 * object has been loaded (as indicated by its LoadTrait entering the READY
@@ -205,12 +171,11 @@ package osmf_patch
 		 *  @playerversion Flash 10
 		 *  @playerversion AIR 1.5
 		 *  @productversion OSMF 1.0
-		 */ 
-		public function get client():NetClient
-		{
+		 */
+		public function get client() : NetClient {
 			return stream != null ? stream.client as NetClient : null;
 		}
-		
+
 		/**
 		 * Defines the duration that the element's TimeTrait will expose until the
 		 * element's content is loaded.
@@ -223,44 +188,31 @@ package osmf_patch
 		 *  @playerversion Flash 10
 		 *  @playerversion AIR 1.5
 		 *  @productversion OSMF 1.0
-		 */       	
-		public function get defaultDuration():Number
-		{
+		 */
+		public function get defaultDuration() : Number {
 			return defaultTimeTrait ? defaultTimeTrait.duration : NaN;
 		}
-		
-		public function set defaultDuration(value:Number):void
-		{
-			if (isNaN(value) || value < 0)
-			{
-				if (defaultTimeTrait != null)
-				{
+
+		public function set defaultDuration(value : Number) : void {
+			if (isNaN(value) || value < 0) {
+				if (defaultTimeTrait != null) {
 					// Remove the default trait if the default duration
 					// gets set to not a number:
 					removeTraitResolver(MediaTraitType.TIME);
 					defaultTimeTrait = null;
 				}
-			}
-			else 
-			{
-				if (defaultTimeTrait == null)
-				{		
+			} else {
+				if (defaultTimeTrait == null) {
 					// Add the default trait if when default duration
 					// gets set:
 					defaultTimeTrait = new ModifiableTimeTrait();
-					addTraitResolver
-					( MediaTraitType.TIME
-						, new DefaultTraitResolver
-						( MediaTraitType.TIME
-							, defaultTimeTrait
-						)
-					);
+					addTraitResolver(MediaTraitType.TIME, new DefaultTraitResolver(MediaTraitType.TIME, defaultTimeTrait));
 				}
-				
-				defaultTimeTrait.duration = value; 
-			}	
+
+				defaultTimeTrait.duration = value;
+			}
 		}
-		
+
 		/**
 		 * Specifies whether the video should be smoothed (interpolated) when it is scaled. 
 		 * For smoothing to work, the runtime must be in high-quality mode (the default). 
@@ -274,20 +226,17 @@ package osmf_patch
 		 *  @playerversion AIR 1.5
 		 *  @productversion OSMF 1.0
 		 **/
-		public function get smoothing():Boolean
-		{
-			return _smoothing;			
+		public function get smoothing() : Boolean {
+			return _smoothing;
 		}
-		
-		public function set smoothing(value:Boolean):void
-		{
+
+		public function set smoothing(value : Boolean) : void {
 			_smoothing = value;
-			if (videoSurface != null)
-			{
-				videoSurface.smoothing = value;
+			if (videoSurface != null) {
+				// videoSurface.smoothing = value;
 			}
 		}
-		
+
 		/**
 		 * Indicates the type of filter applied to decoded video as part of post-processing. The
 		 * default value is 0, which lets the video compressor apply a deblocking filter as needed.
@@ -299,92 +248,77 @@ package osmf_patch
 		 *  @playerversion Flash 10
 		 *  @playerversion AIR 1.5
 		 *  @productversion OSMF 1.0
-		 */ 
-		public function get deblocking():int
-		{
-			return _deblocking;			
+		 */
+		public function get deblocking() : int {
+			return _deblocking;
 		}
-		
-		public function set deblocking(value:int):void
-		{
+
+		public function set deblocking(value : int) : void {
 			_deblocking = value;
-			if (videoSurface != null)
-			{
-				videoSurface.deblocking = value;
+			if (videoSurface != null) {
+				// videoSurface.deblocking = value;
 			}
 		}
-		
+
 		/**
 		 * The number of frames per second being displayed.  Will be zero until
 		 * the video is loaded and playing.
 		 **/
-		public function get currentFPS():Number
-		{
+		public function get currentFPS() : Number {
 			return stream != null ? stream.currentFPS : 0;
 		}
-		
+
 		// Overrides
 		//
-		
 		/**
 		 * @private
 		 */
-		override protected function createLoadTrait(resource:MediaResourceBase, loader:LoaderBase):LoadTrait
-		{
+		override protected function createLoadTrait(resource : MediaResourceBase, loader : LoaderBase) : LoadTrait {
 			return new NetStreamLoadTrait(loader, resource);
 		}
-		
+
 		/**
 		 * @private
 		 */
-		protected function createVideo():Video
-		{			
+		protected function createVideo() : Video {
 			return new Video();
 		}
-		
+
 		/**
 		 * @private
 		 */
-		override protected function processReadyState():void
-		{
-			//var loadTrait:*;
-			//var _DRM_ContentData:* = null;
-			var loadTrait:* = getTrait(MediaTraitType.LOAD) as NetStreamLoadTrait;
+		override protected function processReadyState() : void {
+			// var loadTrait:*;
+			// var _DRM_ContentData:* = null;
+			var loadTrait : NetStreamLoadTrait = getTrait(MediaTraitType.LOAD) as NetStreamLoadTrait;
 			stream = loadTrait.netStream;
-			
+
 			// Set the video's dimensions so that it doesn't appear at the wrong size.
-			// We'll set the correct dimensions once the metadata is loaded.  (FM-206)			
-			videoSurface = new VideoSurface(
-				OSMFSettings.enableStageVideo && OSMFSettings.supportsStageVideo, 
-				createVideo
-			);
+			// We'll set the correct dimensions once the metadata is loaded.  (FM-206)
+			videoSurface = new VideoSurface(OSMFSettings.enableStageVideo && OSMFSettings.supportsStageVideo, createVideo);
 			videoSurface.smoothing = _smoothing;
 			videoSurface.deblocking = _deblocking;
 			videoSurface.width = videoSurface.height = 0;
-			
+
 			videoSurface.attachNetStream(stream);
-			
+
 			// Hook up our metadata listeners
 			NetClient(stream.client).addHandler(NetStreamCodes.ON_META_DATA, onMetaData);
 			NetClient(stream.client).addHandler(NetStreamCodes.ON_CUE_POINT, onCuePoint);
-			
+
 			stream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatusEvent);
 			loadTrait.connection.addEventListener(NetStatusEvent.NET_STATUS, onNetStatusEvent, false, 0, true);
-			
-			CONFIG::FLASH_10_1
-			{
+
+			CONFIG::FLASH_10_1 {
 				// Listen for all errors
 				stream.addEventListener(DRMErrorEvent.DRM_ERROR, onDRMErrorEvent);
-				
+
 				// Rustem
-				var _DRM_ContentData:ByteArray = this.getDRMContentData(resource);
-				if (!(_DRM_ContentData == null) && _DRM_ContentData.bytesAvailable > 0) 
-				{
+				var _DRM_ContentData : ByteArray = this.getDRMContentData(resource);
+				if (!(_DRM_ContentData == null) && _DRM_ContentData.bytesAvailable > 0) {
 					trace("meta not null");
 					this.setupDRMTrait(_DRM_ContentData);
-				}
-				else 
-				{
+				} else {
 					trace("meta null:", resource.getMetadataValue(org.osmf.metadata.MetadataNamespaces.DRM_METADATA));
 					this.stream.addEventListener(flash.events.StatusEvent.STATUS, this.onStatus);
 					this.stream.addEventListener(flash.events.DRMStatusEvent.DRM_STATUS, this.onDRMStatus);
@@ -406,234 +340,197 @@ package osmf_patch
 				stream.addEventListener(DRMStatusEvent.DRM_STATUS, onDRMStatus);
 				}*/
 			}
-			finishLoad();			
+			finishLoad();
 		}
-		
+
 		// Rustem
-		private function removeAllTraits():void
-		{
-			if (hasTrait(org.osmf.traits.MediaTraitType.DVR)) 
-			{
+		private function removeAllTraits() : void {
+			if (hasTrait(org.osmf.traits.MediaTraitType.DVR)) {
 				removeTrait(org.osmf.traits.MediaTraitType.DVR);
 			}
-			if (hasTrait(org.osmf.traits.MediaTraitType.AUDIO)) 
-			{
+			if (hasTrait(org.osmf.traits.MediaTraitType.AUDIO)) {
 				removeTrait(org.osmf.traits.MediaTraitType.AUDIO);
 			}
-			if (hasTrait(org.osmf.traits.MediaTraitType.BUFFER)) 
-			{
+			if (hasTrait(org.osmf.traits.MediaTraitType.BUFFER)) {
 				removeTrait(org.osmf.traits.MediaTraitType.BUFFER);
 			}
-			if (hasTrait(org.osmf.traits.MediaTraitType.TIME)) 
-			{
+			if (hasTrait(org.osmf.traits.MediaTraitType.TIME)) {
 				removeTrait(org.osmf.traits.MediaTraitType.TIME);
 			}
-			if (hasTrait(org.osmf.traits.MediaTraitType.DISPLAY_OBJECT)) 
-			{
+			if (hasTrait(org.osmf.traits.MediaTraitType.DISPLAY_OBJECT)) {
 				removeTrait(org.osmf.traits.MediaTraitType.DISPLAY_OBJECT);
 			}
-			if (hasTrait(org.osmf.traits.MediaTraitType.PLAY)) 
-			{
+			if (hasTrait(org.osmf.traits.MediaTraitType.PLAY)) {
 				removeTrait(org.osmf.traits.MediaTraitType.PLAY);
 			}
-			if (hasTrait(org.osmf.traits.MediaTraitType.SEEK)) 
-			{
+			if (hasTrait(org.osmf.traits.MediaTraitType.SEEK)) {
 				removeTrait(org.osmf.traits.MediaTraitType.SEEK);
 			}
-			if (hasTrait(org.osmf.traits.MediaTraitType.DYNAMIC_STREAM)) 
-			{
+			if (hasTrait(org.osmf.traits.MediaTraitType.DYNAMIC_STREAM)) {
 				removeTrait(org.osmf.traits.MediaTraitType.DYNAMIC_STREAM);
 			}
-			if (hasTrait(org.osmf.traits.MediaTraitType.ALTERNATIVE_AUDIO)) 
-			{
+			if (hasTrait(org.osmf.traits.MediaTraitType.ALTERNATIVE_AUDIO)) {
 				removeTrait(org.osmf.traits.MediaTraitType.ALTERNATIVE_AUDIO);
 			}
 			return;
 		}
+
 		// Rustem/
-		
-		private function finishLoad():void
-		{
+		private function finishLoad() : void {
 			// Rustem
-			//var dvrTrait:org.osmf.traits.MediaTraitBase;
-			//var audioTrait:org.osmf.traits.MediaTraitBase;
-			//var bufferTrait:org.osmf.traits.BufferTrait;
-			//var timeTrait:org.osmf.traits.TimeTrait;
-			//var displayObjectTrait:org.osmf.traits.DisplayObjectTrait;
-			//var playTrait:org.osmf.traits.PlayTrait;
-			//var seekTrait:org.osmf.traits.SeekTrait;
-			//var dsResource:org.osmf.net.DynamicStreamingResource;
-			//var sResource:org.osmf.net.StreamingURLResource;
-			//var loadTrait:org.osmf.net.NetStreamLoadTrait;
-			//var reconnectStreams:Boolean;
-			//var onDurationChange:Function;
-			//var dsTrait:org.osmf.traits.MediaTraitBase;
-			//var aaTrait:org.osmf.traits.AlternativeAudioTrait;
-			
-			//var loc1:*;
-			try
-			{
-				var loadTrait:NetStreamLoadTrait = getTrait(MediaTraitType.LOAD) as NetStreamLoadTrait;
-				//loadTrait = getTrait(org.osmf.traits.MediaTraitType.LOAD) as org.osmf.net.NetStreamLoadTrait;
+			// var dvrTrait:org.osmf.traits.MediaTraitBase;
+			// var audioTrait:org.osmf.traits.MediaTraitBase;
+			// var bufferTrait:org.osmf.traits.BufferTrait;
+			// var timeTrait:org.osmf.traits.TimeTrait;
+			// var displayObjectTrait:org.osmf.traits.DisplayObjectTrait;
+			// var playTrait:org.osmf.traits.PlayTrait;
+			// var seekTrait:org.osmf.traits.SeekTrait;
+			// var dsResource:org.osmf.net.DynamicStreamingResource;
+			// var sResource:org.osmf.net.StreamingURLResource;
+			// var loadTrait:org.osmf.net.NetStreamLoadTrait;
+			// var reconnectStreams:Boolean;
+			// var onDurationChange:Function;
+			// var dsTrait:org.osmf.traits.MediaTraitBase;
+			// var aaTrait:org.osmf.traits.AlternativeAudioTrait;
+
+			// var loc1:*;
+			try {
+				var loadTrait : NetStreamLoadTrait = getTrait(MediaTraitType.LOAD) as NetStreamLoadTrait;
+				// loadTrait = getTrait(org.osmf.traits.MediaTraitType.LOAD) as org.osmf.net.NetStreamLoadTrait;
+			} catch (err : Error) {
 			}
-			catch (err:Error)
-			{
-			};
+			;
 			// Rustem/
-			
-			//var loadTrait:NetStreamLoadTrait = getTrait(MediaTraitType.LOAD) as NetStreamLoadTrait;
-			
+
+			// var loadTrait:NetStreamLoadTrait = getTrait(MediaTraitType.LOAD) as NetStreamLoadTrait;
+
 			// setup dvr trait
-			var dvrTrait:MediaTraitBase = loadTrait.getTrait(MediaTraitType.DVR) as DVRTrait;
-			//dvrTrait = loadTrait.getTrait(MediaTraitType.DVR) as DVRTrait;
-			if (dvrTrait != null)
-			{
+			var dvrTrait : MediaTraitBase = loadTrait.getTrait(MediaTraitType.DVR) as DVRTrait;
+			// dvrTrait = loadTrait.getTrait(MediaTraitType.DVR) as DVRTrait;
+			if (dvrTrait != null) {
 				addTrait(MediaTraitType.DVR, dvrTrait);
 			}
-			
+
 			// setup audio trait
-			var audioTrait:MediaTraitBase = loadTrait.getTrait(MediaTraitType.AUDIO) as AudioTrait;
-			//audioTrait = loadTrait.getTrait(MediaTraitType.AUDIO) as AudioTrait;
-			if (audioTrait == null)
-			{
+			var audioTrait : MediaTraitBase = loadTrait.getTrait(MediaTraitType.AUDIO) as AudioTrait;
+			// audioTrait = loadTrait.getTrait(MediaTraitType.AUDIO) as AudioTrait;
+			if (audioTrait == null) {
 				audioTrait = new NetStreamAudioTrait(stream);
 			}
 			addTrait(MediaTraitType.AUDIO, audioTrait);
-			
+
 			// setup buffer trait
-			var bufferTrait:BufferTrait = loadTrait.getTrait(MediaTraitType.BUFFER) as BufferTrait;
-			//bufferTrait = loadTrait.getTrait(MediaTraitType.BUFFER) as BufferTrait;
-			if (bufferTrait == null)
-			{
+			var bufferTrait : BufferTrait = loadTrait.getTrait(MediaTraitType.BUFFER) as BufferTrait;
+			// bufferTrait = loadTrait.getTrait(MediaTraitType.BUFFER) as BufferTrait;
+			if (bufferTrait == null) {
 				bufferTrait = new NetStreamBufferTrait(stream);
 			}
 			addTrait(MediaTraitType.BUFFER, bufferTrait);
-			
-			
+
 			// setup time trait
-			var timeTrait:TimeTrait = loadTrait.getTrait(MediaTraitType.TIME) as TimeTrait;
-			//timeTrait = loadTrait.getTrait(MediaTraitType.TIME) as TimeTrait;
-			if (timeTrait == null)
-			{
+			var timeTrait : TimeTrait = loadTrait.getTrait(MediaTraitType.TIME) as TimeTrait;
+			// timeTrait = loadTrait.getTrait(MediaTraitType.TIME) as TimeTrait;
+			if (timeTrait == null) {
 				timeTrait = new NetStreamTimeTrait(stream, loadTrait.resource, defaultDuration);
 			}
 			addTrait(MediaTraitType.TIME, timeTrait);
-			
+
 			// setup display object trait
-			var displayObjectTrait:DisplayObjectTrait = loadTrait.getTrait(MediaTraitType.DISPLAY_OBJECT) as DisplayObjectTrait;
-			//displayObjectTrait = loadTrait.getTrait(MediaTraitType.DISPLAY_OBJECT) as DisplayObjectTrait;
-			if (displayObjectTrait == null)
-			{
-				displayObjectTrait = new NetStreamDisplayObjectTrait(stream, videoSurface, NaN, NaN); 
+			var displayObjectTrait : DisplayObjectTrait = loadTrait.getTrait(MediaTraitType.DISPLAY_OBJECT) as DisplayObjectTrait;
+			// displayObjectTrait = loadTrait.getTrait(MediaTraitType.DISPLAY_OBJECT) as DisplayObjectTrait;
+			if (displayObjectTrait == null) {
+				displayObjectTrait = new NetStreamDisplayObjectTrait(stream, videoSurface, NaN, NaN);
 			}
-			addTrait(MediaTraitType.DISPLAY_OBJECT,	displayObjectTrait);
-			
+			addTrait(MediaTraitType.DISPLAY_OBJECT, displayObjectTrait);
+
 			// setup play trait
-			var playTrait:PlayTrait = loadTrait.getTrait(MediaTraitType.PLAY) as PlayTrait;
-			//playTrait = loadTrait.getTrait(MediaTraitType.PLAY) as PlayTrait;
-			if (playTrait == null)
-			{
-				var reconnectStreams:Boolean = false;
-				//reconnectStreams = false;
-				CONFIG::FLASH_10_1	
-				{
+			var playTrait : PlayTrait = loadTrait.getTrait(MediaTraitType.PLAY) as PlayTrait;
+			// playTrait = loadTrait.getTrait(MediaTraitType.PLAY) as PlayTrait;
+			if (playTrait == null) {
+				var reconnectStreams : Boolean = false;
+				// reconnectStreams = false;
+				CONFIG::FLASH_10_1 {
 					reconnectStreams = (loader as NetLoader).reconnectStreams;
 				}
 				playTrait = new NetStreamPlayTrait(stream, resource, reconnectStreams, loadTrait.connection);
-			}			
+			}
 			addTrait(MediaTraitType.PLAY, playTrait);
-			
+
 			// setup seek trait
-			var seekTrait:SeekTrait = loadTrait.getTrait(MediaTraitType.SEEK) as SeekTrait;
-			//seekTrait = loadTrait.getTrait(MediaTraitType.SEEK) as SeekTrait;
-			if (seekTrait == null && NetStreamUtils.getStreamType(resource) != StreamType.LIVE)
-			{
+			var seekTrait : SeekTrait = loadTrait.getTrait(MediaTraitType.SEEK) as SeekTrait;
+			// seekTrait = loadTrait.getTrait(MediaTraitType.SEEK) as SeekTrait;
+			if (seekTrait == null && NetStreamUtils.getStreamType(resource) != StreamType.LIVE) {
 				seekTrait = new NetStreamSeekTrait(timeTrait, loadTrait, stream, videoSurface);
 			}
-			if (seekTrait != null)
-			{
+			if (seekTrait != null) {
 				// Only add the SeekTrait if/when the TimeTrait has a duration,
 				// otherwise the user might try to seek when a seek cannot actually
 				// be executed (FM-440).
-				if (isNaN(timeTrait.duration) || timeTrait.duration == 0)
-				{
-					var onDurationChange:Function = function (event:TimeEvent):void
-					{
+				if (isNaN(timeTrait.duration) || timeTrait.duration == 0) {
+					var onDurationChange : Function = function(event : TimeEvent) : void {
 						timeTrait.removeEventListener(TimeEvent.DURATION_CHANGE, onDurationChange);
-						
-						//addTrait(MediaTraitType.SEEK, seekTrait);
+
+						// addTrait(MediaTraitType.SEEK, seekTrait);
 						// Rustem
-						try 
-						{
+						try {
 							addTrait(org.osmf.traits.MediaTraitType.SEEK, seekTrait);
+						} catch (err : Error) {
 						}
-						catch (err:Error)
-						{
-						};
+						;
 						// Rustem/
-						
-					}
+					};
 					timeTrait.addEventListener(TimeEvent.DURATION_CHANGE, onDurationChange);
-				}
-				else
-				{
+				} else {
 					addTrait(MediaTraitType.SEEK, seekTrait);
 				}
 			}
-			
+
 			// setup dynamic resource trait
-			var dsResource:DynamicStreamingResource = resource as DynamicStreamingResource;
-			//dsResource = resource as DynamicStreamingResource;
-			if (dsResource != null && loadTrait.switchManager != null)
-			{
-				var dsTrait:MediaTraitBase = loadTrait.getTrait(MediaTraitType.DYNAMIC_STREAM) as DynamicStreamTrait;
-				//dsTrait = loadTrait.getTrait(MediaTraitType.DYNAMIC_STREAM) as DynamicStreamTrait;
-				if (dsTrait == null)
-				{
+			var dsResource : DynamicStreamingResource = resource as DynamicStreamingResource;
+			// dsResource = resource as DynamicStreamingResource;
+			if (dsResource != null && loadTrait.switchManager != null) {
+				var dsTrait : MediaTraitBase = loadTrait.getTrait(MediaTraitType.DYNAMIC_STREAM) as DynamicStreamTrait;
+				// dsTrait = loadTrait.getTrait(MediaTraitType.DYNAMIC_STREAM) as DynamicStreamTrait;
+				if (dsTrait == null) {
 					dsTrait = new NetStreamDynamicStreamTrait(stream, loadTrait.switchManager, dsResource);
 				}
 				addTrait(MediaTraitType.DYNAMIC_STREAM, dsTrait);
 			}
-			
+
 			/*
-			//setup alternative audio trait (OSMF v1.6)
+			// setup alternative audio trait (OSMF v1.6)
 			var sResource:StreamingURLResource = resource as StreamingURLResource;
-			//sResource = resource as StreamingURLResource;
+			// sResource = resource as StreamingURLResource;
 			if (sResource != null && sResource.alternativeAudioItems != null && sResource.alternativeAudioItems.length > 0)
 			{
-				var aaTrait:AlternativeAudioTrait = loadTrait.getTrait(MediaTraitType.ALTERNATIVE_AUDIO) as AlternativeAudioTrait;
-				//aaTrait = loadTrait.getTrait(MediaTraitType.ALTERNATIVE_AUDIO) as AlternativeAudioTrait;
-				if (aaTrait == null)
-				{
-					aaTrait = new NetStreamAlternativeAudioTrait(stream, sResource);
-				}
-				addTrait(MediaTraitType.ALTERNATIVE_AUDIO, aaTrait);
-			}*/
-			
-			
-			//setup alternative audio trait (OSMF v2.0)
-			var sResource:StreamingURLResource = resource as StreamingURLResource;
-			if (sResource != null && sResource.alternativeAudioStreamItems != null && sResource.alternativeAudioStreamItems.length > 0)
+			var aaTrait:AlternativeAudioTrait = loadTrait.getTrait(MediaTraitType.ALTERNATIVE_AUDIO) as AlternativeAudioTrait;
+			// aaTrait = loadTrait.getTrait(MediaTraitType.ALTERNATIVE_AUDIO) as AlternativeAudioTrait;
+			if (aaTrait == null)
 			{
-				var aaTrait:AlternativeAudioTrait = loadTrait.getTrait(MediaTraitType.ALTERNATIVE_AUDIO) as AlternativeAudioTrait;
-				if (aaTrait == null)
-				{
+			aaTrait = new NetStreamAlternativeAudioTrait(stream, sResource);
+			}
+			addTrait(MediaTraitType.ALTERNATIVE_AUDIO, aaTrait);
+			}*/
+
+			// setup alternative audio trait (OSMF v2.0)
+			var sResource : StreamingURLResource = resource as StreamingURLResource;
+			if (sResource != null && sResource.alternativeAudioStreamItems != null && sResource.alternativeAudioStreamItems.length > 0) {
+				var aaTrait : AlternativeAudioTrait = loadTrait.getTrait(MediaTraitType.ALTERNATIVE_AUDIO) as AlternativeAudioTrait;
+				if (aaTrait == null) {
 					aaTrait = new NetStreamAlternativeAudioTrait(stream, sResource);
 				}
 				addTrait(MediaTraitType.ALTERNATIVE_AUDIO, aaTrait);
 			}
 		}
-		
-		
-		override protected function processUnloadingState():void
-		{
-			var loadTrait:NetStreamLoadTrait = getTrait(MediaTraitType.LOAD) as NetStreamLoadTrait;
-			
+
+		override protected function processUnloadingState() : void {
+			var loadTrait : NetStreamLoadTrait = getTrait(MediaTraitType.LOAD) as NetStreamLoadTrait;
+
 			NetClient(stream.client).removeHandler(NetStreamCodes.ON_META_DATA, onMetaData);
-			
+
 			stream.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatusEvent);
 			loadTrait.connection.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatusEvent);
-			
+
 			removeTrait(MediaTraitType.AUDIO);
 			removeTrait(MediaTraitType.BUFFER);
 			removeTrait(MediaTraitType.PLAY);
@@ -642,226 +539,171 @@ package osmf_patch
 			removeTrait(MediaTraitType.SEEK);
 			removeTrait(MediaTraitType.DYNAMIC_STREAM);
 			removeTrait(MediaTraitType.DVR);
-			
-			CONFIG::FLASH_10_1
-			{    			
+
+			CONFIG::FLASH_10_1 {
 				stream.removeEventListener(DRMErrorEvent.DRM_ERROR, onDRMErrorEvent);
 				stream.removeEventListener(DRMStatusEvent.DRM_STATUS, onDRMStatus);
 				stream.removeEventListener(StatusEvent.STATUS, onStatus);
-				if (drmTrait != null)
-				{       			
-					drmTrait.removeEventListener(DRMEvent.DRM_STATE_CHANGE, reloadAfterAuth);	 
-					removeTrait(MediaTraitType.DRM);  
+				if (drmTrait != null) {
+					drmTrait.removeEventListener(DRMEvent.DRM_STATE_CHANGE, reloadAfterAuth);
+					removeTrait(MediaTraitType.DRM);
 					drmTrait = null;
 				}  					
 			}
-			
-			// Null refs to garbage collect.	    	
+
+			// Null refs to garbage collect.
 			videoSurface.attachNetStream(null);
 			videoSurface = null;
 			stream = null;
 			displayObjectTrait = null;
 		}
-		
-		
-		private function onMetaData(info:Object):void 
-		{   
-			var cuePoints:Array = info.cuePoints;
-			
-			if (cuePoints != null && cuePoints.length > 0)
-			{
-				var dynamicCuePoints:TimelineMetadata = getMetadata(CuePoint.DYNAMIC_CUEPOINTS_NAMESPACE) as TimelineMetadata;
-				if (dynamicCuePoints == null)
-				{
+
+		private function onMetaData(info : Object) : void {
+			var cuePoints : Array = info["cuePoints"] as Array;
+
+			if (cuePoints != null && cuePoints.length > 0) {
+				var dynamicCuePoints : TimelineMetadata = getMetadata(CuePoint.DYNAMIC_CUEPOINTS_NAMESPACE) as TimelineMetadata;
+				if (dynamicCuePoints == null) {
 					dynamicCuePoints = new TimelineMetadata(this);
 					addMetadata(CuePoint.DYNAMIC_CUEPOINTS_NAMESPACE, dynamicCuePoints);
 				}
-				
-				for (var i:int = 0; i < cuePoints.length; i++)
-				{
-					var cuePoint:CuePoint = new CuePoint
-						( cuePoints[i].type
-							, cuePoints[i].time
-							, cuePoints[i].name
-							, cuePoints[i].parameters
-						);
-					
-					try
-					{
+
+				for (var i : int = 0; i < cuePoints.length; i++) {
+					var cuePoint : CuePoint = new CuePoint(cuePoints[i]["type"], cuePoints[i]["time"], cuePoints[i]["name"], cuePoints[i]["parameters"]);
+
+					try {
 						dynamicCuePoints.addMarker(cuePoint);
-					}
-					catch (error:ArgumentError)
-					{
+					} catch (error : ArgumentError) {
 						// Invalid cue points should be ignored.
 					}
 				}
-			}			    		
+			}
 		}
-		
-		private function onCuePoint(info:Object):void
-		{
-			if (embeddedCuePoints == null)
-			{
+
+		private function onCuePoint(info : Object) : void {
+			if (embeddedCuePoints == null) {
 				embeddedCuePoints = new TimelineMetadata(this);
 				addMetadata(CuePoint.EMBEDDED_CUEPOINTS_NAMESPACE, embeddedCuePoints);
 			}
-			
-			var cuePoint:CuePoint = new CuePoint
-				( info.type
-					, info.time
-					, info.name
-					, info.parameters
-				);
-			
-			try
-			{
+
+			var cuePoint : CuePoint = new CuePoint(info["type"], info["time"], info["name"], info["parameters"]);
+
+			try {
 				embeddedCuePoints.addMarker(cuePoint);
-			}
-			catch (error:ArgumentError)
-			{
+			} catch (error : ArgumentError) {
 				// Invalid cue points should be ignored.
 			}
-		}     	
-		
-		// Fired when the DRM subsystem is updated.  NetStream needs to be recreated.
-		private function onUpdateComplete(event:Event):void
-		{          		
-			(getTrait(MediaTraitType.LOAD) as LoadTrait).unload();
-			(getTrait(MediaTraitType.LOAD) as LoadTrait).load();		
 		}
-		
-		
-		private function onNetStatusEvent(event:NetStatusEvent):void
-		{     		
-			var error:MediaError = null;
-			switch (event.info.code)
-			{
+
+		// Fired when the DRM subsystem is updated.  NetStream needs to be recreated.
+		private function onUpdateComplete(event : Event) : void {
+			(getTrait(MediaTraitType.LOAD) as LoadTrait).unload();
+			(getTrait(MediaTraitType.LOAD) as LoadTrait).load();
+		}
+
+		private function onNetStatusEvent(event : NetStatusEvent) : void {
+			var error : MediaError = null;
+			switch (event.info["code"]) {
 				case NetStreamCodes.NETSTREAM_PLAY_FAILED:
 				case NetStreamCodes.NETSTREAM_FAILED:
-					error = new MediaError(MediaErrorCodes.NETSTREAM_PLAY_FAILED, event.info.description);
+					error = new MediaError(MediaErrorCodes.NETSTREAM_PLAY_FAILED, event.info["description"]);
 					break;
 				case NetStreamCodes.NETSTREAM_PLAY_STREAMNOTFOUND:
-					error = new MediaError(MediaErrorCodes.NETSTREAM_STREAM_NOT_FOUND, event.info.description);
+					error = new MediaError(MediaErrorCodes.NETSTREAM_STREAM_NOT_FOUND, event.info["description"]);
 					break;
 				case NetStreamCodes.NETSTREAM_PLAY_FILESTRUCTUREINVALID:
-					error = new MediaError(MediaErrorCodes.NETSTREAM_FILE_STRUCTURE_INVALID, event.info.description);
+					error = new MediaError(MediaErrorCodes.NETSTREAM_FILE_STRUCTURE_INVALID, event.info["description"]);
 					break;
 				case NetStreamCodes.NETSTREAM_PLAY_NOSUPPORTEDTRACKFOUND:
-					error = new MediaError(MediaErrorCodes.NETSTREAM_NO_SUPPORTED_TRACK_FOUND, event.info.description);
+					error = new MediaError(MediaErrorCodes.NETSTREAM_NO_SUPPORTED_TRACK_FOUND, event.info["description"]);
 					break;
 				case NetConnectionCodes.CONNECT_IDLE_TIME_OUT:
-					error = new MediaError(MediaErrorCodes.NETCONNECTION_TIMEOUT, event.info.description);
+					error = new MediaError(MediaErrorCodes.NETCONNECTION_TIMEOUT, event.info["description"]);
 					break;
 			}
-			
-			CONFIG::FLASH_10_1
-			{
-				if (event.info.code == NetStreamCodes.NETSTREAM_DRM_UPDATE)
-				{
+
+			CONFIG::FLASH_10_1 {
+				if (event.info["code"] == NetStreamCodes.NETSTREAM_DRM_UPDATE) {
 					update(SystemUpdaterType.DRM);
 				}
 			}
-			
-			if (error != null)
-			{
+
+			if (error != null) {
 				dispatchEvent(new MediaErrorEvent(MediaErrorEvent.MEDIA_ERROR, false, false, error));
 			}
 		}
-		
-		private function onDRMErrorEvent(event:DRMErrorEvent):void
-		{
+
+		private function onDRMErrorEvent(event : DRMErrorEvent) : void {
 			if (event.errorID == DRM_NEEDS_AUTHENTICATION)  // Needs authentication
-			{					
-				drmTrait.addEventListener(DRMEvent.DRM_STATE_CHANGE, reloadAfterAuth);	 
+			{
+				drmTrait.addEventListener(DRMEvent.DRM_STATE_CHANGE, reloadAfterAuth);
 				drmTrait.drmMetadata = event.contentData;
-			}	
-			else if (event.drmUpdateNeeded)
-			{
+			} else if (event.drmUpdateNeeded) {
 				update(SystemUpdaterType.DRM);
-			}
-			else if (event.systemUpdateNeeded)
-			{
+			} else if (event.systemUpdateNeeded) {
 				update(SystemUpdaterType.SYSTEM);
-			}					
-			else // Inline DRM - Errors need to be forwarded
-			{						
+			} else // Inline DRM - Errors need to be forwarded
+			{
 				drmTrait.inlineDRMFailed(new MediaError(event.errorID));
 			}
-		}	
-		
-		private function update(type:String):void
-		{
-			if (drmTrait == null)
-			{
-				createDRMTrait();	
-			}	
-			var updater:SystemUpdater = drmTrait.update(type);	
-			updater.addEventListener(Event.COMPLETE, onUpdateComplete);			
 		}
-		
+
+		private function update(type : String) : void {
+			if (drmTrait == null) {
+				createDRMTrait();
+			}
+			var updater : SystemUpdater = drmTrait.update(type);
+			updater.addEventListener(Event.COMPLETE, onUpdateComplete);
+		}
+
 		// Rustem
-		private function setupDRMTrait(arg1:flash.utils.ByteArray):void
-		{
+		private function setupDRMTrait(arg1 : flash.utils.ByteArray) : void {
 			this.createDRMTrait();
 			this.drmTrait.drmMetadata = arg1;
 			return;
 		}
-		
-		private function getDRMContentData(arg1:org.osmf.media.MediaResourceBase):flash.utils.ByteArray
-		{
-			//var loc2:*=null;
-			//var loc3:*=null;
-			//var loc4:*=null;
-			//var loc5:*=null;
-			//var loc6:*=null;
-			//var loc7:*=0;
-			//var loc8:*=null;
+
+		private function getDRMContentData(arg1 : org.osmf.media.MediaResourceBase) : flash.utils.ByteArray {
+			// var loc2:*=null;
+			// var loc3:*=null;
+			// var loc4:*=null;
+			// var loc5:*=null;
+			// var loc6:*=null;
+			// var loc7:*=0;
+			// var loc8:*=null;
 			trace("get drm meta");
-			var loc1:*=arg1 as org.osmf.net.StreamingURLResource;
-			if (loc1 == null) 
-			{
-				if (this._customDRMData != null) 
-				{
+			var loc1 : StreamingURLResource = arg1 as StreamingURLResource;
+			if (loc1 == null) {
+				if (this._customDRMData != null) {
 					trace("streamingResource:", this._customDRMData.bytesAvailable);
 					return this._customDRMData;
 				}
-			}
-			else 
-			{
-				if (loc1.drmContentData != null) 
-				{
+			} else {
+				if (loc1.drmContentData != null) {
 					return loc1.drmContentData;
 				}
-				var loc2:* = arg1.getMetadataValue(org.osmf.metadata.MetadataNamespaces.DRM_METADATA) as org.osmf.metadata.Metadata;
-				if (!(loc2 == null) && loc2.keys.length > 0) 
-				{
+				var loc2 : Metadata = arg1.getMetadataValue(org.osmf.metadata.MetadataNamespaces.DRM_METADATA) as Metadata;
+				if (!(loc2 == null) && loc2.keys.length > 0) {
 					trace("drmMetadata != null");
-					var loc3:* = null;
-					var loc4:* = arg1 as org.osmf.net.DynamicStreamingResource;
-					if (!(loc4 == null) && loc4.initialIndex > -1 && loc4.initialIndex < loc4.streamItems.length) 
-					{
+					var loc3 : * = null;
+					var loc4 : DynamicStreamingResource = arg1 as DynamicStreamingResource;
+					if (!(loc4 == null) && loc4.initialIndex > -1 && loc4.initialIndex < loc4.streamItems.length) {
 						loc3 = loc4.streamItems[loc4.initialIndex].streamName;
 					}
-					var loc5:* = null;
-					if (loc3 != null) 
-					{
+					var loc5 : * = null;
+					if (loc3 != null) {
 						loc5 = loc2.getValue(loc3) as flash.utils.ByteArray;
 					}
-					if (loc5 == null) 
-					{
+					if (loc5 == null) {
 						trace("drmMetadata == null");
-						var loc6:* = loc2.keys;
-						var loc7:* = 0;
-						do 
-						{
-							var loc8:* = loc6[loc7];
-							if (loc8.indexOf(org.osmf.metadata.MetadataNamespaces.DRM_ADDITIONAL_HEADER_KEY) != 0) 
-							{
-								loc5 = loc2.getValue(loc8);
+						var loc6 : Vector.<String> = loc2.keys;
+						var loc7 : int = 0;
+						do {
+							if (loc6[loc7].indexOf(org.osmf.metadata.MetadataNamespaces.DRM_ADDITIONAL_HEADER_KEY) != 0) {
+								loc5 = loc2.getValue(loc6[loc7]);
 							}
 							++loc7;
-						}
-						while (loc5 == null && loc7 < loc6.length);
+						} while (loc5 == null && loc7 < loc6.length);
 					}
 					return loc5;
 				}
@@ -869,82 +711,66 @@ package osmf_patch
 			return null;
 		}
 		// Rustem/
-		
 		// DRM APIs
-		CONFIG::FLASH_10_1
-		{
-			private function onStatus(event:StatusEvent):void
-			{
-				if (event.code == DRM_STATUS_CODE 
-					&& getTrait(MediaTraitType.DRM) == null)
-				{			
-					createDRMTrait(); 			
+		CONFIG::FLASH_10_1 {
+			private function onStatus(event : StatusEvent) : void {
+				if (event.code == DRM_STATUS_CODE && getTrait(MediaTraitType.DRM) == null) {
+					createDRMTrait();
 				}
 			}
-			
-			public function onVoucherLoaded(arg1:flash.events.DRMStatusEvent):void
-			{
+
+			public function onVoucherLoaded(arg1 : flash.events.DRMStatusEvent) : void {
 				this.createDRMTrait();
 				trace("drmTrait1:", this.drmTrait);
 				this.drmTrait.inlineOnVoucher(arg1);
 				return;
 			}
-			
-			
-			private function onDRMStatus(event:DRMStatusEvent):void
-			{
+
+			private function onDRMStatus(event : DRMStatusEvent) : void {
 				// Rustem
 				trace("onDRMStatus:", event.contentData);
 				// Rustem/
 				drmTrait.inlineOnVoucher(event);
-			}	  		 
-			
-			// Inline metadata + credentials.  The NetStream is dead at this point, restart with new credentials
-			private function reloadAfterAuth(event:DRMEvent):void
-			{
-				if (drmTrait.drmState == DRMState.AUTHENTICATION_COMPLETE)
-				{	  				
-					var loadTrait:NetStreamLoadTrait = getTrait(MediaTraitType.LOAD) as NetStreamLoadTrait;
-					if (loadTrait.loadState == LoadState.READY)
-					{				  			
-						loadTrait.unload();	  	
-					}
-					loadTrait.load();	  					  				
-				}	  				  					
 			}
-			
+
+			// Inline metadata + credentials.  The NetStream is dead at this point, restart with new credentials
+			private function reloadAfterAuth(event : DRMEvent) : void {
+				if (drmTrait.drmState == DRMState.AUTHENTICATION_COMPLETE) {
+					var loadTrait : NetStreamLoadTrait = getTrait(MediaTraitType.LOAD) as NetStreamLoadTrait;
+					if (loadTrait.loadState == LoadState.READY) {
+						loadTrait.unload();
+					}
+					loadTrait.load();
+				}
+			}
+
 			// Rustem
-			public function customDRMData(arg1:flash.utils.ByteArray):void
-			{
+			public function customDRMData(arg1 : flash.utils.ByteArray) : void {
 				this._customDRMData = arg1;
 				return;
 			}
-			
-			public function customToken(arg1:String):void
-			{
+
+			public function customToken(arg1 : String) : void {
 				this._customToken = arg1;
 				return;
 			}
+
 			// Rustem/
-			
-			
-			
-			private function createDRMTrait():void
-			{
-				trace("createDRMTrait2");	// Rustem
-				drmTrait = new NetStreamDRMTrait_p();	    	
+			private function createDRMTrait() : void {
+				trace("createDRMTrait2");
+				// Rustem
+				drmTrait = new NetStreamDRMTrait_p();
 				addTrait(MediaTraitType.DRM, drmTrait);
-				this.drmTrait.customToken = this._customToken;	// Rustem
-			}	
-			
-			public function customSetupDRMTrait(arg1:flash.net.drm.DRMContentData):void
-			{
+				this.drmTrait.customToken = this._customToken;
+				// Rustem
+			}
+
+			public function customSetupDRMTrait(arg1 : flash.net.drm.DRMContentData) : void {
 				this.createDRMTrait();
 				this.drmTrait.drmMetadata = arg1;
 				this.removeAllTraits();
 				this.finishLoad();
 			}
-			
 			/*private function setupDRMTrait(contentData:ByteArray):void
 			{			
 			createDRMTrait();
@@ -954,23 +780,22 @@ package osmf_patch
 			
 			
 		}
-		
-		
-		private var displayObjectTrait:DisplayObjectTrait;
-		private var defaultTimeTrait:ModifiableTimeTrait;
-		private var _customDRMData:flash.utils.ByteArray;	// Rustem
-		private var embeddedCuePoints:TimelineMetadata;
-		private var _smoothing:Boolean;
-		private var _deblocking:int;
-		private var stream:flash.net.NetStream;	// Rustem
-		private var videoSurface:VideoSurface;
-		private var _customToken:String="";	// Rustem
-		
-		CONFIG::FLASH_10_1
-		{	
-			private static const DRM_STATUS_CODE:String 		= "DRM.encryptedFLV";
-			private static const DRM_NEEDS_AUTHENTICATION:int	= 3330; 
-			private var drmTrait:NetStreamDRMTrait_p;	
+		private var displayObjectTrait : DisplayObjectTrait;
+		private var defaultTimeTrait : ModifiableTimeTrait;
+		private var _customDRMData : flash.utils.ByteArray;
+		// Rustem
+		private var embeddedCuePoints : TimelineMetadata;
+		private var _smoothing : Boolean;
+		private var _deblocking : int;
+		private var stream : flash.net.NetStream;
+		// Rustem
+		private var videoSurface : VideoSurface;
+		private var _customToken : String = "";
+		// Rustem
+		CONFIG::FLASH_10_1 {
+			private static const DRM_STATUS_CODE : String = "DRM.encryptedFLV";
+			private static const DRM_NEEDS_AUTHENTICATION : int = 3330;
+			private var drmTrait : NetStreamDRMTrait_p;	
 		}
 	}
 }
