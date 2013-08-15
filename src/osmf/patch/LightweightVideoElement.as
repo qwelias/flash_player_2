@@ -20,7 +20,7 @@
  *  
  *****************************************************/
 // Rustem OK
-package osmf_patch {
+package osmf.patch {
 	import org.osmf.events.DRMEvent;
 	import org.osmf.events.MediaError;
 	import org.osmf.events.MediaErrorCodes;
@@ -134,7 +134,7 @@ package osmf_patch {
 	 *  @playerversion AIR 1.5
 	 *  @productversion OSMF 1.0	 	 	
 	 **/
-	public class LightweightVideoElement_p extends LoadableElementBase {
+	public class LightweightVideoElement extends LoadableElementBase {
 		/**
 		 * Constructor.
 		 * 
@@ -150,7 +150,7 @@ package osmf_patch {
 		 *  @playerversion AIR 1.5
 		 *  @productversion OSMF 1.0
 		 */
-		public function LightweightVideoElement_p(resource : MediaResourceBase = null, loader : NetLoader = null) {
+		public function LightweightVideoElement(resource : MediaResourceBase = null, loader : NetLoader = null) {
 			if (loader == null) {
 				loader = new NetLoader();
 			}
@@ -759,7 +759,7 @@ package osmf_patch {
 			private function createDRMTrait() : void {
 				trace("createDRMTrait2");
 				// Rustem
-				drmTrait = new NetStreamDRMTrait_p();
+				drmTrait = new NetStreamDRMTrait();
 				addTrait(MediaTraitType.DRM, drmTrait);
 				this.drmTrait.customToken = this._customToken;
 				// Rustem
@@ -795,7 +795,7 @@ package osmf_patch {
 		CONFIG::FLASH_10_1 {
 			private static const DRM_STATUS_CODE : String = "DRM.encryptedFLV";
 			private static const DRM_NEEDS_AUTHENTICATION : int = 3330;
-			private var drmTrait : NetStreamDRMTrait_p;	
+			private var drmTrait : NetStreamDRMTrait;	
 		}
 	}
 }
