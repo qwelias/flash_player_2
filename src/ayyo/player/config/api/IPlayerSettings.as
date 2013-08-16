@@ -7,6 +7,8 @@ package ayyo.player.config.api {
 
 		function get type() : String;
 
+		function get baseURL() : String;
+
 		function get free() : Boolean;
 
 		function get timeLeft() : Number;

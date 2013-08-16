@@ -21,10 +21,14 @@ package ayyo.player.config.impl.support {
 		 * @private
 		 */
 		private var _timeLeft : Number;
+		/**
+		 * @private
+		 */
+		private var _baseURL : String;
 
 		public function initialize(source : Object) : void {
 			for (var property : String in source) {
-				if(property in this) this["_" + property] = source[property];
+				if (property in this) this["_" + property] = source[property];
 			}
 		}
 
@@ -42,6 +46,10 @@ package ayyo.player.config.impl.support {
 
 		public function get timeLeft() : Number {
 			return this._timeLeft ||= 48;
+		}
+
+		public function get baseURL() : String {
+			return this._baseURL ||= "";
 		}
 	}
 }
