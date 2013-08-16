@@ -58,7 +58,6 @@
 		<java jar="${FLEX_HOME}/lib/mxmlc.jar" dir="${FLEX_HOME}/frameworks" fork="true" failonerror="true">
 			<arg value="${main.src.loc}/${main.package}/${project.name}.as" />
 			<arg value="-source-path=${main.src.loc}" />
-			<arg value="-source-path=${modules.src.loc}" />
 			<arg value="-output=${bin.loc}/${project.name.versioned}.swf" />
 			<arg value="-default-size=640,480" />
 			<arg value="-default-background-color=0x000000" />
