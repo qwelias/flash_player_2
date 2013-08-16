@@ -1,4 +1,4 @@
-package ayyo.player.tooltip.api {
+package ayyo.player.config.api {
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */

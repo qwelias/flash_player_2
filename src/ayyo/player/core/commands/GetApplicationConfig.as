@@ -1,8 +1,11 @@
 package ayyo.player.core.commands {
-	import by.blooddy.crypto.serialization.JSON;
 	import ayyo.player.config.api.IPlayerConfig;
+	import ayyo.player.events.ApplicationEvent;
 
 	import robotlegs.bender.extensions.commandCenter.api.ICommand;
+	import robotlegs.bender.extensions.contextView.ContextView;
+
+	import flash.events.IEventDispatcher;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -10,10 +13,26 @@ package ayyo.player.core.commands {
 	public class GetApplicationConfig implements ICommand {
 		[Inject]
 		public var playerConfig : IPlayerConfig;
+		[Inject]
+		public var dispatcher : IEventDispatcher;
+		[Inject]
+		public var contextView : ContextView;
 
 		public function execute() : void {
-			var source : Object = by.blooddy.crypto.serialization.JSON.decode('{"settings":{"screenshot":"banner.jpg","type":"movie","free":false,"timeLeft":48},"assets":[],"tooltip":{"playButton":"Смотреть","pauseButton":"Пауза","timeLeft":"У вас осталось %HOURS% часов, чтобы посмотреть фильм","timer":"Посмотреть сколько осталось","timerReverse":"Посмотреть продолжительность","highQuality":"Включить отличное качество","standartQuality":"Включить стандартное качество","sound":"Включить звук","mute":"Выключить звук","fullscreen":"Развернуть на весь экран","window":"Свернуть"},"replaceWord":{"forTimeLeft":"%HOURS%"}}');
-			playerConfig.initialize(source);
+			var source : Object = this.contextView.view.root.loaderInfo.parameters;
+			this.playerConfig.ready.addOnce(this.onConfigParsed);
+			this.playerConfig.initialize(source);
+		}
+
+		private function onConfigParsed() : void {
+			this.dispatcher.dispatchEvent(new ApplicationEvent(ApplicationEvent.CONFIG_READY));
+			this.dispose();
+		}
+
+		private function dispose() : void {
+			this.playerConfig = null;
+			this.dispatcher = null;
+			this.contextView = null;
 		}
 	}
 }

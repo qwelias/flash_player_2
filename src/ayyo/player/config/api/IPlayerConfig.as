@@ -1,5 +1,5 @@
 package ayyo.player.config.api {
-	import ayyo.player.tooltip.api.IPlayerTooltip;
+	import org.osflash.signals.ISignal;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -12,5 +12,7 @@ package ayyo.player.config.api {
 		function get tooltip() : IPlayerTooltip;
 
 		function get replaceWord() : IReplaceWordList;
+
+		function get ready() : ISignal;
 	}
 }

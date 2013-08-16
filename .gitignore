@@ -13,3 +13,7 @@ bin-release/
 
 # Binary files
 *.psd
+
+# OS specific files
+.DS_Store
+Thumbs.db

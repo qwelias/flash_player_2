@@ -1,8 +1,9 @@
 package ayyo.player {
-	import ayyo.player.core.controller.appconfig.PlayerInjections;
 	import ayyo.player.bundles.MinimalDebugBundle;
 	import ayyo.player.core.controller.appconfig.PlayerCommandsMapping;
+	import ayyo.player.core.controller.appconfig.PlayerInjections;
 	import ayyo.player.core.controller.appconfig.PlayerLaunch;
+	import ayyo.player.core.controller.appconfig.PlayerMediatorsMapping;
 
 	import robotlegs.bender.extensions.contextView.ContextView;
 	import robotlegs.bender.framework.api.IContext;
@@ -31,8 +32,8 @@ package ayyo.player {
 
 		public function get context() : IContext {
 			return this._context ||= new Context().
-			install(MinimalDebugBundle).
-			configure(new ContextView(this.appHolder), PlayerInjections, PlayerCommandsMapping);
+				install(MinimalDebugBundle).
+				configure(new ContextView(this.appHolder), PlayerInjections, PlayerMediatorsMapping, PlayerCommandsMapping);
 		}
 
 		public function get appHolder() : Sprite {

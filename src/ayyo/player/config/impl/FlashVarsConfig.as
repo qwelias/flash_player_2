@@ -2,11 +2,14 @@ package ayyo.player.config.impl {
 	import ayyo.player.config.api.IPlayerAsset;
 	import ayyo.player.config.api.IPlayerConfig;
 	import ayyo.player.config.api.IPlayerSettings;
+	import ayyo.player.config.api.IPlayerTooltip;
 	import ayyo.player.config.api.IReplaceWordList;
 	import ayyo.player.config.impl.support.PlayerSettings;
 	import ayyo.player.config.impl.support.PlayerTooltip;
 	import ayyo.player.config.impl.support.ReplaceWordList;
-	import ayyo.player.tooltip.api.IPlayerTooltip;
+
+	import org.osflash.signals.ISignal;
+	import org.osflash.signals.Signal;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -28,6 +31,10 @@ package ayyo.player.config.impl {
 		 * @private
 		 */
 		private var _replaceWord : ReplaceWordList;
+		/**
+		 * @private
+		 */
+		private var _ready : ISignal;
 
 		public function initialize(source : Object) : void {
 			var settingsSource : Object;
@@ -37,7 +44,7 @@ package ayyo.player.config.impl {
 			settingsSource["type"] = source["player_type"];
 			settingsSource["free"] = source["free"];
 			settingsSource["timeLeft"] = source["hours_until_stop"];
-			
+
 			tooltipSource["playButton"] = source["tooltip_play_button"];
 			tooltipSource["pauseButton"] = source["tooltip_pause_button"];
 			tooltipSource["timeLeft"] = source["tooltip_license_icon"];
@@ -49,12 +56,14 @@ package ayyo.player.config.impl {
 			tooltipSource["mute"] = source["tooltip_sound_icon_off"];
 			tooltipSource["fullscreen"] = source["tooltip_fullscreen"];
 			tooltipSource["window"] = source["tooltip_unfullscreen"];
-			
+
 			replaceWordSource["forTimeLeft"] = source["N"];
-			
+
 			this.settings.initialize(settingsSource);
 			this.tooltip.initialize(tooltipSource);
 			this.replaceWord.initialize(replaceWordSource);
+			
+			this.ready.dispatch();
 		}
 
 		public function get settings() : IPlayerSettings {
@@ -71,6 +80,10 @@ package ayyo.player.config.impl {
 
 		public function get replaceWord() : IReplaceWordList {
 			return this._replaceWord ||= new ReplaceWordList;
+		}
+
+		public function get ready() : ISignal {
+			return this._ready ||= new Signal();
 		}
 	}
 }

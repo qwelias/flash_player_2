@@ -3,11 +3,14 @@ package ayyo.player.config.impl {
 	import ayyo.player.config.api.IPlayerAsset;
 	import ayyo.player.config.api.IPlayerConfig;
 	import ayyo.player.config.api.IPlayerSettings;
+	import ayyo.player.config.api.IPlayerTooltip;
 	import ayyo.player.config.api.IReplaceWordList;
 	import ayyo.player.config.impl.support.PlayerSettings;
 	import ayyo.player.config.impl.support.PlayerTooltip;
 	import ayyo.player.config.impl.support.ReplaceWordList;
-	import ayyo.player.tooltip.api.IPlayerTooltip;
+
+	import org.osflash.signals.ISignal;
+	import org.osflash.signals.Signal;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -29,6 +32,10 @@ package ayyo.player.config.impl {
 		 * @private
 		 */
 		private var _replaceWord : ReplaceWordList;
+		/**
+		 * @private
+		 */
+		private var _ready : ISignal;
 
 		public function initialize(source : Object) : void {
 			var item : ICanInitialize;
@@ -36,6 +43,7 @@ package ayyo.player.config.impl {
 				if (property in this) item = this[property] as ICanInitialize;
 				item && item.initialize(source[property]);
 			}
+			this.ready.dispatch();
 		}
 
 		public function get settings() : IPlayerSettings {
@@ -52,6 +60,10 @@ package ayyo.player.config.impl {
 
 		public function get replaceWord() : IReplaceWordList {
 			return this._replaceWord ||= new ReplaceWordList;
+		}
+
+		public function get ready() : ISignal {
+			return this._ready ||= new Signal();
 		}
 	}
 }
