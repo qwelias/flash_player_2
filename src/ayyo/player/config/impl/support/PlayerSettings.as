@@ -1,10 +1,10 @@
 package ayyo.player.config.impl.support {
-	import ayyo.player.config.api.IPlayerSettings;
+	import ayyo.player.config.api.IAyyoPlayerSettings;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
-	public class PlayerSettings implements IPlayerSettings {
+	public class PlayerSettings implements IAyyoPlayerSettings {
 		/**
 		 * @private
 		 */

@@ -2,7 +2,7 @@ package ayyo.player.config.api {
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
-	public interface IPlayerTooltip {
+	public interface IAyyoPlayerTooltip {
 		function initialize(source : Object) : void;
 
 		function get playButton() : String;

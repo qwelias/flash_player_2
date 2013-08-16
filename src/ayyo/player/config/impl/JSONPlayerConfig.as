@@ -1,13 +1,14 @@
 package ayyo.player.config.impl {
+	import ayyo.player.config.api.IAyyoPlayerAsset;
+	import ayyo.player.config.api.IAyyoPlayerConfig;
+	import ayyo.player.config.api.IAyyoPlayerSettings;
+	import ayyo.player.config.api.IAyyoPlayerTooltip;
 	import ayyo.player.config.api.ICanInitialize;
-	import ayyo.player.config.api.IPlayerAsset;
-	import ayyo.player.config.api.IPlayerConfig;
-	import ayyo.player.config.api.IPlayerSettings;
-	import ayyo.player.config.api.IPlayerTooltip;
 	import ayyo.player.config.api.IReplaceWordList;
 	import ayyo.player.config.impl.support.PlayerSettings;
 	import ayyo.player.config.impl.support.PlayerTooltip;
 	import ayyo.player.config.impl.support.ReplaceWordList;
+	import ayyo.player.modules.info.impl.ModuleInfo;
 
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
@@ -15,19 +16,23 @@ package ayyo.player.config.impl {
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
-	public class JSONPlayerConfig implements IPlayerConfig {
+	public class JSONPlayerConfig implements IAyyoPlayerConfig {
 		/**
 		 * @private
 		 */
-		private var _settings : IPlayerSettings;
+		private var _settings : IAyyoPlayerSettings;
 		/**
 		 * @private
 		 */
-		private var _assets : Vector.<IPlayerAsset>;
+		private var _assets : Vector.<IAyyoPlayerAsset>;
 		/**
 		 * @private
 		 */
-		private var _tooltip : IPlayerTooltip;
+		private var _modules : Vector.<ModuleInfo>;
+		/**
+		 * @private
+		 */
+		private var _tooltip : IAyyoPlayerTooltip;
 		/**
 		 * @private
 		 */
@@ -46,15 +51,19 @@ package ayyo.player.config.impl {
 			this.ready.dispatch();
 		}
 
-		public function get settings() : IPlayerSettings {
+		public function get settings() : IAyyoPlayerSettings {
 			return this._settings ||= new PlayerSettings();
 		}
 
-		public function get assets() : Vector.<IPlayerAsset> {
-			return this._assets ||= new Vector.<IPlayerAsset>();
+		public function get assets() : Vector.<IAyyoPlayerAsset> {
+			return this._assets ||= new Vector.<IAyyoPlayerAsset>();
 		}
 
-		public function get tooltip() : IPlayerTooltip {
+		public function get modules() : Vector.<ModuleInfo> {
+			return this._modules ||= new Vector.<ModuleInfo>();
+		}
+
+		public function get tooltip() : IAyyoPlayerTooltip {
 			return this._tooltip ||= new PlayerTooltip();
 		}
 

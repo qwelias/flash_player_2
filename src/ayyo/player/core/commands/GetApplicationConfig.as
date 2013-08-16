@@ -1,5 +1,5 @@
 package ayyo.player.core.commands {
-	import ayyo.player.config.api.IPlayerConfig;
+	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.events.ApplicationEvent;
 
 	import robotlegs.bender.extensions.commandCenter.api.ICommand;
@@ -12,7 +12,7 @@ package ayyo.player.core.commands {
 	 */
 	public class GetApplicationConfig implements ICommand {
 		[Inject]
-		public var playerConfig : IPlayerConfig;
+		public var playerConfig : IAyyoPlayerConfig;
 		[Inject]
 		public var dispatcher : IEventDispatcher;
 		[Inject]

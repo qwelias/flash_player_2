@@ -1,12 +1,15 @@
 package ayyo.player.config.impl {
-	import ayyo.player.config.api.IPlayerAsset;
-	import ayyo.player.config.api.IPlayerConfig;
-	import ayyo.player.config.api.IPlayerSettings;
-	import ayyo.player.config.api.IPlayerTooltip;
+	import ayyo.player.config.api.IAyyoPlayerAsset;
+	import ayyo.player.config.api.IAyyoPlayerConfig;
+	import ayyo.player.config.api.IAyyoPlayerSettings;
+	import ayyo.player.config.api.IAyyoPlayerTooltip;
 	import ayyo.player.config.api.IReplaceWordList;
 	import ayyo.player.config.impl.support.PlayerSettings;
 	import ayyo.player.config.impl.support.PlayerTooltip;
 	import ayyo.player.config.impl.support.ReplaceWordList;
+	import ayyo.player.modules.info.impl.ModuleInfo;
+
+	import by.blooddy.crypto.serialization.JSON;
 
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
@@ -14,19 +17,23 @@ package ayyo.player.config.impl {
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
-	public class FlashVarsConfig implements IPlayerConfig {
+	public class FlashVarsConfig implements IAyyoPlayerConfig {
 		/**
 		 * @private
 		 */
-		private var _settings : IPlayerSettings;
+		private var _settings : IAyyoPlayerSettings;
 		/**
 		 * @private
 		 */
-		private var _assets : Vector.<IPlayerAsset>;
+		private var _assets : Vector.<IAyyoPlayerAsset>;
 		/**
 		 * @private
 		 */
-		private var _tooltip : IPlayerTooltip;
+		private var _modules : Vector.<ModuleInfo>;
+		/**
+		 * @private
+		 */
+		private var _tooltip : IAyyoPlayerTooltip;
 		/**
 		 * @private
 		 */
@@ -37,9 +44,10 @@ package ayyo.player.config.impl {
 		private var _ready : ISignal;
 
 		public function initialize(source : Object) : void {
-			var settingsSource : Object;
-			var tooltipSource : Object;
-			var replaceWordSource : Object;
+			var settingsSource : Object = {};
+			var tooltipSource : Object = {};
+			var replaceWordSource : Object = {};
+			var modulesSource : Array = [];
 			settingsSource["screenshot"] = source["screenshot"];
 			settingsSource["type"] = source["player_type"];
 			settingsSource["free"] = source["free"];
@@ -59,22 +67,33 @@ package ayyo.player.config.impl {
 
 			replaceWordSource["forTimeLeft"] = source["N"];
 
+			modulesSource = String(source["modules"]).split(";");
+			var length : uint = modulesSource.length;
+			var i : int = 0;
+			for (i = 0; i < length; i++) {
+				this.modules.push(new ModuleInfo(by.blooddy.crypto.serialization.JSON.decode(modulesSource[i])));
+			}
+
 			this.settings.initialize(settingsSource);
 			this.tooltip.initialize(tooltipSource);
 			this.replaceWord.initialize(replaceWordSource);
-			
+
 			this.ready.dispatch();
 		}
 
-		public function get settings() : IPlayerSettings {
+		public function get settings() : IAyyoPlayerSettings {
 			return this._settings ||= new PlayerSettings();
 		}
 
-		public function get assets() : Vector.<IPlayerAsset> {
-			return this._assets ||= new Vector.<IPlayerAsset>();
+		public function get assets() : Vector.<IAyyoPlayerAsset> {
+			return this._assets ||= new Vector.<IAyyoPlayerAsset>();
 		}
 
-		public function get tooltip() : IPlayerTooltip {
+		public function get modules() : Vector.<ModuleInfo> {
+			return this._modules ||= new Vector.<ModuleInfo>();
+		}
+
+		public function get tooltip() : IAyyoPlayerTooltip {
 			return this._tooltip ||= new PlayerTooltip();
 		}
 

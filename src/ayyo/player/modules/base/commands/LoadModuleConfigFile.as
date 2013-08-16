@@ -1,5 +1,5 @@
 package ayyo.player.modules.base.commands {
-	import ayyo.player.config.api.IPlayerConfig;
+	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.modules.info.impl.ModuleInfo;
 
 	import robotlegs.bender.extensions.commandCenter.api.ICommand;
@@ -23,7 +23,7 @@ package ayyo.player.modules.base.commands {
 		[Inject]
 		public var dispatcher : IEventDispatcher;
 		[Inject]
-		public var playerConfig : IPlayerConfig;
+		public var playerConfig : IAyyoPlayerConfig;
 		/**
 		 * @private
 		 */

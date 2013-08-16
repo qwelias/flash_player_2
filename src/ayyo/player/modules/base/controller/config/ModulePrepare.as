@@ -1,5 +1,5 @@
 package ayyo.player.modules.base.controller.config {
-	import ayyo.player.config.api.IPlayerConfig;
+	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.modules.base.commands.LoadModuleConfigFile;
 	import ayyo.player.modules.base.commands.TellIamReady;
 	import ayyo.player.modules.base.commands.guards.OnlyIfConfigURLNotSetted;
@@ -36,8 +36,8 @@ package ayyo.player.modules.base.controller.config {
 		[PostConstruct]
 		public function init() : void {
 			// injecting base objects
-			var playerConfig : IPlayerConfig = this.context.injector.parent.getInstance(IPlayerConfig) as IPlayerConfig;
-			playerConfig && this.context.injector.map(IPlayerConfig).toValue(playerConfig);
+			var playerConfig : IAyyoPlayerConfig = this.context.injector.parent.getInstance(IAyyoPlayerConfig) as IAyyoPlayerConfig;
+			playerConfig && this.context.injector.map(IAyyoPlayerConfig).toValue(playerConfig);
 
 			this.context.injector.map(IResizable, "module").toValue(this.contextView.view.parent);
 
@@ -61,7 +61,7 @@ package ayyo.player.modules.base.controller.config {
 
 		[PreDestroy]
 		public function destroy() : void {
-			this.context.injector.hasMapping(IPlayerConfig) && this.context.injector.unmap(IPlayerConfig);
+			this.context.injector.hasMapping(IAyyoPlayerConfig) && this.context.injector.unmap(IAyyoPlayerConfig);
 			this.context.injector.hasMapping(IResizable, "module") && this.context.injector.unmap(IResizable, "module");
 			this.context.injector.hasMapping(ILogger) && this.context.injector.unmap(ILogger);
 

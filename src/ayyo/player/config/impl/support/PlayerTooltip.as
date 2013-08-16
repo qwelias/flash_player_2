@@ -1,10 +1,10 @@
 package ayyo.player.config.impl.support {
-	import ayyo.player.config.api.IPlayerTooltip;
+	import ayyo.player.config.api.IAyyoPlayerTooltip;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
-	public class PlayerTooltip implements IPlayerTooltip {
+	public class PlayerTooltip implements IAyyoPlayerTooltip {
 		/**
 		 * @private
 		 */

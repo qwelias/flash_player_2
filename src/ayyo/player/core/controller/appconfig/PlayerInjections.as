@@ -1,5 +1,5 @@
 package ayyo.player.core.controller.appconfig {
-	import ayyo.player.config.api.IPlayerConfig;
+	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.config.impl.FlashVarsConfig;
 	import ayyo.player.modules.info.api.IModuleInfoMap;
 	import ayyo.player.modules.info.impl.ModuleInfoMap;
@@ -15,7 +15,7 @@ package ayyo.player.core.controller.appconfig {
 		/**
 		 * @private
 		 */
-		private var config : IPlayerConfig;
+		private var config : IAyyoPlayerConfig;
 		/**
 		 * @private
 		 */
@@ -26,13 +26,13 @@ package ayyo.player.core.controller.appconfig {
 			this.config = new FlashVarsConfig();
 			this.moduleInfoMap = new ModuleInfoMap(this.context);
 			
-			this.context.injector.map(IPlayerConfig).toValue(this.config);
+			this.context.injector.map(IAyyoPlayerConfig).toValue(this.config);
 			this.context.injector.map(IModuleInfoMap).toValue(this.moduleInfoMap);
 		}
 
 		[PreDestroy]
 		public function destroy() : void {
-			this.context.injector.unmap(IPlayerConfig);
+			this.context.injector.unmap(IAyyoPlayerConfig);
 			this.context.injector.unmap(IModuleInfoMap);
 			
 			this.moduleInfoMap.dispose();
