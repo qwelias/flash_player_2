@@ -23,6 +23,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 package ayyo.player.bundles {
+	import robotlegs.bender.extensions.vigilance.VigilanceExtension;
 	import robotlegs.bender.extensions.contextView.ContextViewExtension;
 	import robotlegs.bender.extensions.contextView.ContextViewListenerConfig;
 	import robotlegs.bender.extensions.contextView.StageSyncExtension;
@@ -59,13 +60,14 @@ package ayyo.player.bundles {
 				ViewManagerExtension,
 				StageObserverExtension,
 				StageSyncExtension,
-				
 				MediatorMapExtension,
 				
+				VigilanceExtension,
+				
 				//	Command map & modularity section
-				new ModularityExtension(false, true),
 				EventDispatcherExtension,
-				EventCommandMapExtension
+				EventCommandMapExtension,
+				new ModularityExtension(false, true)
 			);
 			//	configure <code>ContextView</code>
 			context.configure(ContextViewListenerConfig);

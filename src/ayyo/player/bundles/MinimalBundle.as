@@ -23,6 +23,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 package ayyo.player.bundles {
+	import robotlegs.bender.extensions.vigilance.VigilanceExtension;
 	import robotlegs.bender.extensions.contextView.ContextViewExtension;
 	import robotlegs.bender.extensions.contextView.ContextViewListenerConfig;
 	import robotlegs.bender.extensions.contextView.StageSyncExtension;
@@ -59,6 +60,8 @@ package ayyo.player.bundles {
 				StageSyncExtension,
 				ViewManagerExtension,
 				MediatorMapExtension,
+				
+				VigilanceExtension,
 				
 				//	Command map section
 				new ModularityExtension(false, true),

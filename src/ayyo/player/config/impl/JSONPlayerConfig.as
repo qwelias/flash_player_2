@@ -1,5 +1,5 @@
 package ayyo.player.config.impl {
-	import ayyo.player.config.api.IAyyoPlayerAsset;
+	import ayyo.player.asstes.info.impl.AssetInfo;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.config.api.IAyyoPlayerSettings;
 	import ayyo.player.config.api.IAyyoPlayerTooltip;
@@ -24,7 +24,7 @@ package ayyo.player.config.impl {
 		/**
 		 * @private
 		 */
-		private var _assets : Vector.<IAyyoPlayerAsset>;
+		private var _assets : Vector.<AssetInfo>;
 		/**
 		 * @private
 		 */
@@ -55,8 +55,8 @@ package ayyo.player.config.impl {
 			return this._settings ||= new PlayerSettings();
 		}
 
-		public function get assets() : Vector.<IAyyoPlayerAsset> {
-			return this._assets ||= new Vector.<IAyyoPlayerAsset>();
+		public function get assets() : Vector.<AssetInfo> {
+			return this._assets ||= new Vector.<AssetInfo>();
 		}
 
 		public function get modules() : Vector.<ModuleInfo> {

@@ -10,7 +10,6 @@ package ayyo.player {
 	import robotlegs.bender.framework.impl.Context;
 
 	import flash.display.Sprite;
-	import flash.events.Event;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -27,40 +26,25 @@ package ayyo.player {
 		private var _appHolder : Sprite;
 
 		public function AyyoPlayer() {
-			this.stage ? this.init() : this.waitForStage();
-		}
-
-		public function get context() : IContext {
-			return this._context ||= new Context().
-				install(MinimalDebugBundle).
-				configure(new ContextView(this.appHolder), PlayerInjections, PlayerMediatorsMapping, PlayerCommandsMapping);
+			this.context.	install(MinimalDebugBundle).
+							configure(new ContextView(this.appHolder)).
+							afterInitializing(this.onContextReady);
+			this.addChild(this.appHolder);
 		}
 
 		public function get appHolder() : Sprite {
 			return this._appHolder ||= new Sprite();
 		}
-
-		private function init() : void {
-			this.addChild(this.appHolder);
-			this.context.initialize(this.onContextReady);
+		
+		public function get context() : IContext {
+			return this._context ||= new Context();
 		}
 
-		private function waitForStage() : void {
-			this.addEventListener(Event.ADDED_TO_STAGE, this.onAddedToStage);
-		}
 
 		// Handlers
-		/**
-		 * @eventType flash.event.Event.ADDED_TO_STAGE
-		 * @private app added to stage 
-		 */
-		private function onAddedToStage(event : Event) : void {
-			this.removeEventListener(Event.ADDED_TO_STAGE, this.onAddedToStage);
-			this.init();
-		}
-
 		private function onContextReady() : void {
-			this.context.configure(PlayerLaunch);
+			this.context.	configure(PlayerInjections, PlayerMediatorsMapping, PlayerCommandsMapping).
+							configure(PlayerLaunch);
 		}
 	}
 }

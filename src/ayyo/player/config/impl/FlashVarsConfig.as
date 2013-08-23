@@ -1,5 +1,5 @@
 package ayyo.player.config.impl {
-	import ayyo.player.config.api.IAyyoPlayerAsset;
+	import ayyo.player.asstes.info.impl.AssetInfo;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.config.api.IAyyoPlayerSettings;
 	import ayyo.player.config.api.IAyyoPlayerTooltip;
@@ -25,7 +25,7 @@ package ayyo.player.config.impl {
 		/**
 		 * @private
 		 */
-		private var _assets : Vector.<IAyyoPlayerAsset>;
+		private var _assets : Vector.<AssetInfo>;
 		/**
 		 * @private
 		 */
@@ -47,7 +47,6 @@ package ayyo.player.config.impl {
 			var settingsSource : Object = {};
 			var tooltipSource : Object = {};
 			var replaceWordSource : Object = {};
-			var modulesSource : Array = [];
 			settingsSource["screenshot"] = source["screenshot"];
 			settingsSource["type"] = source["player_type"];
 			settingsSource["free"] = source["free"];
@@ -67,12 +66,8 @@ package ayyo.player.config.impl {
 
 			replaceWordSource["forTimeLeft"] = source["N"];
 
-			modulesSource = String(source["modules"]).split(";");
-			var length : uint = modulesSource.length;
-			var i : int = 0;
-			for (i = 0; i < length; i++) {
-				this.modules.push(new ModuleInfo(by.blooddy.crypto.serialization.JSON.decode(modulesSource[i])));
-			}
+			this.parseVector(this.modules, String(source["modules"]).split(";"), ModuleInfo);
+			this.parseVector(this.assets, String(source["assets"]).split(";"), AssetInfo);
 
 			this.settings.initialize(settingsSource);
 			this.tooltip.initialize(tooltipSource);
@@ -85,8 +80,8 @@ package ayyo.player.config.impl {
 			return this._settings ||= new PlayerSettings();
 		}
 
-		public function get assets() : Vector.<IAyyoPlayerAsset> {
-			return this._assets ||= new Vector.<IAyyoPlayerAsset>();
+		public function get assets() : Vector.<AssetInfo> {
+			return this._assets ||= new Vector.<AssetInfo>();
 		}
 
 		public function get modules() : Vector.<ModuleInfo> {
@@ -103,6 +98,14 @@ package ayyo.player.config.impl {
 
 		public function get ready() : ISignal {
 			return this._ready ||= new Signal();
+		}
+
+		private function parseVector(vector : Object, source : Array, type : Class) : void {
+			var length : uint = source.length;
+			var i : int = 0;
+			for (i = 0; i < length; i++) {
+				vector["push"](new type(by.blooddy.crypto.serialization.JSON.decode(source[i])));
+			}
 		}
 	}
 }

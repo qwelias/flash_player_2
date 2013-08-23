@@ -1,4 +1,5 @@
 package ayyo.player.config.api {
+	import ayyo.player.asstes.info.impl.AssetInfo;
 	import ayyo.player.modules.info.impl.ModuleInfo;
 
 	import org.osflash.signals.ISignal;
@@ -9,7 +10,7 @@ package ayyo.player.config.api {
 	public interface IAyyoPlayerConfig  extends ICanInitialize {
 		function get settings() : IAyyoPlayerSettings;
 
-		function get assets() : Vector.<IAyyoPlayerAsset>;
+		function get assets() : Vector.<AssetInfo>;
 
 		function get modules() : Vector.<ModuleInfo>;
 

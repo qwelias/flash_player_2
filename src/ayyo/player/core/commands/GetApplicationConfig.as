@@ -1,6 +1,7 @@
 package ayyo.player.core.commands {
 	import ayyo.player.config.api.IAyyoPlayerConfig;
-	import ayyo.player.events.ApplicationEvent;
+	import ayyo.player.core.model.DataType;
+	import ayyo.player.events.BinDataEvent;
 
 	import robotlegs.bender.extensions.commandCenter.api.ICommand;
 	import robotlegs.bender.extensions.contextView.ContextView;
@@ -25,7 +26,7 @@ package ayyo.player.core.commands {
 		}
 
 		private function onConfigParsed() : void {
-			this.dispatcher.dispatchEvent(new ApplicationEvent(ApplicationEvent.CONFIG_READY));
+			this.dispatcher.dispatchEvent(new BinDataEvent(BinDataEvent.LOAD, DataType.ASSETS));
 			this.dispose();
 		}
 
