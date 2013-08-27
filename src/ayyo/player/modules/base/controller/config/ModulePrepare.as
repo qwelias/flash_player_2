@@ -5,8 +5,6 @@ package ayyo.player.modules.base.controller.config {
 	import ayyo.player.modules.base.commands.guards.OnlyIfConfigURLNotSetted;
 	import ayyo.player.modules.base.commands.guards.OnlyIfConfigURLSetted;
 
-	import me.scriptor.additional.api.IResizable;
-
 	import robotlegs.bender.extensions.contextView.ContextView;
 	import robotlegs.bender.extensions.enhancedLogging.impl.LoggerProvider;
 	import robotlegs.bender.extensions.eventCommandMap.api.IEventCommandMap;
@@ -39,8 +37,6 @@ package ayyo.player.modules.base.controller.config {
 			var playerConfig : IAyyoPlayerConfig = this.context.injector.parent.getInstance(IAyyoPlayerConfig) as IAyyoPlayerConfig;
 			playerConfig && this.context.injector.map(IAyyoPlayerConfig).toValue(playerConfig);
 
-			this.context.injector.map(IResizable, "module").toValue(this.contextView.view.parent);
-
 			// relaying events
 
 			// reciving events
@@ -62,7 +58,6 @@ package ayyo.player.modules.base.controller.config {
 		[PreDestroy]
 		public function destroy() : void {
 			this.context.injector.hasMapping(IAyyoPlayerConfig) && this.context.injector.unmap(IAyyoPlayerConfig);
-			this.context.injector.hasMapping(IResizable, "module") && this.context.injector.unmap(IResizable, "module");
 			this.context.injector.hasMapping(ILogger) && this.context.injector.unmap(ILogger);
 
 			this.commandMap = null;

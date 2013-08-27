@@ -1,6 +1,7 @@
 package ayyo.player.modules.splash {
-	import ayyo.player.modules.info.impl.ModuleInfo;
+	import ayyo.player.events.ModuleEvent;
 	import ayyo.player.modules.base.impl.AbstractModule;
+	import ayyo.player.modules.splash.controller.config.SplashCommandsMapping;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -10,9 +11,15 @@ package ayyo.player.modules.splash {
 			super(autoCreate);
 		}
 
-		override public function initialize(moduleInfo : ModuleInfo) : void {
-			super.initialize(moduleInfo);
-			trace('moduleInfo.name: ' + (moduleInfo.name));
+		override protected function onContextInited() : void {
+			this.context.	configure(SplashCommandsMapping);
+			this.dispatcher.addEventListener(ModuleEvent.READY, this.onModuleReady);
+			super.onContextInited();
+		}
+		
+		//	Handlers
+		private function onModuleReady(event : ModuleEvent) : void {
+			this.ready.dispatch();
 		}
 	}
 }

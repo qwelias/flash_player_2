@@ -1,4 +1,5 @@
 package ayyo.player.core.controller {
+	import robotlegs.bender.framework.api.ILogger;
 	import flash.geom.Rectangle;
 	import me.scriptor.additional.api.IResizable;
 
@@ -20,12 +21,15 @@ package ayyo.player.core.controller {
 		public var screen : Rectangle;
 		[Inject]
 		public var dispatcher : IEventDispatcher;
+		[Inject]
+		public var logger : ILogger;
 		/**
 		 * @private
 		 */
 		private var _reszied : ISignal;
 
 		public function initialize() : void {
+			this.logger.debug("{0} under resize controll", [this.item]);
 			this.reszied.add(this.onApplicationReszied);
 			this.onApplicationReszied(null);
 		}
@@ -35,6 +39,7 @@ package ayyo.player.core.controller {
 			this.dispatcher = null;
 			this.item = null;
 			this.screen = null;
+			this.logger = null;
 			this._reszied = null;
 		}
 

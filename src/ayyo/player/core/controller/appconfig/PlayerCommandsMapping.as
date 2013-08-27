@@ -1,6 +1,8 @@
 package ayyo.player.core.controller.appconfig {
+	import ayyo.player.core.commands.AppReady;
 	import ayyo.player.core.commands.GetApplicationConfig;
 	import ayyo.player.core.commands.LoadBinData;
+	import ayyo.player.core.commands.LoadModules;
 	import ayyo.player.core.commands.NullCommand;
 	import ayyo.player.core.commands.RegisterAsset;
 	import ayyo.player.core.commands.RegisterModule;
@@ -27,6 +29,8 @@ package ayyo.player.core.controller.appconfig {
 		[PostConstruct]
 		public function initialize() : void {
 			this.commandMap.map(ApplicationEvent.LAUNCH).toCommand(GetApplicationConfig).withHooks(InitStageOptions).once();
+			this.commandMap.map(BinDataEvent.LOADED, BinDataEvent).toCommand(LoadModules).withGuards(OnlyIfTypeIsAssets).once();
+			this.commandMap.map(BinDataEvent.LOADED, BinDataEvent).toCommand(AppReady).withGuards(OnlyIfTypeIsModule).once();
 			this.commandMap.map(BinDataEvent.LOAD, BinDataEvent).toCommand(LoadBinData).withHooks(CreatePreloader);
 			this.commandMap.map(BinDataEvent.COMPLETE, BinDataEvent).toCommand(RegisterAsset).withGuards(OnlyIfTypeIsAssets);
 			this.commandMap.map(BinDataEvent.COMPLETE, BinDataEvent).toCommand(RegisterModule).withGuards(OnlyIfTypeIsModule);
@@ -39,6 +43,8 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.unmap(BinDataEvent.LOAD, BinDataEvent).fromCommand(LoadBinData);
 			this.commandMap.unmap(BinDataEvent.COMPLETE, BinDataEvent).fromCommand(RegisterAsset);
 			this.commandMap.unmap(BinDataEvent.COMPLETE, BinDataEvent).fromCommand(RegisterModule);
+			this.commandMap.unmap(ApplicationEvent.READY).fromCommand(NullCommand);
+			this.commandMap.unmap(ResizeEvent.RESIZE, ResizeEvent).fromCommand(NullCommand);
 			this.commandMap = null;
 		}
 	}
