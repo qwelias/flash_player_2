@@ -1,13 +1,16 @@
 package ayyo.player.core.controller.appconfig {
 	import ayyo.player.core.commands.GetApplicationConfig;
 	import ayyo.player.core.commands.LoadBinData;
+	import ayyo.player.core.commands.NullCommand;
 	import ayyo.player.core.commands.RegisterAsset;
 	import ayyo.player.core.commands.RegisterModule;
 	import ayyo.player.core.commands.guards.OnlyIfTypeIsAssets;
 	import ayyo.player.core.commands.guards.OnlyIfTypeIsModule;
 	import ayyo.player.core.commands.hooks.InitStageOptions;
+	import ayyo.player.core.commands.hooks.SaveScreen;
 	import ayyo.player.events.ApplicationEvent;
 	import ayyo.player.events.BinDataEvent;
+	import ayyo.player.events.ResizeEvent;
 
 	import robotlegs.bender.extensions.eventCommandMap.api.IEventCommandMap;
 
@@ -24,6 +27,7 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.map(BinDataEvent.LOAD, BinDataEvent).toCommand(LoadBinData);
 			this.commandMap.map(BinDataEvent.COMPLETE, BinDataEvent).toCommand(RegisterAsset).withGuards(OnlyIfTypeIsAssets);
 			this.commandMap.map(BinDataEvent.COMPLETE, BinDataEvent).toCommand(RegisterModule).withGuards(OnlyIfTypeIsModule);
+			this.commandMap.map(ResizeEvent.RESIZE, ResizeEvent).toCommand(NullCommand).withHooks(SaveScreen);
 		}
 
 		[PreDestroy]

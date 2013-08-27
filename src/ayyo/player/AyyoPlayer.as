@@ -1,4 +1,5 @@
 package ayyo.player {
+	import ayyo.player.events.ResizeEvent;
 	import ayyo.player.bundles.MinimalDebugBundle;
 	import ayyo.player.core.controller.appconfig.PlayerCommandsMapping;
 	import ayyo.player.core.controller.appconfig.PlayerInjections;
@@ -9,7 +10,14 @@ package ayyo.player {
 	import robotlegs.bender.framework.api.IContext;
 	import robotlegs.bender.framework.impl.Context;
 
+	import org.osflash.signals.ISignal;
+	import org.osflash.signals.natives.NativeSignal;
+
 	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.IEventDispatcher;
+	import flash.utils.clearTimeout;
+	import flash.utils.setTimeout;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -24,6 +32,18 @@ package ayyo.player {
 		 * @private
 		 */
 		private var _appHolder : Sprite;
+		/**
+		 * @private
+		 */
+		private var _resize : NativeSignal;
+		/**
+		 * @private
+		 */
+		private var _dispatcher : IEventDispatcher;
+		/**
+		 * @private
+		 */
+		private var provideEventTimeoutID : uint;
 
 		public function AyyoPlayer() {
 			this.context.	install(MinimalDebugBundle).
@@ -39,12 +59,30 @@ package ayyo.player {
 		public function get context() : IContext {
 			return this._context ||= new Context();
 		}
+		
+		public function get dispatcher() : IEventDispatcher {
+			return this._dispatcher ||= this.context.injector.getInstance(IEventDispatcher) as IEventDispatcher;
+		}
+		
+		public function get resize() : ISignal {
+			return this._resize ||= new NativeSignal(this.stage, Event.RESIZE);
+		}
 
 
 		// Handlers
 		private function onContextReady() : void {
 			this.context.	configure(PlayerInjections, PlayerMediatorsMapping, PlayerCommandsMapping).
 							configure(PlayerLaunch);
+			
+			this.resize.add(this.onStageReszied);
+		}
+		
+		/**
+		 * @eventType flash.events.Event.RESIZE
+		 */
+		private function onStageReszied(event : Event) : void {
+			clearTimeout(this.provideEventTimeoutID);
+			this.provideEventTimeoutID = setTimeout(this.dispatcher.dispatchEvent, 300, new ResizeEvent(ResizeEvent.RESIZE, this.stage.stageWidth, this.stage.stageHeight));
 		}
 	}
 }
