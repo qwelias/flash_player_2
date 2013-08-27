@@ -1,8 +1,9 @@
 package ayyo.player.modules.info.impl {
+	import ayyo.player.core.model.api.IInfoObject;
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
-	public class ModuleInfo {
+	public class ModuleInfo implements IInfoObject {
 		/**
 		 * @private
 		 */

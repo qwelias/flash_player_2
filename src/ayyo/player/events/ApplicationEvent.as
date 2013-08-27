@@ -6,6 +6,7 @@ package ayyo.player.events {
 	 */
 	public class ApplicationEvent extends Event {
 		public static const LAUNCH : String = "lauchApplication";
+		public static const READY : String = "applicationReady";
 
 		public function ApplicationEvent(type : String) {
 			super(type, false, false);

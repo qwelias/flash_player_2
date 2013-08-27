@@ -1,12 +1,15 @@
 package ayyo.player.preloader.impl {
+	import com.greensock.events.TweenEvent;
 	import ayyo.player.preloader.api.IAyyoPreloader;
 
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Cubic;
 	import com.greensock.easing.Linear;
 
+	import org.osflash.signals.ISignal;
+	import org.osflash.signals.Signal;
+
 	import flash.display.DisplayObject;
-	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.geom.Rectangle;
 
@@ -36,6 +39,10 @@ package ayyo.player.preloader.impl {
 		 * @private
 		 */
 		private var _film : FilmShape;
+		/**
+		 * @private
+		 */
+		private var _animationComplete : ISignal;
 
 		public function AyyoPreloader(autoCreate : Boolean = true) {
 			autoCreate && this.create();
@@ -51,7 +58,18 @@ package ayyo.player.preloader.impl {
 
 		public function dispose() : void {
 			if (this.isCreated) {
+				this.stop();
+				this.film.dispose();
+				this.animation.kill();
+				this.showHide.kill();
+				this.animationComplete.removeAll();
+				
+				this._film = null;
+				this._animationComplete = null;
+				this._animation = null;
+				this._showHide = null;
 				this.isCreated = false;
+				this.parent && this.parent.removeChild(this);
 			}
 		}
 
@@ -89,17 +107,30 @@ package ayyo.player.preloader.impl {
 			return this;
 		}
 		
-		public function get film() : Shape {
+		public function get film() : FilmShape {
 			return this._film ||= new FilmShape();
 		}
 
 		public function get showHide() : TweenLite {
-			this._showHide ||= TweenLite.fromTo(this, .7, {alpha:0, ease:Cubic.easeOut}, {alpha:1, ease:Cubic.easeOut});
+			this._showHide ||= TweenLite.fromTo(this, .7,
+				{alpha:0},
+				{
+					alpha:1,
+					ease:Cubic.easeOut,
+					onReverseComplete:this.animationComplete.dispatch,
+					onReverseCompleteParams:[TweenEvent.REVERSE_COMPLETE, this],
+					onComplete:this.animationComplete.dispatch,
+					onCompleteParams:[TweenEvent.COMPLETE, this]
+				});
 			return this._showHide;
 		}
 		
 		public function get animation() : TweenLite {
 			return this._animation ||= TweenLite.to(this.film, 1, {rotation:360, ease:Linear.easeNone, onComplete:this.resetAnimation});
+		}
+		
+		public function get animationComplete() : ISignal {
+			return this._animationComplete ||= new Signal(String, IAyyoPreloader);
 		}
 
 		private function update(value : Number) : void {

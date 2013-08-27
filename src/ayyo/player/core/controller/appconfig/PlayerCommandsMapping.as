@@ -4,8 +4,11 @@ package ayyo.player.core.controller.appconfig {
 	import ayyo.player.core.commands.NullCommand;
 	import ayyo.player.core.commands.RegisterAsset;
 	import ayyo.player.core.commands.RegisterModule;
+	import ayyo.player.core.commands.guards.OnlyIfPreloaderExists;
 	import ayyo.player.core.commands.guards.OnlyIfTypeIsAssets;
 	import ayyo.player.core.commands.guards.OnlyIfTypeIsModule;
+	import ayyo.player.core.commands.hooks.CreatePreloader;
+	import ayyo.player.core.commands.hooks.DisposePreloader;
 	import ayyo.player.core.commands.hooks.InitStageOptions;
 	import ayyo.player.core.commands.hooks.SaveScreen;
 	import ayyo.player.events.ApplicationEvent;
@@ -24,9 +27,10 @@ package ayyo.player.core.controller.appconfig {
 		[PostConstruct]
 		public function initialize() : void {
 			this.commandMap.map(ApplicationEvent.LAUNCH).toCommand(GetApplicationConfig).withHooks(InitStageOptions).once();
-			this.commandMap.map(BinDataEvent.LOAD, BinDataEvent).toCommand(LoadBinData);
+			this.commandMap.map(BinDataEvent.LOAD, BinDataEvent).toCommand(LoadBinData).withHooks(CreatePreloader);
 			this.commandMap.map(BinDataEvent.COMPLETE, BinDataEvent).toCommand(RegisterAsset).withGuards(OnlyIfTypeIsAssets);
 			this.commandMap.map(BinDataEvent.COMPLETE, BinDataEvent).toCommand(RegisterModule).withGuards(OnlyIfTypeIsModule);
+			this.commandMap.map(ApplicationEvent.READY).toCommand(NullCommand).withHooks(DisposePreloader).withGuards(OnlyIfPreloaderExists);
 			this.commandMap.map(ResizeEvent.RESIZE, ResizeEvent).toCommand(NullCommand).withHooks(SaveScreen);
 		}
 

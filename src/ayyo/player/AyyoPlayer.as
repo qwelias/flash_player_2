@@ -1,10 +1,10 @@
 package ayyo.player {
-	import ayyo.player.events.ResizeEvent;
 	import ayyo.player.bundles.MinimalDebugBundle;
 	import ayyo.player.core.controller.appconfig.PlayerCommandsMapping;
 	import ayyo.player.core.controller.appconfig.PlayerInjections;
 	import ayyo.player.core.controller.appconfig.PlayerLaunch;
 	import ayyo.player.core.controller.appconfig.PlayerMediatorsMapping;
+	import ayyo.player.events.ResizeEvent;
 
 	import robotlegs.bender.extensions.contextView.ContextView;
 	import robotlegs.bender.framework.api.IContext;
@@ -16,8 +16,6 @@ package ayyo.player {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
-	import flash.utils.clearTimeout;
-	import flash.utils.setTimeout;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -40,10 +38,6 @@ package ayyo.player {
 		 * @private
 		 */
 		private var _dispatcher : IEventDispatcher;
-		/**
-		 * @private
-		 */
-		private var provideEventTimeoutID : uint;
 
 		public function AyyoPlayer() {
 			this.context.	install(MinimalDebugBundle).
@@ -75,14 +69,14 @@ package ayyo.player {
 							configure(PlayerLaunch);
 			
 			this.resize.add(this.onStageReszied);
+			this.onStageReszied(null);
 		}
 		
 		/**
 		 * @eventType flash.events.Event.RESIZE
 		 */
 		private function onStageReszied(event : Event) : void {
-			clearTimeout(this.provideEventTimeoutID);
-			this.provideEventTimeoutID = setTimeout(this.dispatcher.dispatchEvent, 300, new ResizeEvent(ResizeEvent.RESIZE, this.stage.stageWidth, this.stage.stageHeight));
+			this.dispatcher.dispatchEvent(new ResizeEvent(ResizeEvent.RESIZE, this.stage.stageWidth, this.stage.stageHeight));
 		}
 	}
 }

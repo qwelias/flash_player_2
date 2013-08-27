@@ -1,8 +1,9 @@
 package ayyo.player.asstes.info.impl {
+	import ayyo.player.core.model.api.IInfoObject;
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
-	public class AssetInfo {
+	public class AssetInfo implements IInfoObject {
 		/**
 		 * @private
 		 */

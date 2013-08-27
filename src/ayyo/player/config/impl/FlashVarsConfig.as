@@ -7,6 +7,7 @@ package ayyo.player.config.impl {
 	import ayyo.player.config.impl.support.PlayerSettings;
 	import ayyo.player.config.impl.support.PlayerTooltip;
 	import ayyo.player.config.impl.support.ReplaceWordList;
+	import ayyo.player.core.model.api.IInfoObject;
 	import ayyo.player.modules.info.impl.ModuleInfo;
 
 	import by.blooddy.crypto.serialization.JSON;
@@ -25,11 +26,11 @@ package ayyo.player.config.impl {
 		/**
 		 * @private
 		 */
-		private var _assets : Vector.<AssetInfo>;
+		private var _assets : Vector.<IInfoObject>;
 		/**
 		 * @private
 		 */
-		private var _modules : Vector.<ModuleInfo>;
+		private var _modules : Vector.<IInfoObject>;
 		/**
 		 * @private
 		 */
@@ -66,8 +67,8 @@ package ayyo.player.config.impl {
 
 			replaceWordSource["forTimeLeft"] = source["N"];
 
-			this.parseVector(this.modules, String(source["modules"]).split(";"), ModuleInfo);
-			this.parseVector(this.assets, String(source["assets"]).split(";"), AssetInfo);
+			source["modules"] && this.parseVector(this.modules, String(source["modules"]).split(";"), ModuleInfo);
+			source["assets"] && this.parseVector(this.assets, String(source["assets"]).split(";"), AssetInfo);
 
 			this.settings.initialize(settingsSource);
 			this.tooltip.initialize(tooltipSource);
@@ -80,12 +81,12 @@ package ayyo.player.config.impl {
 			return this._settings ||= new PlayerSettings();
 		}
 
-		public function get assets() : Vector.<AssetInfo> {
-			return this._assets ||= new Vector.<AssetInfo>();
+		public function get assets() : Vector.<IInfoObject> {
+			return this._assets ||= new Vector.<IInfoObject>();
 		}
 
-		public function get modules() : Vector.<ModuleInfo> {
-			return this._modules ||= new Vector.<ModuleInfo>();
+		public function get modules() : Vector.<IInfoObject> {
+			return this._modules ||= new Vector.<IInfoObject>();
 		}
 
 		public function get tooltip() : IAyyoPlayerTooltip {
@@ -100,11 +101,11 @@ package ayyo.player.config.impl {
 			return this._ready ||= new Signal();
 		}
 
-		private function parseVector(vector : Object, source : Array, type : Class) : void {
+		private function parseVector(vector : Vector.<IInfoObject>, source : Array, type : Class) : void {
 			var length : uint = source.length;
 			var i : int = 0;
 			for (i = 0; i < length; i++) {
-				vector["push"](new type(by.blooddy.crypto.serialization.JSON.decode(source[i])));
+				vector.push(new type(by.blooddy.crypto.serialization.JSON.decode(source[i])));
 			}
 		}
 	}

@@ -27,6 +27,7 @@ package ayyo.player.core.controller {
 
 		public function initialize() : void {
 			this.reszied.add(this.onApplicationReszied);
+			this.onApplicationReszied(null);
 		}
 
 		public function destroy() : void {

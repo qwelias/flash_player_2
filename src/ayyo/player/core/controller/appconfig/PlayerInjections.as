@@ -1,11 +1,14 @@
 package ayyo.player.core.controller.appconfig {
-	import flash.geom.Rectangle;
+	import me.scriptor.mvc.model.impl.ApplicationModel;
+	import me.scriptor.mvc.model.api.IApplicationModel;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.config.impl.FlashVarsConfig;
 	import ayyo.player.modules.info.api.IModuleInfoMap;
 	import ayyo.player.modules.info.impl.ModuleInfoMap;
 
 	import robotlegs.bender.framework.api.IContext;
+
+	import flash.geom.Rectangle;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -35,6 +38,7 @@ package ayyo.player.core.controller.appconfig {
 			this.context.injector.map(IAyyoPlayerConfig).toValue(this.config);
 			this.context.injector.map(IModuleInfoMap).toValue(this.moduleInfoMap);
 			this.context.injector.map(Rectangle, "screen").toValue(this.screen);
+			this.context.injector.map(IApplicationModel).toSingleton(ApplicationModel);
 		}
 
 		[PreDestroy]
@@ -42,6 +46,7 @@ package ayyo.player.core.controller.appconfig {
 			this.context.injector.unmap(IAyyoPlayerConfig);
 			this.context.injector.unmap(IModuleInfoMap);
 			this.context.injector.unmap(Rectangle, "screen");
+			this.context.injector.unmap(IApplicationModel);
 			
 			this.moduleInfoMap.dispose();
 			

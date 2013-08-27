@@ -33,6 +33,7 @@ package ayyo.player.preloader.impl {
 			if (this.isCreated) {
 				this.graphics.clear();
 				this.isCreated = false;
+				this.parent && this.parent.removeChild(this);
 			}
 		}
 	}

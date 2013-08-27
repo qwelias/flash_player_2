@@ -1,4 +1,5 @@
 package ayyo.player.preloader.api {
+	import org.osflash.signals.ISignal;
 	import me.scriptor.additional.api.IDisposable;
 	import me.scriptor.additional.api.IHaveView;
 	import me.scriptor.additional.api.IResizable;
@@ -10,6 +11,9 @@ package ayyo.player.preloader.api {
 		function show(immediately : Boolean = false) : void;
 
 		function hide(immediately : Boolean = false) : void;
+
+		function get animationComplete() : ISignal;
+
 
 		function set progress(value : Number) : void;
 

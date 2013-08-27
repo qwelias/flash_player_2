@@ -1,4 +1,6 @@
 package ayyo.player.core.commands.hooks {
+	import flash.system.Capabilities;
+	import flash.geom.Rectangle;
 	import robotlegs.bender.extensions.contextView.ContextView;
 	import robotlegs.bender.framework.api.IHook;
 
@@ -18,7 +20,9 @@ package ayyo.player.core.commands.hooks {
 
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.stageFocusRect = false;
 			stage.frameRate = 60;
+			stage.fullScreenSourceRect = new Rectangle(0, 0, Capabilities.screenResolutionX, Capabilities.screenResolutionY);
 			stage.showDefaultContextMenu = false;
 
 			this.dispose();
