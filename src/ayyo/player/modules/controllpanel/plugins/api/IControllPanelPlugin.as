@@ -6,6 +6,6 @@ package ayyo.player.modules.controllpanel.plugins.api {
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
-	public interface IControlPanelPlugin extends IHaveView, IDisposable, IHaveActionSignal {
+	public interface IControllPanelPlugin extends IHaveView, IDisposable, IHaveActionSignal {
 	}
 }

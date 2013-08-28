@@ -2,6 +2,8 @@ package ayyo.player.modules.controllpanel {
 	import ayyo.player.events.ModuleEvent;
 	import ayyo.player.modules.base.impl.AbstractModule;
 	import ayyo.player.modules.controllpanel.controller.config.ControllBarCommandsMapping;
+	import ayyo.player.modules.controllpanel.controller.config.ControllBarInjections;
+	import ayyo.player.modules.controllpanel.controller.config.ControllBarMediatorsMapping;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -12,7 +14,9 @@ package ayyo.player.modules.controllpanel {
 		}
 
 		override protected function onContextInited() : void {
-			this.context.	configure(ControllBarCommandsMapping);
+			this.context.	configure(ControllBarCommandsMapping).
+							configure(ControllBarInjections).
+							configure(ControllBarMediatorsMapping);
 			this.dispatcher.addEventListener(ModuleEvent.READY, this.onModuleReady);
 			super.onContextInited();
 		}

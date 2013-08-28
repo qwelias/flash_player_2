@@ -1,7 +1,7 @@
 package ayyo.player.modules.controllpanel.plugins.buttons {
 	import ayyo.player.core.model.PlayerConstants;
 	import ayyo.player.modules.controllpanel.model.ButtonState;
-	import ayyo.player.modules.controllpanel.plugins.api.IControlPanelPlugin;
+	import ayyo.player.modules.controllpanel.plugins.api.IControllPanelPlugin;
 
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
@@ -18,7 +18,7 @@ package ayyo.player.modules.controllpanel.plugins.buttons {
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
-	public class ControllButton extends Sprite implements IControlPanelPlugin {
+	public class ControllButton extends Sprite implements IControllPanelPlugin {
 		/**
 		 * @private
 		 */
