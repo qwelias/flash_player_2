@@ -72,7 +72,7 @@
 	</target>
 
 	<!-- Compile Release SWF -->
-	<target name="module-splash" depends="init">
+	<target name="module-splash">
 		<echo>[compile] Compiling splash module</echo>
 		<echo>[compile] Using Flex SDK at: ${FLEX_HOME}</echo>
 		<java jar="${FLEX_HOME}/lib/mxmlc.jar" dir="${FLEX_HOME}/frameworks" fork="true" failonerror="true">
@@ -89,6 +89,24 @@
 		</java>
 		<echo>[compile] ${bin.loc}/modules/splash/SplashScreen.swf created successfully</echo>
 	</target>
+	
+	<target name="module-control">
+			<echo>[compile] Compiling control module</echo>
+			<echo>[compile] Using Flex SDK at: ${FLEX_HOME}</echo>
+			<java jar="${FLEX_HOME}/lib/mxmlc.jar" dir="${FLEX_HOME}/frameworks" fork="true" failonerror="true">
+				<arg value="${main.src.loc}/${main.package}/modules/controllpanel/ControllPanel.as" />
+				<arg value="-source-path=${main.src.loc}" />
+				<arg value="-output=${bin.loc}/modules/controls/ControlPanel.swf" />
+				<arg value="-default-size=640,480" />
+				<arg value="-default-background-color=0x000000" />
+				<arg value="-library-path+=${lib.loc}" />
+				<arg value="-incremental=true" />
+				<arg value="-verbose-stacktraces=true" />
+				<arg value="-headless-server=false" />
+				<arg value="-debug=${debug}" />
+			</java>
+			<echo>[compile] ${bin.loc}/modules/controls/ControlPanel.swf created successfully</echo>
+		</target>
 
 	<!-- Run Unit Tests -->
 	<target name="test" depends="init">

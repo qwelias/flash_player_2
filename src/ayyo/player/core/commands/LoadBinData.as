@@ -1,4 +1,5 @@
 package ayyo.player.core.commands {
+	import com.greensock.loading.data.LoaderMaxVars;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.core.model.DataType;
 	import ayyo.player.core.model.api.IInfoObject;
@@ -33,7 +34,7 @@ package ayyo.player.core.commands {
 			var info : IInfoObject;
 			var vector : Vector.<IInfoObject> = event.dataType == DataType.ASSETS ? this.playerConfig.assets : this.playerConfig.modules;
 			while (vector.length) {
-				info = vector.shift();
+				info = this.event.dataType == DataType.ASSETS ? vector.shift() : vector.pop();
 				info && this.binLoader.append(new BinaryDataLoader(info.url, {info:info}));
 			}
 			this.binLoader.numChildren > 0 && this.binLoader.load();
@@ -41,7 +42,7 @@ package ayyo.player.core.commands {
 
 		private function createLoader() : void {
 			if (!this.binLoader) {
-				this.binLoader = new LoaderMax();
+				this.binLoader = new LoaderMax(new LoaderMaxVars().maxConnections(1));
 				this.binLoader.addEventListener(LoaderEvent.CHILD_COMPLETE, this.onChildLoaded);
 				this.binLoader.addEventListener(LoaderEvent.COMPLETE, this.onChildrenLoaded);
 			}

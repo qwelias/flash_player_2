@@ -1,4 +1,5 @@
 package ayyo.player.preloader.impl {
+	import flash.geom.Point;
 	import me.scriptor.additional.api.IDisposable;
 
 	import flash.display.Shape;
@@ -7,6 +8,7 @@ package ayyo.player.preloader.impl {
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
 	public class FilmShape extends Shape implements IDisposable {
+		private static const CIRCLE_COUNT : Number = 5;
 		/**
 		 * @private
 		 */
@@ -20,10 +22,13 @@ package ayyo.player.preloader.impl {
 			if (!this.isCreated) {
 				this.graphics.beginFill(AyyoPreloader.COLOR);
 				this.graphics.drawCircle(0, 0, AyyoPreloader.BOUNDS);
-				this.graphics.drawCircle(AyyoPreloader.BOUNDS >> 1, 0, AyyoPreloader.BOUNDS / 3.5);
-				this.graphics.drawCircle(-AyyoPreloader.BOUNDS >> 1, 0, AyyoPreloader.BOUNDS / 3.5);
-				this.graphics.drawCircle(0, AyyoPreloader.BOUNDS >> 1, AyyoPreloader.BOUNDS / 3.5);
-				this.graphics.drawCircle(0, -AyyoPreloader.BOUNDS >> 1, AyyoPreloader.BOUNDS / 3.5);
+				var point : Point = new Point();
+				var step : Number = Math.PI * 2 / FilmShape.CIRCLE_COUNT;
+				for (var i : int = 0; i < FilmShape.CIRCLE_COUNT; i++) {
+					point.x = Math.cos(i * step) * (AyyoPreloader.BOUNDS >> 1);
+					point.y = Math.sin(i * step) * (AyyoPreloader.BOUNDS >> 1);
+					this.graphics.drawCircle(point.x, point.y, AyyoPreloader.BOUNDS >> 2);
+				}
 				this.graphics.drawCircle(0, 0, AyyoPreloader.BOUNDS >> 3);
 				this.isCreated = true;
 			}
