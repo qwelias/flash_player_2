@@ -17,7 +17,7 @@ package ayyo.player.modules.controllpanel.controller.config {
 		[PostConstruct]
 		public function initialize() : void {
 			this.commandMap.map(DataEvent.DATA, DataEvent).toCommand(ParseControllBarConfig).once();
-			this.commandMap.map(ConfigEvent.PARSED).toCommand(AddControllPanelUIElements).once();
+			this.commandMap.map(ConfigEvent.PARSED, ConfigEvent).toCommand(AddControllPanelUIElements).once();
 		}
 
 		[PreDestroy]

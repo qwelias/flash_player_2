@@ -1,10 +1,10 @@
 package ayyo.player.modules.controllpanel.commands {
-	import robotlegs.bender.framework.api.ILogger;
 	import ayyo.player.events.ConfigEvent;
 
 	import by.blooddy.crypto.serialization.JSON;
 
 	import robotlegs.bender.extensions.commandCenter.api.ICommand;
+	import robotlegs.bender.framework.api.ILogger;
 
 	import flash.events.DataEvent;
 	import flash.events.IEventDispatcher;
@@ -24,7 +24,7 @@ package ayyo.player.modules.controllpanel.commands {
 			var config : Object = by.blooddy.crypto.serialization.JSON.decode(this.event.data);
 			this.dispatcher.dispatchEvent(new ConfigEvent(ConfigEvent.PARSED, config));
 			this.logger.debug("Config file parsed");
-			
+
 			this.dispose();
 		}
 
