@@ -1,5 +1,5 @@
 package ayyo.player.modules.controllpanel.controller.config {
-	import ayyo.player.events.ModuleEvent;
+	import ayyo.player.events.ConfigEvent;
 	import ayyo.player.modules.controllpanel.commands.AddControllPanelUIElements;
 	import ayyo.player.modules.controllpanel.commands.ParseControllBarConfig;
 
@@ -17,7 +17,7 @@ package ayyo.player.modules.controllpanel.controller.config {
 		[PostConstruct]
 		public function initialize() : void {
 			this.commandMap.map(DataEvent.DATA, DataEvent).toCommand(ParseControllBarConfig).once();
-			this.commandMap.map(ModuleEvent.READY).toCommand(AddControllPanelUIElements).once();
+			this.commandMap.map(ConfigEvent.PARSED).toCommand(AddControllPanelUIElements).once();
 		}
 
 		[PreDestroy]
