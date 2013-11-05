@@ -1,4 +1,5 @@
 package ayyo.player.core.controller.appconfig {
+	import flash.events.Event;
 	import ayyo.player.core.commands.AppReady;
 	import ayyo.player.core.commands.GetApplicationConfig;
 	import ayyo.player.core.commands.LoadBinData;
@@ -18,6 +19,7 @@ package ayyo.player.core.controller.appconfig {
 	import ayyo.player.events.ResizeEvent;
 
 	import robotlegs.bender.extensions.eventCommandMap.api.IEventCommandMap;
+	import robotlegs.bender.extensions.modularity.api.IModuleConnector;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -25,9 +27,13 @@ package ayyo.player.core.controller.appconfig {
 	public class PlayerCommandsMapping {
 		[Inject]
 		public var commandMap : IEventCommandMap;
+		[Inject]
+		public var connector : IModuleConnector;
 
 		[PostConstruct]
 		public function initialize() : void {
+			this.connector.onDefaultChannel().relayEvent(Event.RESIZE);
+			
 			this.commandMap.map(ApplicationEvent.LAUNCH).toCommand(GetApplicationConfig).withHooks(InitStageOptions).once();
 			this.commandMap.map(BinDataEvent.LOADED, BinDataEvent).toCommand(LoadModules).withGuards(OnlyIfTypeIsAssets).once();
 			this.commandMap.map(BinDataEvent.LOADED, BinDataEvent).toCommand(AppReady).withGuards(OnlyIfTypeIsModule).once();
@@ -46,6 +52,8 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.unmap(ApplicationEvent.READY).fromCommand(NullCommand);
 			this.commandMap.unmap(ResizeEvent.RESIZE, ResizeEvent).fromCommand(NullCommand);
 			this.commandMap = null;
+			
+			this.connector = null;
 		}
 	}
 }

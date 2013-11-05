@@ -6,7 +6,6 @@ package ayyo.player.modules.splash.view.impl {
 	import flash.display.Bitmap;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
-	import flash.geom.Rectangle;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -30,7 +29,7 @@ package ayyo.player.modules.splash.view.impl {
 			if (!this.isCreated) {
 				this.image.smoothing = true;
 				this.addChild(this.image);
-				this.mouseChildren = this.mouseEnabled = false;
+				this.mouseChildren = false;//this.mouseEnabled = false;
 				this.cacheAsBitmap = true;
 				this.isCreated = true;
 			}
@@ -42,13 +41,6 @@ package ayyo.player.modules.splash.view.impl {
 				this._image = null;
 				this.isCreated = false;
 				this.parent && this.parent.removeChild(this.image);
-			}
-		}
-
-		public function resize(screen : Rectangle = null) : void {
-			if(screen) {
-				this.x = screen.width - this.image.width >> 1;
-				this.y = screen.height - this.image.height >> 1;
 			}
 		}
 

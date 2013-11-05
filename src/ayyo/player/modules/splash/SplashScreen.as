@@ -2,6 +2,8 @@ package ayyo.player.modules.splash {
 	import ayyo.player.events.ModuleEvent;
 	import ayyo.player.modules.base.impl.AbstractModule;
 	import ayyo.player.modules.splash.controller.config.SplashCommandsMapping;
+	import ayyo.player.modules.splash.controller.config.SplashInjections;
+	import ayyo.player.modules.splash.controller.config.SplashMediatorsMapping;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -12,7 +14,9 @@ package ayyo.player.modules.splash {
 		}
 
 		override protected function onContextInited() : void {
-			this.context.	configure(SplashCommandsMapping);
+			this.context.	configure(SplashCommandsMapping).
+							configure(SplashMediatorsMapping).
+							configure(SplashInjections);
 			this.dispatcher.addEventListener(ModuleEvent.READY, this.onModuleReady);
 			super.onContextInited();
 		}
