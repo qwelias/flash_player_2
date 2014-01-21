@@ -1,7 +1,7 @@
 package ayyo.player.core.controller.appconfig {
-	import flash.events.Event;
 	import ayyo.player.core.commands.AppReady;
 	import ayyo.player.core.commands.GetApplicationConfig;
+	import ayyo.player.core.commands.LaunchTestVideo;
 	import ayyo.player.core.commands.LoadBinData;
 	import ayyo.player.core.commands.LoadModules;
 	import ayyo.player.core.commands.NullCommand;
@@ -20,6 +20,8 @@ package ayyo.player.core.controller.appconfig {
 
 	import robotlegs.bender.extensions.eventCommandMap.api.IEventCommandMap;
 	import robotlegs.bender.extensions.modularity.api.IModuleConnector;
+
+	import flash.events.Event;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -40,7 +42,7 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.map(BinDataEvent.LOAD, BinDataEvent).toCommand(LoadBinData).withHooks(CreatePreloader);
 			this.commandMap.map(BinDataEvent.COMPLETE, BinDataEvent).toCommand(RegisterAsset).withGuards(OnlyIfTypeIsAssets);
 			this.commandMap.map(BinDataEvent.COMPLETE, BinDataEvent).toCommand(RegisterModule).withGuards(OnlyIfTypeIsModule);
-			this.commandMap.map(ApplicationEvent.READY).toCommand(NullCommand).withHooks(DisposePreloader).withGuards(OnlyIfPreloaderExists);
+			this.commandMap.map(ApplicationEvent.READY).toCommand(LaunchTestVideo).withHooks(DisposePreloader).withGuards(OnlyIfPreloaderExists).once();
 			this.commandMap.map(ResizeEvent.RESIZE, ResizeEvent).toCommand(NullCommand).withHooks(SaveScreen);
 		}
 
@@ -49,7 +51,6 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.unmap(BinDataEvent.LOAD, BinDataEvent).fromCommand(LoadBinData);
 			this.commandMap.unmap(BinDataEvent.COMPLETE, BinDataEvent).fromCommand(RegisterAsset);
 			this.commandMap.unmap(BinDataEvent.COMPLETE, BinDataEvent).fromCommand(RegisterModule);
-			this.commandMap.unmap(ApplicationEvent.READY).fromCommand(NullCommand);
 			this.commandMap.unmap(ResizeEvent.RESIZE, ResizeEvent).fromCommand(NullCommand);
 			this.commandMap = null;
 			

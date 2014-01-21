@@ -621,6 +621,8 @@ package osmf.patch {
 					error = new MediaError(MediaErrorCodes.NETCONNECTION_TIMEOUT, event.info["description"]);
 					break;
 			}
+					trace('event.info["description"]: ' + (event.info["description"]));
+			trace('event.info["code"]: ' + (event.info["code"]));
 
 			CONFIG::FLASH_10_1 {
 				if (event.info["code"] == NetStreamCodes.NETSTREAM_DRM_UPDATE) {
@@ -634,6 +636,7 @@ package osmf.patch {
 		}
 
 		private function onDRMErrorEvent(event : DRMErrorEvent) : void {
+			trace("LightweightVideoElement.onDRMErrorEvent(event)");
 			if (event.errorID == DRM_NEEDS_AUTHENTICATION)  // Needs authentication
 			{
 				drmTrait.addEventListener(DRMEvent.DRM_STATE_CHANGE, reloadAfterAuth);
@@ -751,13 +754,14 @@ package osmf.patch {
 			}
 
 			public function customToken(arg1 : String) : void {
+				trace("LightweightVideoElement.customToken(arg1)");
 				this._customToken = arg1;
 				return;
 			}
 
 			// Rustem/
 			private function createDRMTrait() : void {
-				trace("createDRMTrait2");
+				trace("LightweightVideoElement.createDRMTrait()");
 				// Rustem
 				drmTrait = new NetStreamDRMTrait();
 				addTrait(MediaTraitType.DRM, drmTrait);

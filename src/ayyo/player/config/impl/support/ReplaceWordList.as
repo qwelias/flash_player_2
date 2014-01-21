@@ -8,10 +8,10 @@ package ayyo.player.config.impl.support {
 		/**
 		 * @private
 		 */
-		private var _forTimeLeft : String;
+		private var _timeLeft : String;
 
-		public function get forTimeLeft() : String {
-			return this._forTimeLeft ||= "%HOURS%";
+		public function get timeLeft() : String {
+			return this._timeLeft ||= "%HOURS%";
 		}
 
 		public function initialize(source : Object) : void {

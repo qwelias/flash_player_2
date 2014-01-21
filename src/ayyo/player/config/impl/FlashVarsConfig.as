@@ -3,10 +3,12 @@ package ayyo.player.config.impl {
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.config.api.IAyyoPlayerSettings;
 	import ayyo.player.config.api.IAyyoPlayerTooltip;
+	import ayyo.player.config.api.IAyyoVideoSettings;
 	import ayyo.player.config.api.IReplaceWordList;
 	import ayyo.player.config.impl.support.PlayerSettings;
 	import ayyo.player.config.impl.support.PlayerTooltip;
 	import ayyo.player.config.impl.support.ReplaceWordList;
+	import ayyo.player.config.impl.support.VideoSettings;
 	import ayyo.player.core.model.api.IInfoObject;
 	import ayyo.player.modules.info.impl.ModuleInfo;
 
@@ -43,15 +45,23 @@ package ayyo.player.config.impl {
 		 * @private
 		 */
 		private var _ready : ISignal;
+		/**
+		 * @private video settings section
+		 */
+		private var _video : IAyyoVideoSettings;
 
 		public function initialize(source : Object) : void {
 			var settingsSource : Object = {};
+			var videoSource : Object = {};
 			var tooltipSource : Object = {};
 			var replaceWordSource : Object = {};
 			settingsSource["screenshot"] = source["screenshot"];
 			settingsSource["type"] = source["player_type"];
 			settingsSource["free"] = source["free"];
 			settingsSource["timeLeft"] = source["hours_until_stop"];
+			
+			videoSource["url"] = source["url"];
+			videoSource["token"] = source["token"];
 
 			tooltipSource["playButton"] = source["tooltip_play_button"];
 			tooltipSource["pauseButton"] = source["tooltip_pause_button"];
@@ -65,7 +75,7 @@ package ayyo.player.config.impl {
 			tooltipSource["fullscreen"] = source["tooltip_fullscreen"];
 			tooltipSource["window"] = source["tooltip_unfullscreen"];
 
-			replaceWordSource["forTimeLeft"] = source["N"];
+			replaceWordSource["timeLeft"] = source["N"];
 
 			source["modules"] && this.parseVector(this.modules, String(source["modules"]).split(";"), ModuleInfo);
 			source["assets"] && this.parseVector(this.assets, String(source["assets"]).split(";"), AssetInfo);
@@ -73,6 +83,7 @@ package ayyo.player.config.impl {
 			this.settings.initialize(settingsSource);
 			this.tooltip.initialize(tooltipSource);
 			this.replaceWord.initialize(replaceWordSource);
+			this.video.initialize(videoSource);
 
 			this.ready.dispatch();
 		}
@@ -99,6 +110,10 @@ package ayyo.player.config.impl {
 
 		public function get ready() : ISignal {
 			return this._ready ||= new Signal();
+		}
+		
+		public function get video() : IAyyoVideoSettings {
+			return this._video ||= new VideoSettings();
 		}
 
 		private function parseVector(vector : Vector.<IInfoObject>, source : Array, type : Class) : void {

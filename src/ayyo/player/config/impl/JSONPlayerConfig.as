@@ -3,11 +3,13 @@ package ayyo.player.config.impl {
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.config.api.IAyyoPlayerSettings;
 	import ayyo.player.config.api.IAyyoPlayerTooltip;
+	import ayyo.player.config.api.IAyyoVideoSettings;
 	import ayyo.player.config.api.ICanInitialize;
 	import ayyo.player.config.api.IReplaceWordList;
 	import ayyo.player.config.impl.support.PlayerSettings;
 	import ayyo.player.config.impl.support.PlayerTooltip;
 	import ayyo.player.config.impl.support.ReplaceWordList;
+	import ayyo.player.config.impl.support.VideoSettings;
 	import ayyo.player.modules.info.impl.ModuleInfo;
 
 	import org.osflash.signals.ISignal;
@@ -41,6 +43,10 @@ package ayyo.player.config.impl {
 		 * @private
 		 */
 		private var _ready : ISignal;
+		/**
+		 * @private
+		 */
+		private var _video : VideoSettings;
 
 		public function initialize(source : Object) : void {
 			var item : ICanInitialize;
@@ -73,6 +79,10 @@ package ayyo.player.config.impl {
 
 		public function get ready() : ISignal {
 			return this._ready ||= new Signal();
+		}
+
+		public function get video() : IAyyoVideoSettings {
+			return this._video ||= new VideoSettings();
 		}
 	}
 }

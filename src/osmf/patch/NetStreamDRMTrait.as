@@ -71,7 +71,7 @@ package osmf.patch {
 		}
 
 		public function set customToken(arg1 : String) : void {
-			this.drmServices.customToken = arg1;
+			this.drmServices.customTokenString = arg1;
 		}
 
 		/**

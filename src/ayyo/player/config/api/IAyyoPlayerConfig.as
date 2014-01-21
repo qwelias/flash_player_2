@@ -9,6 +9,8 @@ package ayyo.player.config.api {
 	public interface IAyyoPlayerConfig  extends ICanInitialize {
 		function get settings() : IAyyoPlayerSettings;
 
+		function get video() : IAyyoVideoSettings;
+
 		function get assets() : Vector.<IInfoObject>;
 
 		function get modules() : Vector.<IInfoObject>;

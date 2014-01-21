@@ -28,7 +28,8 @@ package ayyo.player.modules.controllpanel.commands {
 			var plugin : IControllPanelPlugin;
 			while(plugins.length) {
 				description = plugins.shift();
-				if(ApplicationDomain.currentDomain.hasDefinition(description)) {
+				trace('description: ' + (description));
+				if (ApplicationDomain.currentDomain.hasDefinition(description)) {
 					type = ApplicationDomain.currentDomain.getDefinition(description) as Class;
 					plugin = new type();
 					plugin && this.dispatcher.dispatchEvent(new PluginEvent(PluginEvent.REGISTER, plugin));

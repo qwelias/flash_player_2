@@ -329,7 +329,7 @@ package osmf.patch {
 		}
 
 		// Rustem
-		public function set customToken(bytes : String) : void {
+		public function set customTokenString(bytes : String) : void {
 			this.customToken.clear() && this.customToken.writeUTFBytes(bytes);
 		}
 

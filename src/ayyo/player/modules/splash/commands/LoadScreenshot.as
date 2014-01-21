@@ -64,7 +64,7 @@ package ayyo.player.modules.splash.commands {
 		private function onImageLoaded(event : Event) : void {
 			var image : Bitmap = this.imageLoader.content as Bitmap;
 			var imageHolder : ISplashImageHolder = new ImageHolder(image);
-			this.contextView.view.addChild(imageHolder.view);
+			//this.contextView.view.addChild(imageHolder.view);
 			this.logger.debug("Screenshot loaded from {0}", [this.playerConfig.settings.screenshot]);
 			this.dispose();
 		}
