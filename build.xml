@@ -70,6 +70,8 @@
 		</java>
 		<echo>[compile] Release SWF ${project.name.versioned}.swf created successfully</echo>
 	</target>
+	
+	<!-- -omit-trace-statements=true -->
 
 	<!-- Compile Release SWF -->
 	<target name="module-splash">

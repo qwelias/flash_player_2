@@ -41,12 +41,14 @@
 			if (ExternalInterface.available) ExternalInterface.call("console.log", "SmoothedMediaFactory::init()");
 			this.f4mLoader = new F4MLoader(this);
 			var f4mLoaderCreator : Function = function() : MediaElement {
+				trace("F4M Element creation");
 				return new F4MElement(null, f4mLoader);
 			};
 			this.addItem(new MediaFactoryItem("org.osmf.elements.f4m", this.f4mLoader.canHandleResource, f4mLoaderCreator));
 
 			this.dvrCastLoader = new DVRCastNetLoader();
 			var dvrCastLoaderCreator : Function = function() : MediaElement {
+				trace('DVRCastNetLoader creation');
 				var videoElement : VideoElement = new VideoElement(null, dvrCastLoader);
 				videoElement.smoothing = true;
 				return videoElement;
@@ -55,6 +57,7 @@
 
 			this.httpStreamingNetLoader = new CustomHTTPStreamingNetLoader();
 			var httpStreamingCreator : Function = function() : MediaElement {
+				trace('HTTPStreamingNetLoader creation');
 				var setNetTargetHandler : Function = function(evt : NNetTargetEvent) : void {
 					httpStreamingNetLoader.httpNetStream.inBufferSeek = true;
 					httpStreamingNetLoader.httpNetStream.backBufferTime = 120;
@@ -64,12 +67,14 @@
 				var videoElement : VideoElement = new VideoElement(null, httpStreamingNetLoader);
 				videoElement.smoothing = true;
 				videoElement.customTokenFromPlayer = _customToken;
+				trace('_customToken: ' + (_customToken));
 				return videoElement;
 			};
 			this.addItem(new MediaFactoryItem("org.osmf.elements.video.httpstreaming", this.httpStreamingNetLoader.canHandleResource, httpStreamingCreator));
 
 			this.multicastLoader = new MulticastNetLoader();
 			var multicastCreator : Function = function() : MediaElement {
+				trace("MulticastNetLoader creation");
 				var videoElement : VideoElement = new VideoElement(null, multicastLoader);
 				videoElement.smoothing = true;
 				return videoElement;
@@ -78,6 +83,7 @@
 
 			this.rtmpStreamingNetLoader = new RTMPDynamicStreamingNetLoader();
 			var rtmpCreator : Function = function() : MediaElement {
+				trace("RTMPDynamicStreamingNetLoader");
 				var videoElement : VideoElement = new VideoElement(null, rtmpStreamingNetLoader);
 				videoElement.smoothing = true;
 				return videoElement;
@@ -86,6 +92,7 @@
 
 			this.netLoader = new NetLoader();
 			var netLoaderCreator : Function = function() : MediaElement {
+				trace("NetLoader");
 				var videoElement : VideoElement = new VideoElement(null, netLoader);
 				videoElement.smoothing = true;
 				return videoElement;
@@ -94,6 +101,7 @@
 
 			this.soundLoader = new SoundLoader();
 			var soundCreator : Function = function() : MediaElement {
+				trace("SoundLoader");
 				return new AudioElement(null, soundLoader);
 			};
 			this.addItem(new MediaFactoryItem("org.osmf.elements.audio", this.soundLoader.canHandleResource, soundCreator));
@@ -105,12 +113,14 @@
 
 			this.imageLoader = new ImageLoader();
 			var imageCreator : Function = function() : MediaElement {
+				trace("ImageLoader");
 				return new ImageElement(null, imageLoader);
 			};
 			this.addItem(new MediaFactoryItem("org.osmf.elements.image", this.imageLoader.canHandleResource, imageCreator));
 
 			this.swfLoader = new SWFLoader();
 			var swfCreator : Function = function() : MediaElement {
+				trace("SWFLoader");
 				return new SWFElement(null, swfLoader);
 			};
 			this.addItem(new MediaFactoryItem("org.osmf.elements.swf", this.swfLoader.canHandleResource, swfCreator));
