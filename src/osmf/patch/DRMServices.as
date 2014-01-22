@@ -89,7 +89,7 @@ package osmf.patch {
 		private var _lastToken : ByteArray;
 		private var drmContentData : DRMContentData;
 		private var voucher : DRMVoucher;
-		private var _customToken : flash.utils.ByteArray;
+		private var _customToken : ByteArray;
 		// Rustem
 		// this is static, since the SystemUpdater needs to be trated as a singleton.  Only one update at a time.
 		private static var UPDATER : SystemUpdater;
@@ -212,6 +212,7 @@ package osmf.patch {
 			if (drmContentData == null) {
 				throw new IllegalOperationError(OSMFStrings.getString(OSMFStrings.DRM_METADATA_NOT_SET));
 			}
+			trace("DRMServices.authenticateWithToken(token)");
 			drmManager.setAuthenticationToken(drmContentData.serverURL, drmContentData.domain, token as ByteArray);
 			retrieveVoucher();
 		}
@@ -330,7 +331,9 @@ package osmf.patch {
 
 		// Rustem
 		public function set customTokenString(bytes : String) : void {
-			this.customToken.clear() && this.customToken.writeUTFBytes(bytes);
+			trace("DRMServices.customTokenString(bytes)");
+			this.customToken.clear();
+			this.customToken.writeUTFBytes(bytes);
 		}
 
 		public function get customToken() : ByteArray {

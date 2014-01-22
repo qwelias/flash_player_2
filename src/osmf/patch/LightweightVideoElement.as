@@ -764,8 +764,8 @@ package osmf.patch {
 				trace("LightweightVideoElement.createDRMTrait()");
 				// Rustem
 				drmTrait = new NetStreamDRMTrait();
-				addTrait(MediaTraitType.DRM, drmTrait);
 				this.drmTrait.customToken = this._customToken;
+				addTrait(MediaTraitType.DRM, drmTrait);
 				// Rustem
 			}
 
