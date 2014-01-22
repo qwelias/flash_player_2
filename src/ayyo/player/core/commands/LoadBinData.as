@@ -1,17 +1,19 @@
 package ayyo.player.core.commands {
 	import ayyo.player.config.api.IAyyoPlayerConfig;
-	import ayyo.player.core.model.DataType;
 	import ayyo.player.core.model.api.IInfoObject;
 	import ayyo.player.events.BinDataEvent;
 
 	import robotlegs.bender.extensions.commandCenter.api.ICommand;
+	import robotlegs.bender.framework.api.ILogger;
 
-	import com.greensock.events.LoaderEvent;
-	import com.greensock.loading.BinaryDataLoader;
-	import com.greensock.loading.LoaderMax;
-	import com.greensock.loading.data.LoaderMaxVars;
-
+	import flash.events.ErrorEvent;
+	import flash.events.Event;
 	import flash.events.IEventDispatcher;
+	import flash.events.IOErrorEvent;
+	import flash.events.SecurityErrorEvent;
+	import flash.net.URLLoader;
+	import flash.net.URLLoaderDataFormat;
+	import flash.net.URLRequest;
 	import flash.utils.ByteArray;
 
 	/**
@@ -21,59 +23,66 @@ package ayyo.player.core.commands {
 		[Inject]
 		public var event : BinDataEvent;
 		[Inject]
+		public var logger : ILogger;
+		[Inject]
 		public var playerConfig : IAyyoPlayerConfig;
 		[Inject]
 		public var dispatcher : IEventDispatcher;
 		/**
 		 * @private
 		 */
-		private var binLoader : LoaderMax;
+		private var binLoader : URLLoader;
+		/**
+		 * @private
+		 */
+		private var currentInfoObject : IInfoObject;
 
 		public function execute() : void {
 			this.createLoader();
-			var info : IInfoObject;
-			while (this.playerConfig.assets.length) {
-				info = this.event.dataType == DataType.ASSETS ? this.playerConfig.assets.shift() : this.playerConfig.assets.pop();
-				info && this.binLoader.append(new BinaryDataLoader(info.url, {info:info}));
-			}
-			this.binLoader.numChildren > 0 && this.binLoader.load();
+			this.currentInfoObject = this.playerConfig.assets.shift();
+			this.currentInfoObject && this.binLoader.load(new URLRequest(this.currentInfoObject.url));
 		}
 
 		private function createLoader() : void {
 			if (!this.binLoader) {
-				this.binLoader = new LoaderMax(new LoaderMaxVars().maxConnections(1));
-				this.binLoader.addEventListener(LoaderEvent.CHILD_COMPLETE, this.onChildLoaded);
-				this.binLoader.addEventListener(LoaderEvent.COMPLETE, this.onChildrenLoaded);
+				this.binLoader = new URLLoader();
+				this.binLoader.dataFormat = URLLoaderDataFormat.BINARY;
+				this.binLoader.addEventListener(Event.COMPLETE, this.onItemLoadedHandler);
+				this.binLoader.addEventListener(IOErrorEvent.IO_ERROR, this.onErrorOccuredHandler);
+				this.binLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this.onErrorOccuredHandler);
 			}
 		}
-		
+
 		private function disposeLoader() : void {
 			if (this.binLoader) {
-				this.binLoader.removeEventListener(LoaderEvent.CHILD_COMPLETE, this.onChildLoaded);
-				this.binLoader.removeEventListener(LoaderEvent.COMPLETE, this.onChildrenLoaded);
-				this.binLoader.unload();
+				this.binLoader.close();
+				this.binLoader.removeEventListener(Event.COMPLETE, this.onItemLoadedHandler);
+				this.binLoader.removeEventListener(IOErrorEvent.IO_ERROR, this.onErrorOccuredHandler);
+				this.binLoader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, this.onErrorOccuredHandler);
 				this.binLoader = null;
 			}
 		}
-		
+
 		private function dispose() : void {
 			this.disposeLoader();
 			this.event = null;
 			this.playerConfig = null;
 			this.dispatcher = null;
-		}
-		
-		//	Handlers
-		private function onChildLoaded(event : LoaderEvent) : void {
-			var bytes : ByteArray = new ByteArray();
-			var loader : BinaryDataLoader = event.target as BinaryDataLoader;
-			bytes.writeObject(loader.vars["info"]);
-			bytes.writeBytes(loader.content as ByteArray);
-			bytes && this.dispatcher.dispatchEvent(new BinDataEvent(BinDataEvent.ITEM_LOADED, this.event.dataType, bytes));
+			this.currentInfoObject = null;
+			this.logger = null;
 		}
 
-		private function onChildrenLoaded(event : LoaderEvent) : void {
-			this.dispatcher.dispatchEvent(new BinDataEvent(BinDataEvent.COMPLETE, this.event.dataType));
+		// Handlers
+		private function onItemLoadedHandler(event : Event) : void {
+			var bytes : ByteArray = new ByteArray();
+			bytes.writeObject(this.currentInfoObject);
+			bytes.writeBytes(this.binLoader.data as ByteArray);
+			bytes && this.dispatcher.dispatchEvent(new BinDataEvent(BinDataEvent.LOADED, this.event.dataType, bytes));
+			this.dispose();
+		}
+		
+		private function onErrorOccuredHandler(event : ErrorEvent) : void {
+			this.logger.error(event.text);
 			this.dispose();
 		}
 	}
