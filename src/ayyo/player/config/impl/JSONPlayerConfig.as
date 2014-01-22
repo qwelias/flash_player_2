@@ -10,7 +10,6 @@ package ayyo.player.config.impl {
 	import ayyo.player.config.impl.support.PlayerTooltip;
 	import ayyo.player.config.impl.support.ReplaceWordList;
 	import ayyo.player.config.impl.support.VideoSettings;
-	import ayyo.player.modules.info.impl.ModuleInfo;
 
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
@@ -27,10 +26,6 @@ package ayyo.player.config.impl {
 		 * @private
 		 */
 		private var _assets : Vector.<AssetInfo>;
-		/**
-		 * @private
-		 */
-		private var _modules : Vector.<ModuleInfo>;
 		/**
 		 * @private
 		 */
@@ -63,10 +58,6 @@ package ayyo.player.config.impl {
 
 		public function get assets() : Vector.<AssetInfo> {
 			return this._assets ||= new Vector.<AssetInfo>();
-		}
-
-		public function get modules() : Vector.<ModuleInfo> {
-			return this._modules ||= new Vector.<ModuleInfo>();
 		}
 
 		public function get tooltip() : IAyyoPlayerTooltip {

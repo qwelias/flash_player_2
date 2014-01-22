@@ -1,5 +1,4 @@
 package ayyo.player.core.commands {
-	import com.greensock.loading.data.LoaderMaxVars;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.core.model.DataType;
 	import ayyo.player.core.model.api.IInfoObject;
@@ -10,6 +9,7 @@ package ayyo.player.core.commands {
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.loading.BinaryDataLoader;
 	import com.greensock.loading.LoaderMax;
+	import com.greensock.loading.data.LoaderMaxVars;
 
 	import flash.events.IEventDispatcher;
 	import flash.utils.ByteArray;
@@ -32,9 +32,8 @@ package ayyo.player.core.commands {
 		public function execute() : void {
 			this.createLoader();
 			var info : IInfoObject;
-			var vector : Vector.<IInfoObject> = event.dataType == DataType.ASSETS ? this.playerConfig.assets : this.playerConfig.modules;
-			while (vector.length) {
-				info = this.event.dataType == DataType.ASSETS ? vector.shift() : vector.pop();
+			while (this.playerConfig.assets.length) {
+				info = this.event.dataType == DataType.ASSETS ? this.playerConfig.assets.shift() : this.playerConfig.assets.pop();
 				info && this.binLoader.append(new BinaryDataLoader(info.url, {info:info}));
 			}
 			this.binLoader.numChildren > 0 && this.binLoader.load();
@@ -70,11 +69,11 @@ package ayyo.player.core.commands {
 			var loader : BinaryDataLoader = event.target as BinaryDataLoader;
 			bytes.writeObject(loader.vars["info"]);
 			bytes.writeBytes(loader.content as ByteArray);
-			bytes && this.dispatcher.dispatchEvent(new BinDataEvent(BinDataEvent.COMPLETE, this.event.dataType, bytes));
+			bytes && this.dispatcher.dispatchEvent(new BinDataEvent(BinDataEvent.ITEM_LOADED, this.event.dataType, bytes));
 		}
 
 		private function onChildrenLoaded(event : LoaderEvent) : void {
-			this.dispatcher.dispatchEvent(new BinDataEvent(BinDataEvent.LOADED, this.event.dataType));
+			this.dispatcher.dispatchEvent(new BinDataEvent(BinDataEvent.COMPLETE, this.event.dataType));
 			this.dispose();
 		}
 	}

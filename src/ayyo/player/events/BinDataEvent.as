@@ -10,7 +10,7 @@ package ayyo.player.events {
 	public class BinDataEvent extends Event {
 		public static const LOAD : String = "loadBinaryData";
 		public static const COMPLETE : String = "binaryDataLoaded";
-		public static const LOADED : String = "chainLoaded";
+		public static const ITEM_LOADED : String = "binaryItemLoaded";
 		/**
 		 * @private
 		 */

@@ -13,8 +13,6 @@ package ayyo.player.config.api {
 
 		function get assets() : Vector.<IInfoObject>;
 
-		function get modules() : Vector.<IInfoObject>;
-
 		function get tooltip() : IAyyoPlayerTooltip;
 
 		function get replaceWord() : IReplaceWordList;

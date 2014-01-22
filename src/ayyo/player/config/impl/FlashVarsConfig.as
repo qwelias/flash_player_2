@@ -10,7 +10,6 @@ package ayyo.player.config.impl {
 	import ayyo.player.config.impl.support.ReplaceWordList;
 	import ayyo.player.config.impl.support.VideoSettings;
 	import ayyo.player.core.model.api.IInfoObject;
-	import ayyo.player.modules.info.impl.ModuleInfo;
 
 	import by.blooddy.crypto.serialization.JSON;
 
@@ -29,10 +28,6 @@ package ayyo.player.config.impl {
 		 * @private
 		 */
 		private var _assets : Vector.<IInfoObject>;
-		/**
-		 * @private
-		 */
-		private var _modules : Vector.<IInfoObject>;
 		/**
 		 * @private
 		 */
@@ -77,7 +72,6 @@ package ayyo.player.config.impl {
 
 			replaceWordSource["timeLeft"] = source["N"];
 
-			source["modules"] && this.parseVector(this.modules, String(source["modules"]).split(";"), ModuleInfo);
 			source["assets"] && this.parseVector(this.assets, String(source["assets"]).split(";"), AssetInfo);
 
 			this.settings.initialize(settingsSource);
@@ -94,10 +88,6 @@ package ayyo.player.config.impl {
 
 		public function get assets() : Vector.<IInfoObject> {
 			return this._assets ||= new Vector.<IInfoObject>();
-		}
-
-		public function get modules() : Vector.<IInfoObject> {
-			return this._modules ||= new Vector.<IInfoObject>();
 		}
 
 		public function get tooltip() : IAyyoPlayerTooltip {

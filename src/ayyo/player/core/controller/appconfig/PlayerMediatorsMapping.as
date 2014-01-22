@@ -1,7 +1,5 @@
 package ayyo.player.core.controller.appconfig {
-	import ayyo.player.core.controller.PlayerModuleMediator;
 	import ayyo.player.core.controller.ResizeObjectMediator;
-	import ayyo.player.modules.base.api.IAyyoPlayerModule;
 
 	import me.scriptor.additional.api.IResizable;
 
@@ -18,28 +16,21 @@ package ayyo.player.core.controller.appconfig {
 		/**
 		 * @private
 		 */
-		private var playerModule : ITypeMatcher;
-		/**
-		 * @private
-		 */
 		private var resizable : ITypeMatcher;
 
 		[PostConstruct]
 		public function initialize() : void {
 			this.initMatchers();
 
-			this.mediatorMap.mapMatcher(this.playerModule).toMediator(PlayerModuleMediator);
 			this.mediatorMap.mapMatcher(this.resizable).toMediator(ResizeObjectMediator);
 		}
 
 		private function initMatchers() : void {
-			this.playerModule = new TypeMatcher().anyOf(IAyyoPlayerModule);
 			this.resizable = new TypeMatcher().anyOf(IResizable);
 		}
 
 		[PreDestroy]
 		public function destroy() : void {
-			this.mediatorMap.unmapMatcher(this.playerModule).fromMediator(PlayerModuleMediator);
 			this.mediatorMap.unmapMatcher(this.resizable).fromMediator(ResizeObjectMediator);
 
 			this.disposeMatchers();
@@ -47,7 +38,6 @@ package ayyo.player.core.controller.appconfig {
 		}
 
 		private function disposeMatchers() : void {
-			this.playerModule = null;
 			this.resizable = null;
 		}
 	}
