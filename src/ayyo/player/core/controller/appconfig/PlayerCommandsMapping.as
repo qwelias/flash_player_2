@@ -40,7 +40,8 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.map(BinDataEvent.LOADED, BinDataEvent).toCommand(RegisterAsset).withGuards(OnlyIfTypeIsAssets);
 			this.commandMap.map(AssetEvent.REGISTRED).toCommand(NullCommand).withHooks(CheckAvaliableAssets);
 			
-			this.commandMap.map(ApplicationEvent.READY).toCommand(LaunchTestVideo).withHooks(DisposePreloader).withGuards(OnlyIfPreloaderExists).once();
+			this.commandMap.map(ApplicationEvent.READY).toCommand(NullCommand).withHooks(DisposePreloader).withGuards(OnlyIfPreloaderExists).once();
+			this.commandMap.map(ApplicationEvent.READY).toCommand(LaunchTestVideo).once();
 		}
 
 		[PreDestroy]

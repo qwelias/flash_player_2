@@ -1,4 +1,5 @@
 package ayyo.player.core.controller.appconfig {
+	import osmf.patch.SmoothedMediaFactory;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.config.impl.FlashVarsConfig;
 
@@ -23,6 +24,10 @@ package ayyo.player.core.controller.appconfig {
 		 * @private
 		 */
 		private var screen : Rectangle;
+		/**
+		 * @private OSMF media factory instance
+		 */
+		private var factory : SmoothedMediaFactory;
 
 		[PostConstruct]
 		public function initialize() : void {
@@ -36,9 +41,11 @@ package ayyo.player.core.controller.appconfig {
 			this.context.injector.unmap(IAyyoPlayerConfig);
 			this.context.injector.unmap(Rectangle, "screen");
 			this.context.injector.unmap(IApplicationModel);
+			this.context.injector.unmap(SmoothedMediaFactory);
 			
 			this.config = null;
 			this.screen = null;
+			this.factory = null;
 			
 			this.context = null;
 		}
@@ -61,6 +68,9 @@ package ayyo.player.core.controller.appconfig {
 		 * @return void
 		 */
 		private function initPlayer() : void {
+			this.factory = new SmoothedMediaFactory();
+			
+			this.context.injector.map(SmoothedMediaFactory).toValue(this.factory);
 		}
 	}
 }
