@@ -1,6 +1,9 @@
 package ayyo.player.config.impl.support {
 	import ayyo.player.config.api.IAyyoVideoSettings;
 
+	import flash.external.ExternalInterface;
+	import flash.system.Capabilities;
+
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
@@ -19,7 +22,7 @@ package ayyo.player.config.impl.support {
 		}
 
 		public function get token() : String {
-			return this._token;
+			return "type=online," + this._token + ",os=" + escape(Capabilities.os) +",flashversion=" + escape(Capabilities.version) + ",browser=" + (ExternalInterface.available ? escape(ExternalInterface.call("window.navigator.userAgent.toString")):"unknown");
 		}
 
 		public function initialize(source : Object) : void {

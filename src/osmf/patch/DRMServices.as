@@ -123,7 +123,8 @@ package osmf.patch {
 
 		// Rustem
 		public function set lastToken(bytes : ByteArray) : void {
-			this.lastToken.clear() && this.lastToken.writeBytes(bytes);
+			this.lastToken.clear();
+			this.lastToken.writeBytes(bytes);
 		}
 
 		public function get lastToken() : ByteArray {
@@ -212,7 +213,6 @@ package osmf.patch {
 			if (drmContentData == null) {
 				throw new IllegalOperationError(OSMFStrings.getString(OSMFStrings.DRM_METADATA_NOT_SET));
 			}
-			trace("DRMServices.authenticateWithToken(token)");
 			drmManager.setAuthenticationToken(drmContentData.serverURL, drmContentData.domain, token as ByteArray);
 			retrieveVoucher();
 		}
@@ -331,7 +331,6 @@ package osmf.patch {
 
 		// Rustem
 		public function set customTokenString(bytes : String) : void {
-			trace("DRMServices.customTokenString(bytes)");
 			this.customToken.clear();
 			this.customToken.writeUTFBytes(bytes);
 		}
@@ -357,7 +356,6 @@ package osmf.patch {
 			drmManager.addEventListener(DRMErrorEvent.DRM_ERROR, onDRMError);
 			drmManager.addEventListener(DRMStatusEvent.DRM_STATUS, onVoucherLoaded);
 			// Rustem
-			trace("drmManager.setAuthenticationToken(drmContentData.serverURL: " + this.drmContentData.serverURL + ", drmContentData.domain, " + this.customToken + ")");
 			this.drmManager.setAuthenticationToken(this.drmContentData.serverURL, this.drmContentData.domain, this.customToken);
 			// Rustem/
 			drmManager.loadVoucher(drmContentData, LoadVoucherSetting.ALLOW_SERVER);

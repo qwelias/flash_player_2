@@ -1,10 +1,11 @@
 package ayyo.player.core.controller.appconfig {
-	import osmf.patch.SmoothedMediaFactory;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.config.impl.FlashVarsConfig;
 
 	import me.scriptor.mvc.model.api.IApplicationModel;
 	import me.scriptor.mvc.model.impl.ApplicationModel;
+
+	import osmf.patch.SmoothedMediaFactory;
 
 	import robotlegs.bender.framework.api.IContext;
 

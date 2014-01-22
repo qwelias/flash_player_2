@@ -316,10 +316,8 @@ package osmf.patch {
 				// Rustem
 				var _DRM_ContentData : ByteArray = this.getDRMContentData(resource);
 				if (!(_DRM_ContentData == null) && _DRM_ContentData.bytesAvailable > 0) {
-					trace("meta not null");
 					this.setupDRMTrait(_DRM_ContentData);
 				} else {
-					trace("meta null:", resource.getMetadataValue(org.osmf.metadata.MetadataNamespaces.DRM_METADATA));
 					this.stream.addEventListener(flash.events.StatusEvent.STATUS, this.onStatus);
 					this.stream.addEventListener(flash.events.DRMStatusEvent.DRM_STATUS, this.onDRMStatus);
 				}
@@ -476,7 +474,6 @@ package osmf.patch {
 							addTrait(org.osmf.traits.MediaTraitType.SEEK, seekTrait);
 						} catch (err : Error) {
 						}
-						;
 						// Rustem/
 					};
 					timeTrait.addEventListener(TimeEvent.DURATION_CHANGE, onDurationChange);
@@ -621,8 +618,6 @@ package osmf.patch {
 					error = new MediaError(MediaErrorCodes.NETCONNECTION_TIMEOUT, event.info["description"]);
 					break;
 			}
-					trace('event.info["description"]: ' + (event.info["description"]));
-			trace('event.info["code"]: ' + (event.info["code"]));
 
 			CONFIG::FLASH_10_1 {
 				if (event.info["code"] == NetStreamCodes.NETSTREAM_DRM_UPDATE) {
@@ -636,7 +631,6 @@ package osmf.patch {
 		}
 
 		private function onDRMErrorEvent(event : DRMErrorEvent) : void {
-			trace("LightweightVideoElement.onDRMErrorEvent(event)");
 			if (event.errorID == DRM_NEEDS_AUTHENTICATION)  // Needs authentication
 			{
 				drmTrait.addEventListener(DRMEvent.DRM_STATE_CHANGE, reloadAfterAuth);
@@ -666,7 +660,7 @@ package osmf.patch {
 			return;
 		}
 
-		private function getDRMContentData(arg1 : org.osmf.media.MediaResourceBase) : flash.utils.ByteArray {
+		private function getDRMContentData(arg1 : MediaResourceBase) : ByteArray {
 			// var loc2:*=null;
 			// var loc3:*=null;
 			// var loc4:*=null;
@@ -674,20 +668,17 @@ package osmf.patch {
 			// var loc6:*=null;
 			// var loc7:*=0;
 			// var loc8:*=null;
-			trace("get drm meta");
 			var loc1 : StreamingURLResource = arg1 as StreamingURLResource;
 			if (loc1 == null) {
 				if (this._customDRMData != null) {
-					trace("streamingResource:", this._customDRMData.bytesAvailable);
 					return this._customDRMData;
 				}
 			} else {
 				if (loc1.drmContentData != null) {
 					return loc1.drmContentData;
 				}
-				var loc2 : Metadata = arg1.getMetadataValue(org.osmf.metadata.MetadataNamespaces.DRM_METADATA) as Metadata;
+				var loc2 : Metadata = arg1.getMetadataValue(MetadataNamespaces.DRM_METADATA) as Metadata;
 				if (!(loc2 == null) && loc2.keys.length > 0) {
-					trace("drmMetadata != null");
 					var loc3 : * = null;
 					var loc4 : DynamicStreamingResource = arg1 as DynamicStreamingResource;
 					if (!(loc4 == null) && loc4.initialIndex > -1 && loc4.initialIndex < loc4.streamItems.length) {
@@ -698,11 +689,10 @@ package osmf.patch {
 						loc5 = loc2.getValue(loc3) as flash.utils.ByteArray;
 					}
 					if (loc5 == null) {
-						trace("drmMetadata == null");
 						var loc6 : Vector.<String> = loc2.keys;
 						var loc7 : int = 0;
 						do {
-							if (loc6[loc7].indexOf(org.osmf.metadata.MetadataNamespaces.DRM_ADDITIONAL_HEADER_KEY) != 0) {
+							if (loc6[loc7].indexOf(MetadataNamespaces.DRM_ADDITIONAL_HEADER_KEY) != 0) {
 								loc5 = loc2.getValue(loc6[loc7]);
 							}
 							++loc7;
@@ -724,14 +714,12 @@ package osmf.patch {
 
 			public function onVoucherLoaded(arg1 : flash.events.DRMStatusEvent) : void {
 				this.createDRMTrait();
-				trace("drmTrait1:", this.drmTrait);
 				this.drmTrait.inlineOnVoucher(arg1);
 				return;
 			}
 
 			private function onDRMStatus(event : DRMStatusEvent) : void {
 				// Rustem
-				trace("onDRMStatus:", event.contentData);
 				// Rustem/
 				drmTrait.inlineOnVoucher(event);
 			}
@@ -754,14 +742,12 @@ package osmf.patch {
 			}
 
 			public function customToken(arg1 : String) : void {
-				trace("LightweightVideoElement.customToken(arg1)");
 				this._customToken = arg1;
 				return;
 			}
 
 			// Rustem/
 			private function createDRMTrait() : void {
-				trace("LightweightVideoElement.createDRMTrait()");
 				// Rustem
 				drmTrait = new NetStreamDRMTrait();
 				this.drmTrait.customToken = this._customToken;
@@ -786,12 +772,12 @@ package osmf.patch {
 		}
 		private var displayObjectTrait : DisplayObjectTrait;
 		private var defaultTimeTrait : ModifiableTimeTrait;
-		private var _customDRMData : flash.utils.ByteArray;
+		private var _customDRMData : ByteArray;
 		// Rustem
 		private var embeddedCuePoints : TimelineMetadata;
 		private var _smoothing : Boolean;
 		private var _deblocking : int;
-		private var stream : flash.net.NetStream;
+		private var stream : NetStream;
 		// Rustem
 		private var videoSurface : VideoSurface;
 		private var _customToken : String = "";

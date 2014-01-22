@@ -1,12 +1,14 @@
 package ayyo.player.core.commands.hooks {
-	import flash.system.Capabilities;
-	import flash.geom.Rectangle;
 	import robotlegs.bender.extensions.contextView.ContextView;
 	import robotlegs.bender.framework.api.IHook;
+
+	import org.osmf.utils.OSMFSettings;
 
 	import flash.display.Stage;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.geom.Rectangle;
+	import flash.system.Capabilities;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -24,6 +26,8 @@ package ayyo.player.core.commands.hooks {
 			stage.frameRate = 60;
 			stage.fullScreenSourceRect = new Rectangle(0, 0, Capabilities.screenResolutionX, Capabilities.screenResolutionY);
 			stage.showDefaultContextMenu = false;
+			
+			OSMFSettings.enableStageVideo = true;
 
 			this.dispose();
 		}

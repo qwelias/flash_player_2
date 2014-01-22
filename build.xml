@@ -59,6 +59,7 @@
 			<arg value="-output=${bin.loc}/${project.name.versioned}.swf" />
 			<arg value="-default-size=640,480" />
 			<arg value="-define=CONFIG::FLASH_10_1,true"/>
+			<arg value="-define=CONFIG::LOGGING,true"/>
 			<arg value="-default-background-color=0x000000" />
 			<arg value="-library-path+=${lib.loc}" />
 			<arg value="-incremental=true" />
