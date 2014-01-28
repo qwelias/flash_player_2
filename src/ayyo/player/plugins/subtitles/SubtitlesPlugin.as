@@ -1,5 +1,5 @@
-package ayyo.player.plugins.test {
-	import ayyo.player.plugins.test.info.TestPluginInfo;
+package ayyo.player.plugins.subtitles {
+	import ayyo.player.plugins.subtitles.impl.SubtitlesInfo;
 
 	import org.osmf.media.PluginInfo;
 
@@ -8,18 +8,14 @@ package ayyo.player.plugins.test {
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
-	public class TestPlugin extends Sprite {
+	public class SubtitlesPlugin extends Sprite {
 		/**
 		 * @private
 		 */
 		private var _pluginInfo : PluginInfo;
 
-		public function TestPlugin() {
-		}
-
 		public function get pluginInfo() : PluginInfo {
-			trace("TestPlugin.pluginInfo()");
-			return this._pluginInfo ||= new TestPluginInfo();
+			return this._pluginInfo ||= new SubtitlesInfo();
 		}
 	}
 }

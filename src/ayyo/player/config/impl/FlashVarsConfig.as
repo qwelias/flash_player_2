@@ -1,4 +1,5 @@
 package ayyo.player.config.impl {
+	import ayyo.player.plugins.info.impl.AyyoPlugin;
 	import ayyo.player.asstes.info.impl.AssetInfo;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.config.api.IAyyoPlayerSettings;
@@ -28,6 +29,10 @@ package ayyo.player.config.impl {
 		 * @private
 		 */
 		private var _assets : Vector.<IInfoObject>;
+		/**
+		 * @private
+		 */
+		private var _plugins : Vector.<IInfoObject>;
 		/**
 		 * @private
 		 */
@@ -73,6 +78,7 @@ package ayyo.player.config.impl {
 			replaceWordSource["timeLeft"] = source["N"];
 
 			source["assets"] && this.parseVector(this.assets, String(source["assets"]).split(";"), AssetInfo);
+			source["plugins"] && this.parseVector(this.plugins, String(source["plugins"]).split(";"), AyyoPlugin);
 
 			this.settings.initialize(settingsSource);
 			this.tooltip.initialize(tooltipSource);
@@ -88,6 +94,10 @@ package ayyo.player.config.impl {
 
 		public function get assets() : Vector.<IInfoObject> {
 			return this._assets ||= new Vector.<IInfoObject>();
+		}
+		
+		public function get plugins() : Vector.<IInfoObject> {
+			return _plugins ||= new Vector.<IInfoObject>();
 		}
 
 		public function get tooltip() : IAyyoPlayerTooltip {

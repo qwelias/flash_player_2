@@ -52,7 +52,7 @@ package ayyo.player.core.controller {
 		 * @eventType flash.events.Event.RESIZE
 		 */
 		private function onApplicationReszied(event : Event) : void {
-			this.item.resize(this.screen);
+			this.item.resize(this.screen.clone());
 		}
 	}
 }

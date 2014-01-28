@@ -77,6 +77,7 @@ package ayyo.player.core.commands {
 			var bytes : ByteArray = new ByteArray();
 			bytes.writeObject(this.currentInfoObject);
 			bytes.writeBytes(this.binLoader.data as ByteArray);
+			this.currentInfoObject = null;
 			bytes && this.dispatcher.dispatchEvent(new BinDataEvent(BinDataEvent.LOADED, this.event.dataType, bytes));
 			this.dispose();
 		}

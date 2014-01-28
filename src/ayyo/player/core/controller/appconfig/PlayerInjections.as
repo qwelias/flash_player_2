@@ -1,4 +1,5 @@
 package ayyo.player.core.controller.appconfig {
+	import org.osmf.media.MediaPlayerSprite;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.config.impl.FlashVarsConfig;
 
@@ -29,6 +30,10 @@ package ayyo.player.core.controller.appconfig {
 		 * @private OSMF media factory instance
 		 */
 		private var factory : SmoothedMediaFactory;
+		/**
+		 * @private
+		 */
+		private var player : MediaPlayerSprite;
 
 		[PostConstruct]
 		public function initialize() : void {
@@ -43,6 +48,7 @@ package ayyo.player.core.controller.appconfig {
 			this.context.injector.unmap(Rectangle, "screen");
 			this.context.injector.unmap(IApplicationModel);
 			this.context.injector.unmap(SmoothedMediaFactory);
+			this.context.injector.unmap(MediaPlayerSprite);
 			
 			this.config = null;
 			this.screen = null;
@@ -70,8 +76,10 @@ package ayyo.player.core.controller.appconfig {
 		 */
 		private function initPlayer() : void {
 			this.factory = new SmoothedMediaFactory();
+			this.player = new MediaPlayerSprite();
 			
 			this.context.injector.map(SmoothedMediaFactory).toValue(this.factory);
+			this.context.injector.map(MediaPlayerSprite).toValue(this.player);
 		}
 	}
 }

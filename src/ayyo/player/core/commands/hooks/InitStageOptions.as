@@ -27,7 +27,7 @@ package ayyo.player.core.commands.hooks {
 			stage.fullScreenSourceRect = new Rectangle(0, 0, Capabilities.screenResolutionX, Capabilities.screenResolutionY);
 			stage.showDefaultContextMenu = false;
 			
-			OSMFSettings.enableStageVideo = true;
+			OSMFSettings.supportsStageVideo && (OSMFSettings.enableStageVideo = true);
 
 			this.dispose();
 		}
