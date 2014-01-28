@@ -34,17 +34,25 @@ package ayyo.player.view.impl.controllbar {
 		public function enable() : void {
 			if (!this.buttonMode) {
 				this._click.add(this.onButtonClick);
+				this.enableButton();
 				this.mouseChildren = false;
 				this.mouseEnabled = this.buttonMode = true;
 			}
 		}
 
+		protected function enableButton() : void {
+		}
+
 		public function disable() : void {
 			if (this.buttonMode) {
 				this._click.remove(this.onButtonClick);
+				this.disableButton();
 				this.mouseChildren = true;
 				this.mouseEnabled = this.buttonMode = false;
 			}
+		}
+
+		protected function disableButton() : void {
 		}
 
 		public function get action() : ISignal {

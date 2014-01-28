@@ -26,6 +26,7 @@ package ayyo.player.core.controller {
 
 		public function initialize() : void {
 			this.player.media.hasTrait(MediaTraitType.ALTERNATIVE_AUDIO) ? this.extrackAudioTrackData() : this.dispatcher.addEventListener(AlternativeAudioEvent.NUM_ALTERNATIVE_AUDIO_STREAMS_CHANGE, this.onNumAlternativeAudioChange);
+			this.audioTrackInfo.changeTrack.add(this.onChangeTrack);
 		}
 
 		public function destroy() : void {
@@ -37,12 +38,16 @@ package ayyo.player.core.controller {
 
 		private function extrackAudioTrackData() : void {
 			this.logger.debug("This stream contains {0} alternative audio", [this.player.mediaPlayer.numAlternativeAudioStreams]);
-			this.player.mediaPlayer.switchAlternativeAudioIndex(0);
+			this.onChangeTrack(0);
 			var tracks : Vector.<StreamingItem> = new Vector.<StreamingItem>();
 			const length : uint = this.player.mediaPlayer.numAlternativeAudioStreams;
 			for (var i : int = 0; i < length; i++)
 				tracks.push(this.player.mediaPlayer.getAlternativeAudioItemAt(i));
 			length > 0 && this.audioTrackInfo.initialize(tracks);
+		}
+		
+		private function onChangeTrack(trackID : uint) : void {
+			this.player.mediaPlayer.switchAlternativeAudioIndex(trackID);
 		}
 	}
 }
