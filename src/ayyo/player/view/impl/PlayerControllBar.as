@@ -145,8 +145,8 @@ package ayyo.player.view.impl {
 				this.x = MARGIN;
 				this.y = screen.height - this.height - PADDING;
 
-				this.playPause.view.x = 2;
-				this.playPause.view.y = HEIGHT - this.playPause.view.height >> 1;
+				this.playPause.view.x = 3;
+				this.playPause.view.y = (HEIGHT - this.playPause.view.height >> 1) + 1;
 
 				this.screenState.view.x = screen.width - MARGIN * 2 - this.screenState.view.width - PADDING;
 				this.screenState.view.y = HEIGHT - this.screenState.view.height >> 1;
@@ -161,7 +161,8 @@ package ayyo.player.view.impl {
 				this.timer.view.y = HEIGHT - this.timer.view.height >> 1;
 				
 				this.timeline.view.x = this.playPause.view.x + this.playPause.view.width + PADDING;
-				this.timeline.view.y = HEIGHT - this.timeline.view.height >> 1;
+				this.timeline.view.y = HEIGHT - 14 >> 1;
+				this.timeline.view.width = screen.width - (screen.width - this.timer.view.x) - this.timeline.view.x - PADDING;
 			}
 		}
 

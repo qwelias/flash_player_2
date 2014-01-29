@@ -9,6 +9,7 @@ package ayyo.player.events {
 		public static const SPLASH_LOADED : String = "splashLoaded";
 		public static const ALTERNATIVE_AUDIO : String = "alternativeAudio";
 		public static const CAN_PLAY : String = "videoCanPlay";
+		public static const TIME_TRAIT : String = "videoTimeChanges";
 		/**
 		 * @private
 		 */

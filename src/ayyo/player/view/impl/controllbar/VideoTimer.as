@@ -1,6 +1,8 @@
 package ayyo.player.view.impl.controllbar {
+	import flash.display.DisplayObject;
 	import ayyo.player.view.api.IVideoTimer;
 
+	import flash.display.Sprite;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -8,14 +10,36 @@ package ayyo.player.view.impl.controllbar {
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
-	public class VideoTimer extends AbstractButton implements IVideoTimer {
+	public class VideoTimer extends Sprite implements IVideoTimer {
 		/**
 		 * @private
 		 */
 		private var _textfield : TextField;
+		/**
+		 * @private
+		 */
+		private var _duration : uint;
+		/**
+		 * @private
+		 */
+		private var isCreated : Boolean;
 
 		public function VideoTimer(autoCreate : Boolean = true) {
-			super(autoCreate);
+			autoCreate && this.create();
+		}
+
+		public function create() : void {
+			if (!this.isCreated) {
+				this.addChild(this.textfield);
+				this.time = 0;
+				this.isCreated = true;
+			}
+		}
+
+		public function dispose() : void {
+			if (this.isCreated) {
+				this.isCreated = false;
+			}
 		}
 
 		public function get textfield() : TextField {
@@ -34,21 +58,22 @@ package ayyo.player.view.impl.controllbar {
 		public function set time(value : uint) : void {
 			this.textfield.text = this.convertSecondsToString(value);
 		}
-		
-		override protected function createButton() : void {
-			super.createButton();
-			this.addChild(this.textfield);
-			this.time = 0;
+
+		public function set duration(value : uint) : void {
+			this._duration = value;
 		}
-		
+
 		private function convertSecondsToString(value : uint) : String {
 			var result : String = "00:00:00";
 			var hours : uint = value / 3600;
 			var minutes : uint = (value - hours * 3600) / 60;
 			var seconds : uint = value - hours * 3600 - minutes * 60;
-			
-			trace(hours, minutes, seconds);
+			result = (hours < 10 ? "0" : "") + hours.toString() + ":" + (minutes < 10 ? "0" : "") + minutes.toString() + ":" + (seconds < 10 ? "0" : "") + seconds.toString();
 			return result;
+		}
+
+		public function get view() : DisplayObject {
+			return this;
 		}
 	}
 }

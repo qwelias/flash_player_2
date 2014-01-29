@@ -1,9 +1,13 @@
 package ayyo.player.view.api {
-	import ayyo.player.view.api.IButton;
+	import me.scriptor.additional.api.IDisposable;
+	import me.scriptor.additional.api.IHaveView;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
-	public interface IVideoTimer extends IButton {
+	public interface IVideoTimer extends IHaveView, IDisposable {
+		function set time(value : uint) : void;
+
+		function set duration(value : uint) : void;
 	}
 }
