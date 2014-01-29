@@ -29,6 +29,7 @@ package ayyo.player.view.impl.controllbar {
 		 * @private
 		 */
 		private var _id : uint;
+		private var _subicon : Bitmap;
 
 		public function TrackItem(id : uint, autoCreate : Boolean = true) {
 			this._id = id;
@@ -39,6 +40,18 @@ package ayyo.player.view.impl.controllbar {
 			this.textfield.text = value.toUpperCase();
 			this.textfield.x = this._icon.width + 2;
 			this.textfield.y = this._icon.height - this.textfield.height >> 1;
+			
+			/**
+			 * TODO Заплатка. Все id отличные от 0 имют субтитры
+			 * 0 - дорожка по умолчанию
+			 */
+			 if(this._id > 0) {
+				this._subicon = new SubGraphics() as Bitmap;
+				this.addChild(this._subicon);
+				this._subicon.x = this.textfield.x + this.textfield.width + 9;
+				this._subicon.y = this._icon.height - this._subicon.height >> 1;
+				this.textfield.appendText(" +    RU");
+			 }
 		}
 
 		public function get textfield() : TextField {

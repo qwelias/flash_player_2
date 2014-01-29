@@ -3,8 +3,10 @@ package ayyo.player.core.controller.appconfig {
 	import ayyo.player.core.controller.ControllbarMediator;
 	import ayyo.player.core.controller.ResizeObjectMediator;
 	import ayyo.player.core.controller.SubtitlesMediator;
+	import ayyo.player.core.controller.VolumeBarMediator;
 	import ayyo.player.plugins.subtitles.impl.view.ISubtextField;
 	import ayyo.player.view.api.IPlayerControllBar;
+	import ayyo.player.view.api.IVolumeBar;
 	import ayyo.player.view.impl.controllbar.AudioTrackInfo;
 
 	import me.scriptor.additional.api.IResizable;
@@ -31,6 +33,10 @@ package ayyo.player.core.controller.appconfig {
 		 * @private
 		 */
 		private var controllBar : ITypeMatcher;
+		/**
+		 * @private
+		 */
+		private var volumeBar : ITypeMatcher;
 
 		[PostConstruct]
 		public function initialize() : void {
@@ -39,6 +45,7 @@ package ayyo.player.core.controller.appconfig {
 			this.mediatorMap.mapMatcher(this.resizable).toMediator(ResizeObjectMediator);
 			this.mediatorMap.mapMatcher(this.subtextField).toMediator(SubtitlesMediator);
 			this.mediatorMap.mapMatcher(this.controllBar).toMediator(ControllbarMediator);
+			this.mediatorMap.mapMatcher(this.volumeBar).toMediator(VolumeBarMediator);
 			this.mediatorMap.map(AudioTrackInfo).toMediator(AudioTrackInfoMediator);
 		}
 
@@ -46,6 +53,7 @@ package ayyo.player.core.controller.appconfig {
 			this.resizable = new TypeMatcher().anyOf(IResizable);
 			this.subtextField = new TypeMatcher().anyOf(ISubtextField);
 			this.controllBar = new TypeMatcher().anyOf(IPlayerControllBar);
+			this.volumeBar = new TypeMatcher().anyOf(IVolumeBar);
 		}
 
 		[PreDestroy]
@@ -53,6 +61,7 @@ package ayyo.player.core.controller.appconfig {
 			this.mediatorMap.unmapMatcher(this.resizable).fromMediator(ResizeObjectMediator);
 			this.mediatorMap.unmapMatcher(this.subtextField).fromMediator(SubtitlesMediator);
 			this.mediatorMap.unmapMatcher(this.controllBar).fromMediator(ControllbarMediator);
+			this.mediatorMap.unmapMatcher(this.volumeBar).fromMediator(VolumeBarMediator);
 			this.mediatorMap.unmap(AudioTrackInfo).fromMediator(AudioTrackInfoMediator);
 
 			this.disposeMatchers();
@@ -63,6 +72,7 @@ package ayyo.player.core.controller.appconfig {
 			this.resizable = null;
 			this.subtextField = null;
 			this.controllBar = null;
+			this.volumeBar = null;
 		}
 	}
 }

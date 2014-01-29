@@ -4,8 +4,6 @@ package ayyo.player.view.api {
 	import me.scriptor.additional.api.IHaveActionSignal;
 	import me.scriptor.additional.api.IResizable;
 
-	import flash.display.DisplayObject;
-
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
@@ -14,7 +12,7 @@ package ayyo.player.view.api {
 
 		function get audioTrack() : AudioTrackInfo;
 
-		function get volume() : DisplayObject;
+		function get volume() : IVolumeBar;
 
 		function get screenState() : IButton;
 

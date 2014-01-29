@@ -1,6 +1,7 @@
 package ayyo.player.view.impl {
 	import ayyo.player.view.api.IButton;
 	import ayyo.player.view.api.IPlayerControllBar;
+	import ayyo.player.view.api.IVolumeBar;
 	import ayyo.player.view.impl.controllbar.AudioTrackInfo;
 	import ayyo.player.view.impl.controllbar.PlayPauseButton;
 	import ayyo.player.view.impl.controllbar.ScreenStateSwitcher;
@@ -38,7 +39,7 @@ package ayyo.player.view.impl {
 		/**
 		 * @private
 		 */
-		private var _volume : VolumeBar;
+		private var _volume : IVolumeBar;
 		/**
 		 * @private
 		 */
@@ -69,9 +70,9 @@ package ayyo.player.view.impl {
 				this._matrix = new Matrix();
 				this.addChild(this.playPause.view);
 				this.addChild(this.audioTrack.view);
-				this.addChild(this.volume);
+				this.addChild(this.volume.view);
 				this.addChild(this.screenState.view);
-				
+
 				this.alpha = 0;
 
 				this.playPause.action.add(this.action.dispatch);
@@ -103,8 +104,7 @@ package ayyo.player.view.impl {
 			return this._track ||= new AudioTrackInfo();
 		}
 
-
-		public function get volume() : DisplayObject {
+		public function get volume() : IVolumeBar {
 			return this._volume ||= new VolumeBar();
 		}
 
@@ -128,8 +128,11 @@ package ayyo.player.view.impl {
 
 				this.screenState.view.x = screen.width - MARGIN * 2 - this.screenState.view.width - PADDING;
 				this.screenState.view.y = HEIGHT - this.screenState.view.height >> 1;
-				
-				this.audioTrack.view.x = this.screenState.view.x - this.audioTrack.view.width - PADDING;
+
+				this.volume.view.x = this.screenState.view.x - this.volume.view.width - PADDING;
+				this.volume.view.y = HEIGHT - 10 >> 1;
+
+				this.audioTrack.view.x = this.volume.view.x - this.audioTrack.view.width - PADDING;
 				this.audioTrack.view.y = HEIGHT - 10 >> 1;
 			}
 		}
