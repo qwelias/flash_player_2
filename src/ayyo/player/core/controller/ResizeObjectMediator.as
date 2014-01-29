@@ -1,4 +1,5 @@
 package ayyo.player.core.controller {
+	import org.osmf.media.MediaPlayerSprite;
 	import robotlegs.bender.framework.api.ILogger;
 	import flash.geom.Rectangle;
 	import me.scriptor.additional.api.IResizable;
@@ -23,6 +24,8 @@ package ayyo.player.core.controller {
 		public var dispatcher : IEventDispatcher;
 		[Inject]
 		public var logger : ILogger;
+		[Inject]
+		public var player : MediaPlayerSprite;
 		/**
 		 * @private
 		 */
@@ -52,6 +55,8 @@ package ayyo.player.core.controller {
 		 * @eventType flash.events.Event.RESIZE
 		 */
 		private function onApplicationReszied(event : Event) : void {
+			this.player.width = this.screen.width;
+			this.player.height = this.screen.height;
 			this.item.resize(this.screen.clone());
 		}
 	}

@@ -24,6 +24,13 @@ package ayyo.player.core.controller {
 		public function initialize() : void {
 			this.controlls.show();
 			this.controlls.action.add(this.onControlAction);
+			
+			this.dispatcher.addEventListener(PlayerEvent.CAN_PLAY, this.onMediaPlayable);
+		}
+
+		private function onMediaPlayable(event : PlayerEvent) : void {
+			this.dispatcher.removeEventListener(PlayerEvent.CAN_PLAY, this.onMediaPlayable);
+			this.controlls.playPause.enable();
 		}
 
 		public function destroy() : void {

@@ -10,6 +10,10 @@ package ayyo.player.view.api {
 	public interface IPlayerControllBar extends IPlayerView, IResizable, IHaveActionSignal {
 		function get playPause() : IButton;
 
+		function get timeline() : IVideoTimeline;
+
+		function get timer() : IVideoTimer;
+
 		function get audioTrack() : AudioTrackInfo;
 
 		function get volume() : IVolumeBar;

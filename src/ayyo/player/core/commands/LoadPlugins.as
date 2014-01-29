@@ -1,16 +1,15 @@
 package ayyo.player.core.commands {
-	import robotlegs.bender.extensions.contextView.ContextView;
-	import ayyo.player.config.impl.support.PluginMetadata;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
+	import ayyo.player.config.impl.support.PluginMetadata;
 	import ayyo.player.events.ApplicationEvent;
 	import ayyo.player.plugins.info.impl.AyyoPlugin;
 
-	import osmf.patch.SmoothedMediaFactory;
-
 	import robotlegs.bender.extensions.commandCenter.api.ICommand;
+	import robotlegs.bender.extensions.contextView.ContextView;
 	import robotlegs.bender.framework.api.ILogger;
 
 	import org.osmf.events.MediaFactoryEvent;
+	import org.osmf.media.MediaPlayerSprite;
 	import org.osmf.media.PluginInfoResource;
 	import org.osmf.media.URLResource;
 
@@ -21,11 +20,11 @@ package ayyo.player.core.commands {
 	 */
 	public class LoadPlugins implements ICommand {
 		[Inject]
-		public var factory : SmoothedMediaFactory;
-		[Inject]
 		public var logger : ILogger;
 		[Inject]
 		public var dispatcher : IEventDispatcher;
+		[Inject]
+		public var player : MediaPlayerSprite;
 		[Inject]
 		public var playerConfig : IAyyoPlayerConfig;
 		[Inject]
@@ -55,14 +54,13 @@ package ayyo.player.core.commands {
 				var resource : URLResource = new URLResource(this.currentInfo.url);
 				resource.addMetadataValue(PluginMetadata.CONFIG, this.currentInfo.config);
 				resource.addMetadataValue(PluginMetadata.CONTAINER, this.contextView.view);
-				this.factory.loadPlugin(resource);
+				this.player.mediaFactory.loadPlugin(resource);
 			}
 		}
 
 		private function dispose() : void {
 			this.unsubscribeFactory();
 			this.dispatcher.dispatchEvent(new ApplicationEvent(ApplicationEvent.READY));
-			this.factory = null;
 			this.logger = null;
 			this.playerConfig = null;
 			this.contextView = null;
@@ -76,8 +74,8 @@ package ayyo.player.core.commands {
 		 */
 		private function subscribeFactory() : void {
 			if (!this.isFactorySubscribed) {
-				this.factory.addEventListener(MediaFactoryEvent.PLUGIN_LOAD, this.onPluginLoaded);
-				this.factory.addEventListener(MediaFactoryEvent.PLUGIN_LOAD_ERROR, this.onPluginError);
+				this.player.mediaFactory.addEventListener(MediaFactoryEvent.PLUGIN_LOAD, this.onPluginLoaded);
+				this.player.mediaFactory.addEventListener(MediaFactoryEvent.PLUGIN_LOAD_ERROR, this.onPluginError);
 				this.isFactorySubscribed = true;
 			}
 		}
@@ -89,8 +87,8 @@ package ayyo.player.core.commands {
 		 */
 		private function unsubscribeFactory() : void {
 			if (this.isFactorySubscribed) {
-				this.factory.removeEventListener(MediaFactoryEvent.PLUGIN_LOAD, this.onPluginLoaded);
-				this.factory.removeEventListener(MediaFactoryEvent.PLUGIN_LOAD_ERROR, this.onPluginError);
+				this.player.mediaFactory.removeEventListener(MediaFactoryEvent.PLUGIN_LOAD, this.onPluginLoaded);
+				this.player.mediaFactory.removeEventListener(MediaFactoryEvent.PLUGIN_LOAD_ERROR, this.onPluginError);
 				this.isFactorySubscribed = false;
 			}
 		}

@@ -31,6 +31,7 @@ package ayyo.player.view.impl.controllbar {
 			this._pauseState = new PauseButtonGraphics() as Bitmap;
 			this.addChild(this._playState);
 			this.enable();
+			this.disable();
 		}
 
 		override protected function onButtonClick(event : MouseEvent) : void {
@@ -44,6 +45,16 @@ package ayyo.player.view.impl.controllbar {
 				this.addChild(this._playState);
 				this.action.dispatch(PlayerCommands.PAUSE);
 			}
+		}
+		
+		override protected function enableButton() : void {
+			super.enableButton();
+			this.alpha = 1;
+		}
+		
+		override protected function disableButton() : void {
+			super.disableButton();
+			this.alpha = .5;
 		}
 	}
 }

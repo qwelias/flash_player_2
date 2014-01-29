@@ -6,6 +6,9 @@ package ayyo.player.events {
 	 */
 	public class PlayerEvent extends Event {
 		public static const CAN_LOAD : String = "videoCanBeloaded";
+		public static const SPLASH_LOADED : String = "splashLoaded";
+		public static const ALTERNATIVE_AUDIO : String = "alternativeAudio";
+		public static const CAN_PLAY : String = "videoCanPlay";
 		/**
 		 * @private
 		 */

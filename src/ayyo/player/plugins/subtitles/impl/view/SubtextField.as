@@ -62,7 +62,7 @@ package ayyo.player.plugins.subtitles.impl.view {
 				this.text = this.text;
 				this.height += 50;
 				this.x = screen.width - this.width >> 1;
-				this.y = screen.height * .84;
+				this.y = screen.height * .805;
 				
 			}
 		}

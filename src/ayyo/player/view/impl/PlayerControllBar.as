@@ -1,10 +1,14 @@
 package ayyo.player.view.impl {
 	import ayyo.player.view.api.IButton;
 	import ayyo.player.view.api.IPlayerControllBar;
+	import ayyo.player.view.api.IVideoTimeline;
+	import ayyo.player.view.api.IVideoTimer;
 	import ayyo.player.view.api.IVolumeBar;
 	import ayyo.player.view.impl.controllbar.AudioTrackInfo;
 	import ayyo.player.view.impl.controllbar.PlayPauseButton;
 	import ayyo.player.view.impl.controllbar.ScreenStateSwitcher;
+	import ayyo.player.view.impl.controllbar.VideoTimeline;
+	import ayyo.player.view.impl.controllbar.VideoTimer;
 	import ayyo.player.view.impl.controllbar.VolumeBar;
 
 	import com.greensock.TweenLite;
@@ -60,6 +64,14 @@ package ayyo.player.view.impl {
 		 * @private
 		 */
 		private var _track : AudioTrackInfo;
+		/**
+		 * @private
+		 */
+		private var _timeline : VideoTimeline;
+		/**
+		 * @private
+		 */
+		private var _timer : VideoTimer;
 
 		public function PlayerControllBar(autoCreate : Boolean = true) {
 			autoCreate && this.create();
@@ -69,6 +81,8 @@ package ayyo.player.view.impl {
 			if (!this.isCreated) {
 				this._matrix = new Matrix();
 				this.addChild(this.playPause.view);
+				this.addChild(this.timeline.view);
+				this.addChild(this.timer.view);
 				this.addChild(this.audioTrack.view);
 				this.addChild(this.volume.view);
 				this.addChild(this.screenState.view);
@@ -98,6 +112,14 @@ package ayyo.player.view.impl {
 
 		public function get playPause() : IButton {
 			return this._playPause ||= new PlayPauseButton();
+		}
+
+		public function get timeline() : IVideoTimeline {
+			return this._timeline ||= new VideoTimeline();
+		}
+
+		public function get timer() : IVideoTimer {
+			return this._timer ||= new VideoTimer();
 		}
 
 		public function get audioTrack() : AudioTrackInfo {
@@ -130,10 +152,16 @@ package ayyo.player.view.impl {
 				this.screenState.view.y = HEIGHT - this.screenState.view.height >> 1;
 
 				this.volume.view.x = this.screenState.view.x - this.volume.view.width - PADDING;
-				this.volume.view.y = HEIGHT - 10 >> 1;
+				this.volume.view.y = HEIGHT - this.volume.view.height >> 1;
 
 				this.audioTrack.view.x = this.volume.view.x - this.audioTrack.view.width - PADDING;
 				this.audioTrack.view.y = HEIGHT - 10 >> 1;
+				
+				this.timer.view.x = this.audioTrack.view.x - this.timer.view.width - PADDING;
+				this.timer.view.y = HEIGHT - this.timer.view.height >> 1;
+				
+				this.timeline.view.x = this.playPause.view.x + this.playPause.view.width + PADDING;
+				this.timeline.view.y = HEIGHT - this.timeline.view.height >> 1;
 			}
 		}
 

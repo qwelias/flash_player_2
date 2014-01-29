@@ -15,7 +15,7 @@ package ayyo.player.core.controller.appconfig {
 	import ayyo.player.core.commands.hooks.InitInterface;
 	import ayyo.player.core.commands.hooks.InitMediaPlayer;
 	import ayyo.player.core.commands.hooks.InitStageOptions;
-	import ayyo.player.core.commands.hooks.LoadVideo;
+	import ayyo.player.core.commands.hooks.LoadSplashScreen;
 	import ayyo.player.core.commands.hooks.SaveScreen;
 	import ayyo.player.core.model.PlayerCommands;
 	import ayyo.player.events.ApplicationEvent;
@@ -49,14 +49,14 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.map(BinDataEvent.LOADED, BinDataEvent).toCommand(RegisterAsset).withGuards(OnlyIfTypeIsAssets);
 			this.commandMap.map(AssetEvent.REGISTRED).toCommand(NullCommand).withHooks(CheckAvaliableAssets);
 			this.commandMap.map(PluginEvent.LOAD).toCommand(LoadPlugins);
-			
-			this.commandMap.map(ApplicationEvent.READY).toCommand(NullCommand).withHooks(DisposePreloader).withGuards(OnlyIfPreloaderExists).once();
-			this.commandMap.map(ApplicationEvent.READY).toCommand(ConnectToVideo).once();
-			
+
+			this.commandMap.map(ApplicationEvent.READY).toCommand(NullCommand).withHooks(DisposePreloader, LoadSplashScreen).withGuards(OnlyIfPreloaderExists).once();
+
+			this.commandMap.map(PlayerEvent.SPLASH_LOADED, PlayerEvent).toCommand(ConnectToVideo).once();
 			this.commandMap.map(PlayerEvent.CAN_LOAD, PlayerEvent).toCommand(NullCommand).withHooks(InitInterface);
 			this.commandMap.map(PlayerCommands.FULLSCREEN, PlayerEvent).toCommand(SwitchScreenState);
 			this.commandMap.map(PlayerCommands.NORMALSCREEN, PlayerEvent).toCommand(SwitchScreenState);
-			this.commandMap.map(PlayerCommands.PLAY, PlayerEvent).toCommand(SwitchPlayPause).withHooks(LoadVideo);
+			this.commandMap.map(PlayerCommands.PLAY, PlayerEvent).toCommand(SwitchPlayPause);
 			this.commandMap.map(PlayerCommands.PAUSE, PlayerEvent).toCommand(SwitchPlayPause);
 		}
 
@@ -65,15 +65,15 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.unmap(BinDataEvent.LOAD, BinDataEvent).fromCommand(LoadBinData);
 			this.commandMap.unmap(BinDataEvent.LOADED, BinDataEvent).fromCommand(RegisterAsset);
 			this.commandMap.unmap(ResizeEvent.RESIZE, ResizeEvent).fromCommand(NullCommand);
-			
+
 			this.commandMap.unmap(PlayerEvent.CAN_LOAD, PlayerEvent).fromCommand(NullCommand);
 			this.commandMap.unmap(PlayerCommands.FULLSCREEN, PlayerEvent).fromCommand(SwitchScreenState);
 			this.commandMap.unmap(PlayerCommands.NORMALSCREEN, PlayerEvent).fromCommand(SwitchScreenState);
 			this.commandMap.unmap(PlayerCommands.PLAY, PlayerEvent).fromCommand(SwitchPlayPause);
 			this.commandMap.unmap(PlayerCommands.PAUSE, PlayerEvent).fromCommand(SwitchPlayPause);
-			
+
 			this.commandMap = null;
-			
+
 			this.connector = null;
 		}
 	}
