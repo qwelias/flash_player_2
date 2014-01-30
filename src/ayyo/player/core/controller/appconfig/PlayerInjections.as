@@ -9,8 +9,6 @@ package ayyo.player.core.controller.appconfig {
 
 	import robotlegs.bender.framework.api.IContext;
 
-	import org.osmf.elements.F4MElement;
-	import org.osmf.elements.F4MLoader;
 	import org.osmf.media.MediaPlayerSprite;
 
 	import flash.geom.Rectangle;
@@ -33,10 +31,6 @@ package ayyo.player.core.controller.appconfig {
 		 * @private
 		 */
 		private var player : MediaPlayerSprite;
-		/**
-		 * @private
-		 */
-		private var video : F4MElement;
 
 		[PostConstruct]
 		public function initialize() : void {
@@ -76,10 +70,8 @@ package ayyo.player.core.controller.appconfig {
 		 */
 		private function initPlayer() : void {
 			this.player = new MediaPlayerSprite(null, null, new SmoothedMediaFactory());
-			this.video = new F4MElement(null, new F4MLoader(this.player.mediaFactory));
 
 			this.context.injector.map(MediaPlayerSprite).toValue(this.player);
-			this.context.injector.map(F4MElement, "video").toValue(this.video);
 		}
 	}
 }

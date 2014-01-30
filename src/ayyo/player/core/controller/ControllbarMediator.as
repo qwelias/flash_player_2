@@ -1,10 +1,10 @@
 package ayyo.player.core.controller {
+	import ayyo.player.core.model.PlayerCommands;
 	import ayyo.player.events.PlayerEvent;
 	import ayyo.player.view.api.IPlayerControllBar;
-
 	import robotlegs.bender.extensions.mediatorMap.api.IMediator;
 	import robotlegs.bender.framework.api.ILogger;
-
+	import org.osmf.media.MediaElement;
 	import flash.events.IEventDispatcher;
 	import flash.geom.Rectangle;
 
@@ -20,16 +20,21 @@ package ayyo.player.core.controller {
 		public var dispatcher : IEventDispatcher;
 		[Inject(name="screen")]
 		public var screen : Rectangle;
+		/**
+		 * @private
+		 */
+		private var video : MediaElement;
 
 		public function initialize() : void {
 			this.controlls.show();
 			this.controlls.action.add(this.onControlAction);
-			
+
 			this.dispatcher.addEventListener(PlayerEvent.CAN_PLAY, this.onMediaPlayable);
 		}
 
 		private function onMediaPlayable(event : PlayerEvent) : void {
 			this.dispatcher.removeEventListener(PlayerEvent.CAN_PLAY, this.onMediaPlayable);
+			if(event.params) this.video = event.params[0] as MediaElement;
 			this.controlls.playPause.enable();
 		}
 
@@ -43,7 +48,8 @@ package ayyo.player.core.controller {
 
 		// Handlers
 		private function onControlAction(action : String) : void {
-			this.dispatcher.dispatchEvent(new PlayerEvent(action));
+			if(action == PlayerCommands.PLAY || action == PlayerCommands.PAUSE) this.dispatcher.dispatchEvent(new PlayerEvent(action, [this.video]));
+			else this.dispatcher.dispatchEvent(new PlayerEvent(action));
 		}
 	}
 }
