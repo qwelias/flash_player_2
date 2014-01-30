@@ -47,6 +47,7 @@ package ayyo.player.core.commands {
 			else if (event.traitType == MediaTraitType.ALTERNATIVE_AUDIO) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.ALTERNATIVE_AUDIO, [this.video.getTrait(event.traitType)]));
 			else if (event.traitType == MediaTraitType.PLAY) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.CAN_PLAY));
 			else if (event.traitType == MediaTraitType.TIME) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.TIME_TRAIT, [this.video.getTrait(MediaTraitType.TIME)]));
+			else if (event.traitType == MediaTraitType.BUFFER) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.BUFFER_TRAIT, [this.video.getTrait(MediaTraitType.BUFFER)]));
 		}
 	}
 }

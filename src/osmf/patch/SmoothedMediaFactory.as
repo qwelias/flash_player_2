@@ -17,8 +17,6 @@
 	import org.osmf.net.dvr.DVRCastNetLoader;
 	import org.osmf.net.rtmpstreaming.RTMPDynamicStreamingNetLoader;
 
-	import flash.external.ExternalInterface;
-
 	public class SmoothedMediaFactory extends MediaFactory {
 		/**
 		 * Constructor.
@@ -38,7 +36,6 @@
 		}
 
 		public function init() : void {
-			if (ExternalInterface.available) ExternalInterface.call("console.log", "SmoothedMediaFactory::init()");
 			this.f4mLoader = new F4MLoader(this);
 			var f4mLoaderCreator : Function = function() : MediaElement {
 				return new F4MElement(null, f4mLoader);

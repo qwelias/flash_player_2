@@ -8,8 +8,9 @@ package ayyo.player.events {
 		public static const CAN_LOAD : String = "videoCanBeloaded";
 		public static const SPLASH_LOADED : String = "splashLoaded";
 		public static const ALTERNATIVE_AUDIO : String = "alternativeAudio";
-		public static const CAN_PLAY : String = "videoCanPlay";
-		public static const TIME_TRAIT : String = "videoTimeChanges";
+		public static const CAN_PLAY : String = "playTrait";
+		public static const TIME_TRAIT : String = "timeTrait";
+		public static const BUFFER_TRAIT : String = "bufferTrait";
 		/**
 		 * @private
 		 */

@@ -32,7 +32,7 @@ package ayyo.player.view.impl.controllbar {
 		/**
 		 * @private
 		 */
-		private var _duration : uint = 1;
+		private var _duration : Number;
 		/**
 		 * @private
 		 */
@@ -51,7 +51,7 @@ package ayyo.player.view.impl.controllbar {
 				this.addChild(this.buffered);
 				this.addChild(this.played);
 				this.addChild(this.thumb.view);
-				
+
 				this.thumb.view.y = 7;
 				this.played.filters = [new DropShadowFilter(7, 90, 0xffffff, .7, 16, 16, 1, BitmapFilterQuality.MEDIUM, true), new GlowFilter(0x1965ee, .3, 5, 5, 1, BitmapFilterQuality.MEDIUM)];
 
@@ -97,21 +97,22 @@ package ayyo.player.view.impl.controllbar {
 		}
 
 		public function set time(value : uint) : void {
-			var percent : Number = value / this._duration;
-			if (!isNaN(this._widthOfTimeline)) {
-				if (int(percent * this._widthOfTimeline) > int(this.played.width)) {
-					trace("VideoTimeline.time(value)");
-					this.played.graphics.clear();
-					this.played.graphics.beginFill(0x006fff);
-					this.played.graphics.drawRoundRectComplex(0, 0, percent * this._widthOfTimeline, 13, 6, 0, 6, 0);
+			if (!isNaN(this._duration)) {
+				var percent : Number = value / this._duration;
+				if (!isNaN(this._widthOfTimeline)) {
+					if (int(percent * this._widthOfTimeline) > int(this.played.width)) {
+						trace("VideoTimeline.time(value)");
+						this.played.graphics.clear();
+						this.played.graphics.beginFill(0x006fff);
+						this.played.graphics.drawRoundRectComplex(0, 0, percent * this._widthOfTimeline, 13, 6, 0, 6, 0);
 
-					this.thumb.view.x = percent * this._widthOfTimeline;
+						this.thumb.view.x = percent * this._widthOfTimeline;
+					}
 				}
 			}
 		}
 
 		public function set duration(value : uint) : void {
-			trace("VideoTimeline.duration(value)");
 			this._duration = value;
 		}
 	}
