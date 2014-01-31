@@ -10,5 +10,7 @@ package ayyo.player.view.api {
 		function enable() : void;
 
 		function disable() : void;
+
+		function click() : void;
 	}
 }

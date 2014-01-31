@@ -13,7 +13,6 @@ package ayyo.player.core.commands.hooks {
 
 		public function hook() : void {
 			this.contextView.view.addChild(new PlayerControllBar());
-
 			this.dispose();
 		}
 

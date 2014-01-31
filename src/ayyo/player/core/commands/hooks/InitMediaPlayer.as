@@ -15,7 +15,6 @@ package ayyo.player.core.commands.hooks {
 		public var contextView : ContextView;
 
 		public function hook() : void {
-			trace('this.player: ' + (this.player));
 			this.player.mediaPlayer.autoDynamicStreamSwitch = true;
 			this.player.mediaPlayer.autoRewind = false;
 			this.player.mediaPlayer.autoPlay = false;
@@ -27,8 +26,8 @@ package ayyo.player.core.commands.hooks {
 		}
 
 		private function dispose() : void {
-			this.player = null;
 			this.contextView = null;
+			this.player = null;
 		}
 	}
 }

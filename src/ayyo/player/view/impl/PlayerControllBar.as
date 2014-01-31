@@ -1,4 +1,9 @@
 package ayyo.player.view.impl {
+	import flash.ui.Keyboard;
+	import flash.events.KeyboardEvent;
+	import flash.ui.Mouse;
+	import flash.geom.Point;
+
 	import ayyo.player.view.api.IButton;
 	import ayyo.player.view.api.IPlayerControllBar;
 	import ayyo.player.view.api.IVideoTimeline;
@@ -16,14 +21,18 @@ package ayyo.player.view.impl {
 
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
+	import org.osflash.signals.natives.NativeSignal;
 
 	import flash.display.DisplayObject;
 	import flash.display.GradientType;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.filters.BitmapFilterQuality;
 	import flash.filters.DropShadowFilter;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
+	import flash.utils.clearTimeout;
+	import flash.utils.setTimeout;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -72,6 +81,18 @@ package ayyo.player.view.impl {
 		 * @private
 		 */
 		private var _timer : VideoTimer;
+		/**
+		 * @private
+		 */
+		private var hideTimeoutID : uint;
+		/**
+		 * @private
+		 */
+		private var _enterFrame : NativeSignal;
+		/**
+		 * @private
+		 */
+		private var _mousePoint : Point;
 
 		public function PlayerControllBar(autoCreate : Boolean = true) {
 			autoCreate && this.create();
@@ -80,12 +101,15 @@ package ayyo.player.view.impl {
 		public function create() : void {
 			if (!this.isCreated) {
 				this._matrix = new Matrix();
+
 				this.addChild(this.playPause.view);
 				this.addChild(this.timeline.view);
 				this.addChild(this.timer.view);
 				this.addChild(this.audioTrack.view);
 				this.addChild(this.volume.view);
 				this.addChild(this.screenState.view);
+
+				this.stage ? this.addListeners() : this.addEventListener(Event.ADDED_TO_STAGE, this.onAddedToStage);
 
 				this.alpha = 0;
 
@@ -101,6 +125,7 @@ package ayyo.player.view.impl {
 
 		public function dispose() : void {
 			if (this.isCreated) {
+				this.removeListeners();
 				this._tweener.kill();
 				this.isCreated = false;
 			}
@@ -156,10 +181,10 @@ package ayyo.player.view.impl {
 
 				this.audioTrack.view.x = this.volume.view.x - this.audioTrack.view.width - PADDING;
 				this.audioTrack.view.y = HEIGHT - 10 >> 1;
-				
+
 				this.timer.view.x = this.audioTrack.view.x - this.timer.view.width - PADDING;
 				this.timer.view.y = HEIGHT - this.timer.view.height >> 1;
-				
+
 				this.timeline.view.x = this.playPause.view.x + this.playPause.view.width + PADDING;
 				this.timeline.view.y = HEIGHT - 14 >> 1;
 				this.timeline.view.width = screen.width - (screen.width - this.timer.view.x) - this.timeline.view.x - PADDING;
@@ -170,16 +195,70 @@ package ayyo.player.view.impl {
 			return this._action ||= new Signal(String);
 		}
 
+		public function get enterFrame() : ISignal {
+			return this._enterFrame ||= new NativeSignal(this, Event.ENTER_FRAME);
+		}
+
+		public function get mousePoint() : Point {
+			return this._mousePoint ||= new Point(this.mouseX, this.mouseY);
+		}
+
 		public function show() : void {
+			clearTimeout(this.hideTimeoutID);
 			this.tweener.play();
+			Mouse.show();
 		}
 
 		public function hide() : void {
+			clearTimeout(this.hideTimeoutID);
 			this.tweener.reverse();
+			Mouse.hide();
+			this.enterFrame.add(this.onEnterFrame);
 		}
 
 		public function get tweener() : TweenLite {
 			return this._tweener ||= TweenLite.fromTo(this, .5, {alpha:0}, {alpha:1, ease:Quad.easeOut});
+		}
+
+		private function addListeners() : void {
+			this.stage.addEventListener(Event.MOUSE_LEAVE, this.onMouseLeave);
+			this.stage.addEventListener(KeyboardEvent.KEY_DOWN, this.onKeyDown);
+			
+			trace('this.stage.focus: ' + (this.stage.focus));
+		}
+
+		private function removeListeners() : void {
+			this.stage.removeEventListener(Event.MOUSE_LEAVE, this.onMouseLeave);
+		}
+
+		// Handlers
+		private function onMouseLeave(event : Event) : void {
+			clearTimeout(this.hideTimeoutID);
+			this.enterFrame.removeAll();
+			this.mousePoint.x = this.mouseX;
+			this.mousePoint.y = this.mouseY;
+			this.hideTimeoutID = setTimeout(this.hide, 1000);
+		}
+
+		private function onEnterFrame(event : Event) : void {
+			if (Math.abs(this.mousePoint.x - this.mouseX) > 3 || Math.abs(this.mousePoint.y - this.mouseY) > 3) {
+				this.mousePoint.x = this.mouseX;
+				this.mousePoint.y = this.mouseY;
+				this.show();
+			} else {
+				this.alpha == 1 && this.onMouseLeave(null);
+			}
+		}
+
+		private function onAddedToStage(event : Event) : void {
+			this.removeEventListener(Event.ADDED_TO_STAGE, this.onAddedToStage);
+			this.addListeners();
+		}
+		
+		private function onKeyDown(event : KeyboardEvent) : void {
+			trace("PlayerControllBar.onKeyDown(event)");
+			if(event.keyCode == Keyboard.SPACE) this.playPause.click();
+			else if(event.keyCode == Keyboard.F) this.screenState.click();
 		}
 	}
 }
