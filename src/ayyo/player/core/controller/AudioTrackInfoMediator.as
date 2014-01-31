@@ -1,6 +1,5 @@
 package ayyo.player.core.controller {
 	import ayyo.player.core.model.PlayerCommands;
-	import flash.events.Event;
 	import ayyo.player.events.PlayerEvent;
 	import ayyo.player.view.impl.controllbar.AudioTrackInfo;
 
@@ -11,7 +10,9 @@ package ayyo.player.core.controller {
 	import org.osmf.net.StreamingItem;
 	import org.osmf.traits.AlternativeAudioTrait;
 	import org.osmf.traits.MediaTraitType;
+	import org.osmf.traits.SeekTrait;
 
+	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 
 	/**
@@ -58,6 +59,13 @@ package ayyo.player.core.controller {
 
 		private function onChangeTrack(trackID : uint) : void {
 			this._trait.switchTo(trackID);
+			if (this.player.media != null && this.player.media.hasTrait(MediaTraitType.SEEK)) {
+				var seekTrait : SeekTrait = this.player.media.getTrait(MediaTraitType.SEEK) as SeekTrait;
+
+				if (seekTrait.canSeekTo(this.player.mediaPlayer.currentTime)) {
+					seekTrait.seek(this.player.mediaPlayer.currentTime);
+				}
+			}
 			this.dispatcher.dispatchEvent(new PlayerEvent(trackID == 0 ? PlayerCommands.SUBTITLES_OFF : PlayerCommands.SUBTITLES_ON));
 		}
 	}
