@@ -30,6 +30,10 @@ package ayyo.player.view.impl.controllbar {
 			// TODO disable instanciation of abstract class
 			autoCreate && this.create();
 		}
+		
+		public function click() : void {
+			this.onButtonClick(null);
+		}
 
 		public function enable() : void {
 			if (!this.buttonMode) {

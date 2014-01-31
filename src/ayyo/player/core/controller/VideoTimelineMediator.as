@@ -42,9 +42,11 @@ package ayyo.player.core.controller {
 		}
 
 		private function onBufferingChange(event : BufferEvent) : void {
+			trace('event.buffering: ' + (event.buffering));
 		}
 
 		private function onBufferTimeChange(event : BufferEvent) : void {
+			trace('event.bufferTime: ' + (event.bufferTime));
 		}
 	}
 }

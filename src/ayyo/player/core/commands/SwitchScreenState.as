@@ -18,7 +18,7 @@ package ayyo.player.core.commands {
 
 		public function execute() : void {
 			if (this.event.type == PlayerCommands.FULLSCREEN) {
-				this.contextView.view.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+				this.contextView.view.stage.displayState = StageDisplayState.FULL_SCREEN;
 			} else if (this.event.type == PlayerCommands.NORMALSCREEN) {
 				this.contextView.view.stage.displayState = StageDisplayState.NORMAL;
 			}
