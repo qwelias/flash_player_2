@@ -5,6 +5,7 @@ package ayyo.player.core.controller.appconfig {
 	import ayyo.player.core.commands.LoadPlugins;
 	import ayyo.player.core.commands.NullCommand;
 	import ayyo.player.core.commands.RegisterAsset;
+	import ayyo.player.core.commands.SeekVideo;
 	import ayyo.player.core.commands.SwitchPlayPause;
 	import ayyo.player.core.commands.SwitchScreenState;
 	import ayyo.player.core.commands.guards.OnlyIfPreloaderExists;
@@ -58,6 +59,7 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.map(PlayerCommands.NORMALSCREEN, PlayerEvent).toCommand(SwitchScreenState);
 			this.commandMap.map(PlayerCommands.PLAY, PlayerEvent).toCommand(SwitchPlayPause);
 			this.commandMap.map(PlayerCommands.PAUSE, PlayerEvent).toCommand(SwitchPlayPause);
+			this.commandMap.map(PlayerCommands.SEEK, PlayerEvent).toCommand(SeekVideo);
 		}
 
 		[PreDestroy]
@@ -71,6 +73,7 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.unmap(PlayerCommands.NORMALSCREEN, PlayerEvent).fromCommand(SwitchScreenState);
 			this.commandMap.unmap(PlayerCommands.PLAY, PlayerEvent).fromCommand(SwitchPlayPause);
 			this.commandMap.unmap(PlayerCommands.PAUSE, PlayerEvent).fromCommand(SwitchPlayPause);
+			this.commandMap.unmap(PlayerCommands.SEEK, PlayerEvent).fromCommand(SeekVideo);
 
 			this.commandMap = null;
 

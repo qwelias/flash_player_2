@@ -23,6 +23,7 @@ package ayyo.player.core.controller {
 
 		public function initialize() : void {
 			this.dispatcher.addEventListener(PlayerEvent.BUFFER_TRAIT, this.onBufferTrait);
+			this.timeline.action.add(this.onTimeLineAction);
 		}
 
 		public function destroy() : void {
@@ -47,6 +48,10 @@ package ayyo.player.core.controller {
 
 		private function onBufferTimeChange(event : BufferEvent) : void {
 			trace('event.bufferTime: ' + (event.bufferTime));
+		}
+		
+		private function onTimeLineAction(action : String, params : Array) : void {
+			this.dispatcher.dispatchEvent(new PlayerEvent(action, params));
 		}
 	}
 }

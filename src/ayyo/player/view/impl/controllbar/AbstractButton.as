@@ -3,7 +3,7 @@ package ayyo.player.view.impl.controllbar {
 
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
-	import org.osflash.signals.natives.NativeSignal;
+	import org.osflash.signals.natives.sets.InteractiveObjectSignalSet;
 
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -24,7 +24,7 @@ package ayyo.player.view.impl.controllbar {
 		/**
 		 * @private
 		 */
-		private var _click : NativeSignal;
+		private var _signals : InteractiveObjectSignalSet;
 
 		public function AbstractButton(autoCreate : Boolean = true) {
 			// TODO disable instanciation of abstract class
@@ -34,10 +34,14 @@ package ayyo.player.view.impl.controllbar {
 		public function click() : void {
 			this.onButtonClick(null);
 		}
+		
+		public function get signals() : InteractiveObjectSignalSet {
+			return this._signals ||= new InteractiveObjectSignalSet(this);
+		}
 
 		public function enable() : void {
 			if (!this.buttonMode) {
-				this._click.add(this.onButtonClick);
+				this.signals.click.add(this.onButtonClick);
 				this.enableButton();
 				this.mouseChildren = false;
 				this.mouseEnabled = this.buttonMode = true;
@@ -49,7 +53,7 @@ package ayyo.player.view.impl.controllbar {
 
 		public function disable() : void {
 			if (this.buttonMode) {
-				this._click.remove(this.onButtonClick);
+				this.signals.click.remove(this.onButtonClick);
 				this.disableButton();
 				this.mouseChildren = true;
 				this.mouseEnabled = this.buttonMode = false;
@@ -69,7 +73,6 @@ package ayyo.player.view.impl.controllbar {
 
 		public function create() : void {
 			if (!this.isCreated) {
-				this._click = new NativeSignal(this, MouseEvent.CLICK);
 				this.createButton();
 				this.isCreated = true;
 			}
@@ -81,7 +84,8 @@ package ayyo.player.view.impl.controllbar {
 		public function dispose() : void {
 			if (this.isCreated) {
 				this.disable();
-				this._click = null;
+				this.signals.removeAll();
+				this._signals = null;
 				this.disposeButton();
 				this.parent && this.parent.removeChild(this);
 				this.isCreated = false;

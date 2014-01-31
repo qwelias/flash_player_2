@@ -223,8 +223,6 @@ package ayyo.player.view.impl {
 		private function addListeners() : void {
 			this.stage.addEventListener(Event.MOUSE_LEAVE, this.onMouseLeave);
 			this.stage.addEventListener(KeyboardEvent.KEY_DOWN, this.onKeyDown);
-			
-			trace('this.stage.focus: ' + (this.stage.focus));
 		}
 
 		private function removeListeners() : void {

@@ -38,13 +38,13 @@ package ayyo.player.core.controller {
 		private function onTimeTrait(event : PlayerEvent) : void {
 			this.dispatcher.removeEventListener(PlayerEvent.TIME_TRAIT, this.onTimeTrait);
 			this.trait = event.params[0] as TimeTrait;
-			this.trait.addEventListener(TimeEvent.DURATION_CHANGE, this.onDurationChnage);
+			this.trait.addEventListener(TimeEvent.DURATION_CHANGE, this.onDurationChange);
 		}
 
-		private function onDurationChnage(event : TimeEvent) : void {
-			if (this.trait) {
+		private function onDurationChange(event : TimeEvent) : void {
+			if (this.trait && !isNaN(this.trait.duration)) {
 				this.timer.duration = this.trait.duration;
-				this.trait.removeEventListener(TimeEvent.DURATION_CHANGE, this.onDurationChnage);
+				this.trait.removeEventListener(TimeEvent.DURATION_CHANGE, this.onDurationChange);
 			}
 		}
 		
