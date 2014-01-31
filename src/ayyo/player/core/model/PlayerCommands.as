@@ -9,5 +9,7 @@ package ayyo.player.core.model {
 		public static const NORMALSCREEN : String = "normalscreen";
 		public static const SEEK : String = "seek";
 		public static const VOLUME : String = "volume";
+		public static const SUBTITLES_ON : String = "subtitlesOn";
+		public static const SUBTITLES_OFF : String = "subtitlesOff";
 	}
 }

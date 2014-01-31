@@ -1,4 +1,5 @@
 package ayyo.player.core.controller {
+	import ayyo.player.core.model.PlayerCommands;
 	import flash.events.Event;
 	import ayyo.player.events.PlayerEvent;
 	import ayyo.player.view.impl.controllbar.AudioTrackInfo;
@@ -57,6 +58,7 @@ package ayyo.player.core.controller {
 
 		private function onChangeTrack(trackID : uint) : void {
 			this._trait.switchTo(trackID);
+			this.dispatcher.dispatchEvent(new PlayerEvent(trackID == 0 ? PlayerCommands.SUBTITLES_OFF : PlayerCommands.SUBTITLES_ON));
 		}
 	}
 }

@@ -1,8 +1,5 @@
 package ayyo.player.plugins.subtitles.impl {
-	import flash.utils.clearTimeout;
-	import flash.utils.setTimeout;
 	import ayyo.player.plugins.subtitles.impl.view.SubtextField;
-	import ayyo.player.plugins.subtitles.impl.view.SubtitlesGuidlines;
 
 	import org.osmf.elements.ProxyElement;
 	import org.osmf.events.TimelineMetadataEvent;
@@ -12,6 +9,8 @@ package ayyo.player.plugins.subtitles.impl {
 	import org.osmf.metadata.TimelineMetadata;
 
 	import flash.display.DisplayObjectContainer;
+	import flash.utils.clearTimeout;
+	import flash.utils.setTimeout;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -42,6 +41,11 @@ package ayyo.player.plugins.subtitles.impl {
 			super(element);
 		}
 
+		public function set visible(value : Boolean) : void {
+			if (this._subContainer)
+				this.subField.visible = value;
+		}
+
 		override public function set proxiedElement(value : MediaElement) : void {
 			if (value == null) return;
 			super.proxiedElement = value;
@@ -50,8 +54,7 @@ package ayyo.player.plugins.subtitles.impl {
 
 		public function set subContainer(value : DisplayObjectContainer) : void {
 			this._subContainer = value;
-			this._subContainer.addChild(this.subField);
-			this._subContainer.addChild(new SubtitlesGuidlines());
+			this._subContainer && this._subContainer.addChild(this.subField);
 		}
 
 		public function initialize(subtitles : Vector.<Subtitle>) : void {

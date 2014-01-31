@@ -54,6 +54,7 @@ package ayyo.player.core.commands {
 				var resource : URLResource = new URLResource(this.currentInfo.url);
 				resource.addMetadataValue(PluginMetadata.CONFIG, this.currentInfo.config);
 				resource.addMetadataValue(PluginMetadata.CONTAINER, this.contextView.view);
+				resource.addMetadataValue(PluginMetadata.DISPATCHER, this.dispatcher);
 				this.player.mediaFactory.loadPlugin(resource);
 			}
 		}

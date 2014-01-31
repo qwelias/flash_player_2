@@ -5,6 +5,7 @@ package ayyo.player.config.impl.support {
 	public class PluginMetadata {
 		public static const CONFIG : String = "config";
 		public static const CONTAINER : String = "displayObjectContainer";
+		public static const DISPATCHER : String = "dispatcher";
 		
 	}
 }
