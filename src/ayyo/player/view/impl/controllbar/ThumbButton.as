@@ -1,7 +1,6 @@
 package ayyo.player.view.impl.controllbar {
 	import flash.filters.BitmapFilterQuality;
 	import flash.filters.DropShadowFilter;
-	import ayyo.player.view.impl.controllbar.AbstractButton;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
