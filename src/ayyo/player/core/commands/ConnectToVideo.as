@@ -1,4 +1,5 @@
 package ayyo.player.core.commands {
+	import org.osmf.events.MediaErrorEvent;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.events.PlayerEvent;
 
@@ -39,8 +40,13 @@ package ayyo.player.core.commands {
 			this.media = this.player.mediaFactory.createMediaElement(resource);
 
 			this.media.addEventListener(MediaElementEvent.TRAIT_ADD, this.onAddMediaTrait);
+			this.media.addEventListener(MediaErrorEvent.MEDIA_ERROR, this.onErrorOccured);
 
 			(this.media.getTrait(MediaTraitType.LOAD) as LoadTrait).load();
+		}
+
+		private function onErrorOccured(event : MediaErrorEvent) : void {
+			this.logger.error(event.error.message);
 		}
 
 		private function onAddMediaTrait(event : MediaElementEvent) : void {
