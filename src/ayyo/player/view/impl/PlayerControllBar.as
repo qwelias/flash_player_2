@@ -164,7 +164,7 @@ package ayyo.player.view.impl {
 				this.graphics.clear();
 				this._matrix.identity();
 				this._matrix.createGradientBox(screen.width - MARGIN * 2, HEIGHT, -Math.PI / 2);
-				this.graphics.beginGradientFill(GradientType.LINEAR, [0x001e21, 0x000d21], [.9, .9], [0, 0xff], this._matrix);
+				this.graphics.beginGradientFill(GradientType.LINEAR, [0x000d21, 0x001e21], [.9, .9], [0, 0xff], this._matrix);
 				this.graphics.drawRoundRect(0, 0, screen.width - MARGIN * 2, HEIGHT, 12);
 
 				this.x = MARGIN;
@@ -252,11 +252,10 @@ package ayyo.player.view.impl {
 			this.removeEventListener(Event.ADDED_TO_STAGE, this.onAddedToStage);
 			this.addListeners();
 		}
-		
+
 		private function onKeyDown(event : KeyboardEvent) : void {
-			trace("PlayerControllBar.onKeyDown(event)");
-			if(event.keyCode == Keyboard.SPACE) this.playPause.click();
-			else if(event.keyCode == Keyboard.F) this.screenState.click();
+			if (event.keyCode == Keyboard.SPACE) this.playPause.click();
+			else if (event.keyCode == Keyboard.F) this.screenState.click();
 		}
 	}
 }

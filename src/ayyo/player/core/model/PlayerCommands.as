@@ -8,5 +8,6 @@ package ayyo.player.core.model {
 		public static const FULLSCREEN : String = "fullscreen";
 		public static const NORMALSCREEN : String = "normalscreen";
 		public static const SEEK : String = "seek";
+		public static const VOLUME : String = "volume";
 	}
 }

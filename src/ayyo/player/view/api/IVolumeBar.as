@@ -7,5 +7,8 @@ package ayyo.player.view.api {
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
 	public interface IVolumeBar extends IHaveView, IDisposable, IHaveActionSignal {
+		function enable() : void;
+
+		function disable() : void;
 	}
 }

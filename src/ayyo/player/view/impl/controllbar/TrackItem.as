@@ -70,12 +70,16 @@ package ayyo.player.view.impl.controllbar {
 		
 		override protected function enableButton() : void {
 			super.enableButton();
+			this.signals.rollOver.add(this.onRolloverRollout);
+			this.signals.rollOut.add(this.onRolloverRollout);
 			this.alpha = .5;
 			this.filters = [];
 		}
 		
 		override protected function disableButton() : void {
 			super.disableButton();
+			this.signals.rollOver.remove(this.onRolloverRollout);
+			this.signals.rollOut.remove(this.onRolloverRollout);
 			this.alpha = 1;
 			this.filters = [this._glowFilter];
 		}
@@ -92,6 +96,11 @@ package ayyo.player.view.impl.controllbar {
 		override protected function onButtonClick(event : MouseEvent) : void {
 			super.onButtonClick(event);
 			this.action.dispatch(this._id.toString());
+		}
+		
+		//	Handlers
+		private function onRolloverRollout(event : MouseEvent) : void {
+			this.alpha = event.type == MouseEvent.ROLL_OVER ? .8 : .5;
 		}
 	}
 }

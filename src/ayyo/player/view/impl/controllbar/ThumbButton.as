@@ -15,7 +15,7 @@ package ayyo.player.view.impl.controllbar {
 			this.filters = [new DropShadowFilter(2, 90, 0, .3, 1, 1, 1, BitmapFilterQuality.MEDIUM)];
 			this.graphics.clear();
 			this.graphics.beginFill(0xffffff);
-			this.graphics.drawCircle(0, 0, 7);
+			this.graphics.drawCircle(0, 0, 8);
 		}
 	}
 }

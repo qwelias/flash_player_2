@@ -29,6 +29,7 @@ package ayyo.player.view.impl.controllbar {
 			super.createButton();
 			this._fullscreen = new FullscreenGraphics() as Bitmap;
 			this._normalscreen = new NormalscreenGraphics() as Bitmap;
+			this.alpha = .8;
 			this.addChild(this._fullscreen);
 			this.enable();
 		}
@@ -44,6 +45,23 @@ package ayyo.player.view.impl.controllbar {
 				this.addChild(this._fullscreen);
 				this.action.dispatch(PlayerCommands.NORMALSCREEN);
 			}
+		}
+
+		override protected function enableButton() : void {
+			super.enableButton();
+			this.signals.rollOver.add(this.onRolloverRollout);
+			this.signals.rollOut.add(this.onRolloverRollout);
+		}
+		
+		override protected function disableButton() : void {
+			super.disableButton();
+			this.signals.rollOver.remove(this.onRolloverRollout);
+			this.signals.rollOut.remove(this.onRolloverRollout);
+		}
+		
+		//	Handlers
+		private function onRolloverRollout(event : MouseEvent) : void {
+			this.alpha = event.type == MouseEvent.ROLL_OVER ? 1 : .8;
 		}
 	}
 }
