@@ -1,0 +1,122 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru">
+    <head>
+        <title>ayyoPlayerMovie</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <script type="text/javascript" src="http://flash.staging.ayyo.ru/swfobject.js"></script>
+        <script type="text/javascript" src="http://flash.staging.ayyo.ru/jquery.js"></script>
+        <script type="text/javascript">
+
+            function recieveflashevent(val1,val2){
+              console.log("Event: "+val1+", "+val2);
+            }
+
+            window.flashvars = {};
+            window.params = {};
+
+            function replacePlayer(){
+                swfobject.removeSWF('ayyoPlayerMovie')
+
+                $('body').prepend('<div id="flashContent"></div>')
+
+                var swfVersionStr = "10.1.52";
+                var xiSwfUrlStr = "";
+
+                var attributes = {
+                  id: "ayyoPlayerMovie",
+                  name: "ayyoPlayerMovie",
+                  align: "middle"
+                };
+
+                swfobject.createCSS("html", "height:100%; background-color: #000000;");
+                swfobject.createCSS("body", "margin:0; padding:0;");
+
+                $form = $('#flashForm');
+
+                $('#flashvarsfs input').each(function(){
+                  $input = $(this);
+                  window.flashvars[$input.attr('name')] = $input.val();
+                });
+
+
+                var fv = $('#flashvar_get').val();
+                console.log('fv', fv)
+                var fvArr = fv.split('&');
+                var fvObj = {};
+                for(var i = 0; i<fvArr.length; i++){
+                    it = fvArr[i].split('=');
+                    window.flashvars[it[0]] = decodeURIComponent(it[1]);
+                }
+
+                $('#paramsfs input').each(function(){
+                  $input = $(this);
+                  window.params[$input.attr('name')] = $input.val();
+                })
+
+                console.log(window.flashvars, window.params)
+                swfobject.embedSWF("ayyoPlayerMovie.swf", "flashContent", "850", "477",  swfVersionStr, xiSwfUrlStr, window.flashvars, window.params, attributes);
+            }
+
+              $(function(){
+
+                $form = $('#flashForm');
+                $form.submit(function(e){
+                  e.preventDefault();
+                  replacePlayer();
+
+                })
+
+                replacePlayer();
+            })
+
+        </script>
+    </head>
+    <body>
+        <div id="flashContent"></div>
+        <form id="flashForm">
+            <input type="submit" value="Хочу плеер!"/></p>
+
+            <fieldset id="flashvarsfs" style="float: left; color: white;">
+                <p><label>flashvar from API</label><br> <textarea name="flashvar_get" id="flashvar_get" style="width: 100%; height: 150px;">dto_enabled=false&dtr_enabled=false&screenshot=%2Fmedia%2Fmovies%2F1155%2Fvideo_poster.jpg&free=false&streaming_price=80.00&buffer_size=1800&4x3=false&url=http%3A%2F%2Fcdn.ayyo.ru%2Fu24%2Fbf%2F03%2F275c71f9-f159-489a-9a02-8edf64e410c4.f4m&streaming_enabled=true&player_type=movie&token=begintokensessionid%3Dyb0y6wl9ki2yqlat57ulosv55bpbe9zn%2Ccontentid%3D185%2Ccountrycode%3Dru%2Cclientkey%3D6f17269e454fbbd63a1e3e9727ac89%3ASvbwhROcR1JZE6PJUJ03cAg-Qb4endtoken</textarea>
+                <p><label>auto_play</label>             <input name="auto_play", type="text" value="false"/></p>
+              
+                <p><label>first_run</label>             <input name="first_run", type="text" value="true"/></p>
+                <p><label>virtual_time</label>          <input name="virtual_time", type="text" value="6266"/></p>
+
+                <p><label>hours_until_start</label>     <input name="hours_until_start", type="text" value="136"/></p>
+                <p><label>hours_until_stop</label>      <input name="hours_until_stop", type="text" value="48"/></p>
+
+                <p><label>tooltip_play_button</label>           <input name="tooltip_play_button", type="text" value="Смотреть"/></p>
+                <p><label>tooltip_pause_button</label>          <input name="tooltip_pause_button", type="text" value="Пауза"/></p>
+                <p><label>tooltip_license_icon</label>          <input name="tooltip_license_icon", type="text" value="У вас осталось N часов, чтобы посмотреть фильм"/></p>
+                <p><label>tooltip_timer</label>                 <input name="tooltip_timer", type="text" value="Посмотреть сколько осталось"/></p>
+                <p><label>tooltip_timer_reverse</label>         <input name="tooltip_timer_reverse", type="text" value="Посмотреть продолжительность"/></p>
+                <p><label>tooltip_HQ_icon_on</label>            <input name="tooltip_HQ_icon_on", type="text" value="Включить отличное качество"/></p>
+                <p><label>tooltip_HQ_icon_off</label>           <input name="tooltip_HQ_icon_off", type="text" value="Включить стандартное качество"/></p>
+                <p><label>tooltip_sound_icon_on</label>         <input name="tooltip_sound_icon_on", type="text" value="Включить звук"/></p>
+                <p><label>tooltip_sound_icon_off</label>        <input name="tooltip_sound_icon_off", type="text" value="Выключить звук"/></p>
+                <p><label>tooltip_fullscreen</label>            <input name="tooltip_fullscreen", type="text" value="Развернуть на весь экран"/></p>
+                <p><label>tooltip_unfullscreen</label>          <input name="tooltip_unfullscreen", type="text" value="Свернуть"/></p>
+                <p><label>tooltip_rus_lang_button</label>       <input name="tooltip_rus_lang_button" type="Русская дорожка"/></p>
+                <p><label>tooltip_eng_lang_button</label>       <input name="tooltip_eng_lang_button" type="Английская дорожка"/></p>
+                <p><label>tooltip_rus_subs_on_button</label>    <input name="tooltip_rus_subs_on_button" type="Включить субтитры"/></p>
+                <p><label>tooltip_rus_subs_off_button</label>   <input name="tooltip_rus_subs_off_button" type="Выключить субтитры"/></p>
+                <p><label>assets</label>                        <input name="assets" type='{"name":"arialFontFamily","url":"./assets/fonts/arial.swf","type":"font"'/></p>
+                <p><label>plugins</label>                       <input name="plugins" type='{"url":"./plugins/SubtitlesPlugin.swf", "config":"http://cdn.ayyo.ru/u22/ec/96/VForVendetta-Feat-PAL-16x9-2.35_Russian.srt"}'/></p>
+            </fieldset>
+
+            <fieldset id="paramsfs" style="float: left; color: white;">
+                <p><label>quality</label>               <input name="quality", type="text" value="best"/></p>
+                <p><label>bgcolor</label>               <input name="bgcolor", type="text" value="#000000"/></p>
+                <p><label>play</label>                  <input name="play", type="text" value="true"/></p>
+                <p><label>loop</label>                  <input name="loop", type="text" value="true"/></p>
+                <p><label>wmode</label>                 <input name="wmode", type="text" value="transparent"/></p>
+                <p><label>scale</label>                 <input name="scale", type="text" value="noscale"/></p>
+                <p><label>menu</label>                  <input name="menu", type="text" value="false"/></p>
+                <p><label>devicefont</label>            <input name="devicefont", type="text" value="false"/></p>
+                <p><label>salign</label>                <input name="salign", type="text" value="lb"/></p>
+                <p><label>allowscriptaccess</label>     <input name="allowscriptaccess", type="text" value="sameDomain"/></p>
+                <p><label>allowFullScreen</label>       <input name="allowFullScreen", type="text" value="true"/></p>
+            </fieldset>
+        </form>
+    </body>
+</html>
