@@ -50,7 +50,6 @@ package ayyo.player.core.commands {
 		}
 
 		private function onAddMediaTrait(event : MediaElementEvent) : void {
-			trace('event.traitType: ' + (event.traitType));
 			if (event.traitType == MediaTraitType.LOAD) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.CAN_LOAD, [this.media.getTrait(event.traitType)]));
 			else if (event.traitType == MediaTraitType.ALTERNATIVE_AUDIO) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.ALTERNATIVE_AUDIO, [this.media.getTrait(event.traitType)]));
 			else if (event.traitType == MediaTraitType.PLAY) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.CAN_PLAY, [this.media]));

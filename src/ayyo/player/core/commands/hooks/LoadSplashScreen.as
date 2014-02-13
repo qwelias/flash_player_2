@@ -1,4 +1,6 @@
 package ayyo.player.core.commands.hooks {
+	import robotlegs.bender.framework.api.ILogger;
+	import org.osmf.events.MediaErrorEvent;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.events.PlayerEvent;
 
@@ -28,6 +30,8 @@ package ayyo.player.core.commands.hooks {
 		public var playerConfig : IAyyoPlayerConfig;
 		[Inject]
 		public var dispatcher : IEventDispatcher;
+		[Inject]
+		public var logger : ILogger;
 		/**
 		 * @private
 		 */
@@ -38,6 +42,7 @@ package ayyo.player.core.commands.hooks {
 			this._image = this.player.mediaFactory.createMediaElement(resource) as ImageElement;
 			this._image.smoothing = true;
 			this._image.addEventListener(MediaElementEvent.TRAIT_ADD, this.onTraitAdded);
+			this._image.addEventListener(MediaErrorEvent.MEDIA_ERROR, this.onMediaError);
 			var layout : LayoutMetadata = new LayoutMetadata();
 			layout.scaleMode = ScaleMode.LETTERBOX;
 			layout.verticalAlign = VerticalAlign.MIDDLE;
@@ -47,15 +52,33 @@ package ayyo.player.core.commands.hooks {
 			this._image.addMetadata(LayoutMetadata.LAYOUT_NAMESPACE, layout);
 			this.player.media = this._image;
 		}
+		
+		private function dispose() : void {
+			this._image.removeEventListener(MediaElementEvent.TRAIT_ADD, this.onTraitAdded);
+			this._image.removeEventListener(MediaErrorEvent.MEDIA_ERROR, this.onMediaError);
+			this._image = null;
+			this.playerConfig = null;
+			this.dispatcher = null;
+			this.logger = null;
+		}
+		
+		private function nextStep() : void {
+			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.SPLASH_LOADED));
+			this.dispose();
+		}
+
+		private function onMediaError(event : MediaErrorEvent) : void {
+			this.logger.error(event.error.message);
+			this.nextStep();
+		}
 
 		private function onTraitAdded(event : MediaElementEvent) : void {
 			event.traitType == MediaTraitType.DISPLAY_OBJECT && this.next();
 		}
 
 		private function next() : void {
-			this._image.removeEventListener(MediaElementEvent.TRAIT_ADD, this.onTraitAdded);
 			var trait : DisplayObjectTrait = this._image.getTrait(MediaTraitType.DISPLAY_OBJECT) as DisplayObjectTrait;
-			trait.displayObject is Loader && this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.SPLASH_LOADED));
+			trait.displayObject is Loader && this.nextStep();
 		}
 	}
 }
