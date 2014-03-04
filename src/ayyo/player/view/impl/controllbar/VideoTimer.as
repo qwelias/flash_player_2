@@ -1,8 +1,9 @@
 package ayyo.player.view.impl.controllbar {
-	import flash.display.DisplayObject;
 	import ayyo.player.view.api.IVideoTimer;
 
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -23,6 +24,10 @@ package ayyo.player.view.impl.controllbar {
 		 * @private
 		 */
 		private var isCreated : Boolean;
+		/**
+		 * @private
+		 */
+		private var isEstimated : Boolean;
 
 		public function VideoTimer(autoCreate : Boolean = true) {
 			autoCreate && this.create();
@@ -31,6 +36,7 @@ package ayyo.player.view.impl.controllbar {
 		public function create() : void {
 			if (!this.isCreated) {
 				this.addChild(this.textfield);
+				this.addEventListener(MouseEvent.CLICK, this.onSwitchCurrentToEstimated);
 				this.time = 0;
 				this.isCreated = true;
 			}
@@ -63,8 +69,13 @@ package ayyo.player.view.impl.controllbar {
 			this._duration = value;
 		}
 
+		public function get view() : DisplayObject {
+			return this;
+		}
+
 		private function convertSecondsToString(value : uint) : String {
 			var result : String = "00:00:00";
+			value = this.isEstimated ? this._duration - value : value;
 			var hours : uint = value / 3600;
 			var minutes : uint = (value - hours * 3600) / 60;
 			var seconds : uint = value - hours * 3600 - minutes * 60;
@@ -72,8 +83,9 @@ package ayyo.player.view.impl.controllbar {
 			return result;
 		}
 
-		public function get view() : DisplayObject {
-			return this;
+		// Handlers
+		private function onSwitchCurrentToEstimated(event : MouseEvent) : void {
+			this.isEstimated = !this.isEstimated;
 		}
 	}
 }
