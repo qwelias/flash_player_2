@@ -25,6 +25,10 @@ package ayyo.player.config.impl.support {
 		 * @private
 		 */
 		private var _baseURL : String;
+		/**
+		 * @private
+		 */
+		private var _autoplay : Boolean;
 
 		public function initialize(source : Object) : void {
 			for (var property : String in source) {
@@ -50,6 +54,10 @@ package ayyo.player.config.impl.support {
 
 		public function get baseURL() : String {
 			return this._baseURL ||= "";
+		}
+
+		public function get autoplay() : Boolean {
+			return this._autoplay;
 		}
 	}
 }

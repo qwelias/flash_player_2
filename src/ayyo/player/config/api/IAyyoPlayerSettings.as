@@ -12,5 +12,7 @@ package ayyo.player.config.api {
 		function get free() : Boolean;
 
 		function get timeLeft() : Number;
+
+		function get autoplay() : Boolean;
 	}
 }
