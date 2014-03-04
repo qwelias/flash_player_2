@@ -1,4 +1,5 @@
 package ayyo.player.view.impl.controllbar {
+	import ayyo.player.utils.convertSecondsToString;
 	import ayyo.player.view.api.IVideoTimer;
 
 	import flash.display.DisplayObject;
@@ -28,8 +29,13 @@ package ayyo.player.view.impl.controllbar {
 		 * @private
 		 */
 		private var isEstimated : Boolean;
+		/**
+		 * @private
+		 */
+		private var _controlable : Boolean;
 
-		public function VideoTimer(autoCreate : Boolean = true) {
+		public function VideoTimer(autoCreate : Boolean = true, isUnderControlOfMediator : Boolean = true) {
+			this._controlable = isUnderControlOfMediator;
 			autoCreate && this.create();
 		}
 
@@ -44,7 +50,10 @@ package ayyo.player.view.impl.controllbar {
 
 		public function dispose() : void {
 			if (this.isCreated) {
+				this.textfield.parent && this.textfield.parent.removeChild(this.textfield);
+				this.removeEventListener(MouseEvent.CLICK, this.onSwitchCurrentToEstimated);
 				this.isCreated = false;
+				this.parent && this.parent.removeChild(this);
 			}
 		}
 
@@ -62,7 +71,7 @@ package ayyo.player.view.impl.controllbar {
 		}
 
 		public function set time(value : uint) : void {
-			this.textfield.text = this.convertSecondsToString(value);
+			this.textfield.text = convertSecondsToString(value, this._duration, this.isEstimated);
 		}
 
 		public function set duration(value : uint) : void {
@@ -73,14 +82,8 @@ package ayyo.player.view.impl.controllbar {
 			return this;
 		}
 
-		private function convertSecondsToString(value : uint) : String {
-			var result : String = "00:00:00";
-			value = this.isEstimated ? this._duration - value : value;
-			var hours : uint = value / 3600;
-			var minutes : uint = (value - hours * 3600) / 60;
-			var seconds : uint = value - hours * 3600 - minutes * 60;
-			result = (hours < 10 ? "0" : "") + hours.toString() + ":" + (minutes < 10 ? "0" : "") + minutes.toString() + ":" + (seconds < 10 ? "0" : "") + seconds.toString();
-			return result;
+		public function get controlable() : Boolean {
+			return this._controlable;
 		}
 
 		// Handlers

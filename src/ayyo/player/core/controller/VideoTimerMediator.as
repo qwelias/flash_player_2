@@ -1,5 +1,6 @@
 package ayyo.player.core.controller {
 	import org.osmf.media.MediaPlayerSprite;
+
 	import ayyo.player.events.PlayerEvent;
 	import ayyo.player.view.api.IVideoTimer;
 
@@ -26,13 +27,19 @@ package ayyo.player.core.controller {
 		private var trait : TimeTrait;
 
 		public function initialize() : void {
-			this.dispatcher.addEventListener(PlayerEvent.TIME_TRAIT, this.onTimeTrait);
-			this.player.mediaPlayer.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, this.onCurrentTimeChange);
+			if (this.timer.controlable) {
+				this.dispatcher.addEventListener(PlayerEvent.TIME_TRAIT, this.onTimeTrait);
+				this.player.mediaPlayer.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, this.onCurrentTimeChange);
+			} else {
+				this.destroy();
+			}
 		}
 
 		public function destroy() : void {
 			this.timer = null;
 			this.dispatcher = null;
+			this.player = null;
+			this.trait = null;
 		}
 
 		private function onTimeTrait(event : PlayerEvent) : void {
@@ -47,7 +54,7 @@ package ayyo.player.core.controller {
 				this.trait.removeEventListener(TimeEvent.DURATION_CHANGE, this.onDurationChange);
 			}
 		}
-		
+
 		private function onCurrentTimeChange(event : TimeEvent) : void {
 			this.timer.time = event.time;
 		}

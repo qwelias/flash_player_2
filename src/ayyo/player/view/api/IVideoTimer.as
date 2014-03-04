@@ -9,5 +9,7 @@ package ayyo.player.view.api {
 		function set time(value : uint) : void;
 
 		function set duration(value : uint) : void;
+
+		function get controlable() : Boolean;
 	}
 }
