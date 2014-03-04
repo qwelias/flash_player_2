@@ -9,8 +9,6 @@ package ayyo.player.plugins.subtitles.impl {
 	import org.osmf.metadata.TimelineMetadata;
 
 	import flash.display.DisplayObjectContainer;
-	import flash.utils.clearTimeout;
-	import flash.utils.setTimeout;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -32,10 +30,6 @@ package ayyo.player.plugins.subtitles.impl {
 		 * @private
 		 */
 		private var _subField : SubtextField;
-		/**
-		 * @private
-		 */
-		private var clearSubtitlesTextTimeoutID : uint;
 
 		public function SubtitlesProxyElement(element : MediaElement = null) {
 			super(element);
@@ -91,25 +85,24 @@ package ayyo.player.plugins.subtitles.impl {
 			this.timelineMetaData && this.disposeTimelineData();
 			this.timelineMetaData = new TimelineMetadata(this.proxiedElement);
 			this.timelineMetaData.addEventListener(TimelineMetadataEvent.MARKER_TIME_REACHED, this.onSubtitlesShow);
+			this.timelineMetaData.addEventListener(TimelineMetadataEvent.MARKER_DURATION_REACHED, this.onSubtitlesHide);
 		}
 
 		// Handlers
 		private function disposeTimelineData() : void {
 			if (this.timelineMetaData) {
 				this.timelineMetaData.removeEventListener(TimelineMetadataEvent.MARKER_TIME_REACHED, this.onSubtitlesShow);
+				this.timelineMetaData.removeEventListener(TimelineMetadataEvent.MARKER_DURATION_REACHED, this.onSubtitlesHide);
 				this.timelineMetaData = null;
 			}
 		}
 
 		private function onSubtitlesShow(event : TimelineMetadataEvent) : void {
-			clearTimeout(this.clearSubtitlesTextTimeoutID);
 			var cue : CuePoint = event.marker as CuePoint;
 			this.subField.text = cue.parameters as String;
-			this.clearSubtitlesTextTimeoutID = setTimeout(this.clearSubtitles, 3000);
 		}
 
-		private function clearSubtitles() : void {
-			clearTimeout(this.clearSubtitlesTextTimeoutID);
+		private function onSubtitlesHide(event : TimelineMetadataEvent) : void {
 			this.subField.text = "";
 		}
 	}
