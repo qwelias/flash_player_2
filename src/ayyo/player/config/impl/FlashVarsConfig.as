@@ -59,7 +59,7 @@ package ayyo.player.config.impl {
 			settingsSource["type"] = source["player_type"];
 			settingsSource["free"] = source["free"];
 			settingsSource["timeLeft"] = source["hours_until_stop"];
-			settingsSource["autoplay"] = Boolean(source["autoplay"]) || false;
+			settingsSource["autoplay"] = source["autoplay"] == "true";
 			
 			videoSource["url"] = source["url"];
 			videoSource["token"] = source["token"];
