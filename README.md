@@ -17,7 +17,7 @@ var flashvars = {
 	screenshot:"https%3A%2F%2Fmedia.ayyo.ru%2Fmovies%2F185%2Fvideo_poster%2F850x477.jpg",
 	player_type:"movie",
 	assets:'{"name":"arialFontFamily","url":"./assets/fonts/arial.swf","type":"font"}',
-	plugins:'{"url":"file:///Users/zaynutdinov/Documents/Projects/Private/AyyoPlayer/bin/plugins/SubtitlesPlugin.swf", "config":"http://cdn.ayyo.ru/u22/ec/96/VForVendetta-Feat-PAL-16x9-2.35_Russian.srt"}',
+	plugins:'{"url":"file:///Users/zaynutdinov/Documents/Projects/Private/AyyoPlayer/bin/plugins/SubtitlesPlugin.swf", "config":[{"url":"./force.srt","id":"ru","name":"Force russian"}, {"url":"http://cdn.ayyo.ru/u22/ec/96/VForVendetta-Feat-PAL-16x9-2.35_Russian.srt","id":"en","name":"English"}]}',
 	tooltip_play_button:"Смотреть",
 	tooltip_pause_button:"Пауза",
 	tooltip_license_icon:"У вас осталось N часов, чтобы посмотреть фильм",
@@ -71,5 +71,8 @@ swfobject.embedSWF("AyyoPlayer-v2.0.0b1.swf", "flashContent", "852", "480",  swf
 `plugins:'{"url":"<PLUGIN_URL>", "config":"<PLUGIN_CONFIG_URL>"}',`
 
 ### Давайте рассмотрим на примере.
-`plugins:'{"url":"file:///Users/zaynutdinov/Documents/Projects/Private/AyyoPlayer/bin/plugins/SubtitlesPlugin.swf", "config":"http://cdn.ayyo.ru/u22/ec/96/VForVendetta-Feat-PAL-16x9-2.35_Russian.srt"}'`
-Что значит, проигрывателю необходимо загрузить плагин по адресу `file:///Users/zaynutdinov/Documents/Projects/Private/AyyoPlayer/bin/plugins/SubtitlesPlugin.swf`, передав ему в качестве ссылки на конфигурационный файл значение `http://cdn.ayyo.ru/u22/ec/96/VForVendetta-Feat-PAL-16x9-2.35_Russian.srt`.
+`plugins:'{"url":"file:///Users/zaynutdinov/Documents/Projects/Private/AyyoPlayer/bin/plugins/SubtitlesPlugin.swf", "config":[{"url":"./force.srt","id":"ru","name":"Force russian"}, {"url":"http://cdn.ayyo.ru/u22/ec/96/VForVendetta-Feat-PAL-16x9-2.35_Russian.srt","id":"en","name":"English"}]}',`
+Что значит, проигрывателю необходимо загрузить плагин по адресу `file:///Users/zaynutdinov/Documents/Projects/Private/AyyoPlayer/bin/plugins/SubtitlesPlugin.swf`, передав ему в качестве конфигураций массив, который описывает 2 файла субтитров со следующими полями:
+* `url`, что является ссылкой на файл субтитров;
+* `name`, что является именем (в дальнейших имплементациях можно будет сделать нечто вроде drop-списка, в котором будет возможность использовать это поле);
+* `id`, что является идентификатором для файла субтитров. Совпадает с именем язык звуковой дорожки, к которой он принадлежит.
