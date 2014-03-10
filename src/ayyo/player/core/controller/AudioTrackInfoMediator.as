@@ -66,7 +66,7 @@ package ayyo.player.core.controller {
 					seekTrait.seek(this.player.mediaPlayer.currentTime);
 				}
 			}
-			this.dispatcher.dispatchEvent(new PlayerEvent(trackID == 0 ? PlayerCommands.SUBTITLES_OFF : PlayerCommands.SUBTITLES_ON));
+			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerCommands.SUBTITLES_ON, [this._trait.getItemForIndex(trackID).info["language"]]));
 		}
 	}
 }
