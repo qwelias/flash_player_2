@@ -51,6 +51,12 @@ package ayyo.player.plugins.subtitles.impl {
 			this._subContainer && this._subContainer.addChild(this.subField);
 		}
 
+		public function dispose() : void {
+			this.disposeTimelineData();
+			this.subs = null;
+		}
+
+
 		public function initialize(subtitles : Vector.<Subtitle>) : void {
 			if (this.proxiedElement != null) {
 				this.createTimelineData();
@@ -99,7 +105,7 @@ package ayyo.player.plugins.subtitles.impl {
 
 		private function onSubtitlesShow(event : TimelineMetadataEvent) : void {
 			var cue : CuePoint = event.marker as CuePoint;
-			this.subField.text = cue.parameters as String;
+			this.subField.htmlText = cue.parameters as String;
 		}
 
 		private function onSubtitlesHide(event : TimelineMetadataEvent) : void {

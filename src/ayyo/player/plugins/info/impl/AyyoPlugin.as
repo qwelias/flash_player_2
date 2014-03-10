@@ -15,10 +15,10 @@ package ayyo.player.plugins.info.impl {
 		/**
 		 * @private
 		 */
-		private var _config : String;
+		private var _config : Object;
 
 		public function AyyoPlugin(source : Object) {
-			for (var property : String in source) {
+			for (var property : * in source) {
 				if (property in this) this["_" + property] = source[property];
 			}
 		}
@@ -31,11 +31,11 @@ package ayyo.player.plugins.info.impl {
 			if (this._name != value) this._name = value;
 		}
 
-		public function get config() : String {
+		public function get config() : Object {
 			return this._config;
 		}
 
-		public function set config(value : String) : void {
+		public function set config(value : Object) : void {
 			if (this._config != value) this._config = value;
 		}
 

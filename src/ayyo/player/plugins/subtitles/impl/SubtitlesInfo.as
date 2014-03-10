@@ -2,6 +2,7 @@ package ayyo.player.plugins.subtitles.impl {
 	import ayyo.player.config.impl.support.PluginMetadata;
 	import ayyo.player.core.model.PlayerCommands;
 	import ayyo.player.events.PlayerEvent;
+	import ayyo.player.plugins.subtitles.api.ISubtitlesConfigItem;
 
 	import org.osmf.media.MediaElement;
 	import org.osmf.media.MediaFactoryItem;
@@ -54,7 +55,7 @@ package ayyo.player.plugins.subtitles.impl {
 		/**
 		 * @private
 		 */
-		private var subtitlesURL : String;
+		private var config : SubtitlesConfig;
 
 		public function SubtitlesInfo() {
 			var items : Vector.<MediaFactoryItem> = new Vector.<MediaFactoryItem>();
@@ -73,11 +74,10 @@ package ayyo.player.plugins.subtitles.impl {
 			else if (resource.getMetadataValue(PluginMetadata.CONTAINER) == null) throw new ArgumentError(OSMFStrings.INVALID_PARAM, 7201);
 			else if (resource.getMetadataValue(PluginMetadata.DISPATCHER) == null) throw new ArgumentError(OSMFStrings.INVALID_PARAM, 7601);
 			else this.canHandle = true;
-			this.subtitlesURL = resource.getMetadataValue(PluginMetadata.CONFIG) as String;
+			this.config = new SubtitlesConfig(resource.getMetadataValue(PluginMetadata.CONFIG));
 			this.container = resource.getMetadataValue(PluginMetadata.CONTAINER) as DisplayObjectContainer;
 			this.dispatcher = resource.getMetadataValue(PluginMetadata.DISPATCHER) as IEventDispatcher;
 			this.dispatcher.addEventListener(PlayerCommands.SUBTITLES_ON, this.onSubtitlesOn);
-			this.dispatcher.addEventListener(PlayerCommands.SUBTITLES_OFF, this.onSubtitlesOff);
 		}
 
 		public function get subtitles() : Vector.<Subtitle> {
@@ -101,6 +101,7 @@ package ayyo.player.plugins.subtitles.impl {
 		}
 
 		private function createLoader() : void {
+			this.removeLoader();
 			if (!this.urlLoader) {
 				this.urlLoader = new URLLoader();
 				this.urlLoader.addEventListener(Event.COMPLETE, this.onSubtitlesLoaded);
@@ -137,17 +138,9 @@ package ayyo.player.plugins.subtitles.impl {
 			this.isSubitlesParsed = true;
 		}
 
-		private function subtitlesVisible(visibility : Boolean) : void {
-			const length : uint = this.elements.length;
-			for (var i : int = 0; i < length; i++) {
-				this.elements[i].visible = visibility;
-			}
-		}
-
 		// Handlers
 		private function onSubtitlesLoaded(event : Event) : void {
 			this.parseSubtitles();
-			this.subtitlesVisible(true);
 		}
 
 		private function onSubtitlesLoadingError(event : SecurityErrorEvent) : void {
@@ -155,15 +148,20 @@ package ayyo.player.plugins.subtitles.impl {
 		}
 
 		private function onSubtitlesOn(event : PlayerEvent) : void {
-			if (this.subtitles.length == 0) {
+			var configItem : ISubtitlesConfigItem = this.config.getConfigByID(event.params[0]);
+			this.disposeSubtitles();
+			if (configItem) {
 				this.createLoader();
-				this.urlLoader.load(new URLRequest(this.subtitlesURL));
-			} else
-				this.subtitlesVisible(true);
+				this.urlLoader.load(new URLRequest(configItem.url));
+			}
 		}
 
-		private function onSubtitlesOff(event : PlayerEvent) : void {
-			this.subtitles.length > 0 && this.subtitlesVisible(false);
+		private function disposeSubtitles() : void {
+			const length : uint = this.elements.length;
+			for (var i : int = 0; i < length; i++) {
+				this.elements[i].dispose();
+			}
+			this.isSubitlesParsed = false;
 		}
 	}
 }
