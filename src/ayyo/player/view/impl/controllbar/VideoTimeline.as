@@ -236,6 +236,7 @@ package ayyo.player.view.impl.controllbar {
 			this.signals.enterFrame.remove(this.onUpdatePointerPosition);
 			this.signals.mouseOver.addOnce(this.onMouseOver);
 			this.pointer.visible = false;
+			this.setTimerPositionAccordingBy(this.thumb.view.x);
 		}
 
 		private function onUpdatePointerPosition(event : Event) : void {
