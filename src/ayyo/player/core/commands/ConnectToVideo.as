@@ -1,5 +1,4 @@
 package ayyo.player.core.commands {
-	import org.osmf.events.MediaErrorEvent;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.events.PlayerEvent;
 
@@ -9,6 +8,7 @@ package ayyo.player.core.commands {
 	import robotlegs.bender.framework.api.ILogger;
 
 	import org.osmf.events.MediaElementEvent;
+	import org.osmf.events.MediaErrorEvent;
 	import org.osmf.media.MediaElement;
 	import org.osmf.media.MediaPlayerSprite;
 	import org.osmf.media.URLResource;

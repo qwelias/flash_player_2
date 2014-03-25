@@ -52,7 +52,7 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.map(AssetEvent.REGISTRED).toCommand(NullCommand).withHooks(CheckAvaliableAssets);
 			this.commandMap.map(PluginEvent.LOAD).toCommand(LoadPlugins);
 
-			this.commandMap.map(ApplicationEvent.READY).toCommand(NullCommand).withHooks(LoadSplashScreen).once();
+			this.commandMap.map(ApplicationEvent.READY).toCommand(NullCommand).withHooks(LoadSplashScreen);
 
 			this.commandMap.map(PlayerEvent.SPLASH_LOADED, PlayerEvent).toCommand(ConnectToVideo).once();
 			this.commandMap.map(PlayerEvent.CAN_LOAD, PlayerEvent).toCommand(NullCommand).withHooks(InitInterface, DisposePreloader).withGuards(OnlyIfPreloaderExists);

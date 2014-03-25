@@ -16,7 +16,7 @@ package ayyo.player.core.commands.hooks {
 
 		public function hook() : void {
 			this.player.mediaPlayer.autoDynamicStreamSwitch = true;
-			this.player.mediaPlayer.autoRewind = false;
+			this.player.mediaPlayer.autoRewind = true;
 			this.player.mediaPlayer.autoPlay = false;
 			this.player.scaleMode = ScaleMode.LETTERBOX;
 

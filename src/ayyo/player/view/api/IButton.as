@@ -15,6 +15,8 @@ package ayyo.player.view.api {
 
 		function click() : void;
 		
+		function set state(value : String) : void;
+		
 		function get signals() : InteractiveObjectSignalSet;
 	}
 }

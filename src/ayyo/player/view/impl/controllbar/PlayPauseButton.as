@@ -1,5 +1,6 @@
 package ayyo.player.view.impl.controllbar {
 	import ayyo.player.core.model.PlayerCommands;
+	import ayyo.player.view.api.PlayPauseState;
 
 	import flash.display.Bitmap;
 	import flash.events.MouseEvent;
@@ -34,24 +35,26 @@ package ayyo.player.view.impl.controllbar {
 			this.disable();
 		}
 
+		override public function set state(value : String) : void {
+			super.state = value;
+			this.removeChildren();
+			if (value == PlayPauseState.PLAY) this.addChild(this._playState);
+			else if (value == PlayPauseState.PAUSE) this.addChild(this._pauseState);
+		}
+
 		override protected function onButtonClick(event : MouseEvent) : void {
 			super.onButtonClick(event);
-			if (this._playState.parent) {
-				this._playState.parent.removeChild(this._playState);
-				this.addChild(this._pauseState);
-				this.action.dispatch(PlayerCommands.PLAY);
-			} else if (this._pauseState.parent) {
-				this._pauseState.parent.removeChild(this._pauseState);
-				this.addChild(this._playState);
-				this.action.dispatch(PlayerCommands.PAUSE);
-			}
+			var newState : String = this._playState.parent ? PlayPauseState.PAUSE : PlayPauseState.PLAY;
+			var eventType : String = this._playState.parent ? PlayerCommands.PLAY : PlayerCommands.PAUSE;
+			this.state = newState;
+			this.action.dispatch(eventType);
 		}
-		
+
 		override protected function enableButton() : void {
 			super.enableButton();
 			this.alpha = 1;
 		}
-		
+
 		override protected function disableButton() : void {
 			super.disableButton();
 			this.alpha = .5;

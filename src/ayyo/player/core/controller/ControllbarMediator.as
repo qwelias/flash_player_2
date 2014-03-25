@@ -1,15 +1,14 @@
 package ayyo.player.core.controller {
+	import ayyo.player.view.api.PlayPauseState;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.core.model.PlayerCommands;
 	import ayyo.player.events.PlayerEvent;
 	import ayyo.player.view.api.IPlayerControllBar;
 	import ayyo.player.view.impl.controllbar.ActiveZone;
-
 	import robotlegs.bender.extensions.mediatorMap.api.IMediator;
 	import robotlegs.bender.framework.api.ILogger;
-
+	import org.osmf.events.TimeEvent;
 	import org.osmf.media.MediaElement;
-
 	import flash.events.IEventDispatcher;
 	import flash.events.MouseEvent;
 
@@ -41,6 +40,7 @@ package ayyo.player.core.controller {
 
 			this.activeZone.addEventListener(MouseEvent.CLICK, this.onActiveZoneClick);
 			this.dispatcher.addEventListener(PlayerEvent.CAN_PLAY, this.onMediaPlayable);
+			this.dispatcher.addEventListener(TimeEvent.COMPLETE, this.onPlaybackComplete);
 		}
 
 		public function destroy() : void {
@@ -74,6 +74,10 @@ package ayyo.player.core.controller {
 
 		private function onActiveZoneClick(event : MouseEvent) : void {
 			this.controlls.playPause.click();
+		}
+		
+		private function onPlaybackComplete(event : TimeEvent) : void {
+			this.controlls.playPause.state = PlayPauseState.PLAY;
 		}
 	}
 }

@@ -98,5 +98,8 @@ package ayyo.player.view.impl.controllbar {
 		// Handlers
 		protected function onButtonClick(event : MouseEvent) : void {
 		}
+
+		public function set state(value : String) : void {
+		}
 	}
 }

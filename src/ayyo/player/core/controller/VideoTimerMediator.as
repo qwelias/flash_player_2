@@ -1,12 +1,11 @@
 package ayyo.player.core.controller {
-	import org.osmf.media.MediaPlayerSprite;
-
 	import ayyo.player.events.PlayerEvent;
 	import ayyo.player.view.api.IVideoTimer;
 
 	import robotlegs.bender.extensions.mediatorMap.api.IMediator;
 
 	import org.osmf.events.TimeEvent;
+	import org.osmf.media.MediaPlayerSprite;
 	import org.osmf.traits.TimeTrait;
 
 	import flash.events.IEventDispatcher;
@@ -46,6 +45,7 @@ package ayyo.player.core.controller {
 			this.dispatcher.removeEventListener(PlayerEvent.TIME_TRAIT, this.onTimeTrait);
 			this.trait = event.params[0] as TimeTrait;
 			this.trait.addEventListener(TimeEvent.DURATION_CHANGE, this.onDurationChange);
+			this.trait.addEventListener(TimeEvent.COMPLETE, this.dispatcher.dispatchEvent);
 		}
 
 		private function onDurationChange(event : TimeEvent) : void {
