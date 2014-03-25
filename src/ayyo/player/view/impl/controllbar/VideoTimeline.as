@@ -99,7 +99,7 @@ package ayyo.player.view.impl.controllbar {
 				this.thumb.disable();
 
 				this.thumb.view.y = 7;
-				this._timer.textfield.defaultTextFormat = new TextFormat("Arial", 11, 0xffffff);
+				this._timer.textfield.defaultTextFormat = new TextFormat("Arial", 9, 0xffffff);
 				this._timer.mouseEnabled = false;
 				this.timer.time = 0;
 				this.timer.view.y = -this.timer.view.height;

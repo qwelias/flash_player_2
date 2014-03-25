@@ -71,7 +71,7 @@ package ayyo.player.view.impl.controllbar {
 		}
 
 		public function set time(value : uint) : void {
-			this.textfield.text = convertSecondsToString(value, this._duration, this.isEstimated);
+			this.textfield.text = (this.isEstimated ? "-" : " ") + convertSecondsToString(value, this._duration, this.isEstimated);
 		}
 
 		public function set duration(value : uint) : void {
