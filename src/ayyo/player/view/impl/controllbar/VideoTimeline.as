@@ -99,6 +99,7 @@ package ayyo.player.view.impl.controllbar {
 				this.thumb.disable();
 
 				this.thumb.view.y = 7;
+				this.thumb.view.x = this.thumb.view.width >> 1;
 				this._timer.textfield.defaultTextFormat = new TextFormat("Arial", 9, 0xffffff);
 				this._timer.mouseEnabled = false;
 				this.timer.time = 0;
@@ -176,11 +177,12 @@ package ayyo.player.view.impl.controllbar {
 				var percent : Number = value / this._duration;
 				if (!isNaN(this._widthOfTimeline)) {
 					if (Math.abs(percent * this._widthOfTimeline - this.played.width) >= 1) {
+						this.thumb.view.x = (this.thumb.view.width >> 1) + percent * (this._widthOfTimeline - this.thumb.view.width);
+						
 						this.played.graphics.clear();
 						this.played.graphics.beginFill(0x006fff);
-						this.played.graphics.drawRoundRectComplex(0, 0, percent * this._widthOfTimeline, 13, 6, 0, 6, 0);
+						this.played.graphics.drawRoundRectComplex(0, 0, this.thumb.view.x, 13, 6, 0, 6, 0);
 
-						this.thumb.view.x = percent * this._widthOfTimeline;
 
 						this._value = value;
 					}

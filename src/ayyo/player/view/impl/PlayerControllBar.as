@@ -116,7 +116,7 @@ package ayyo.player.view.impl {
 				this.playPause.action.add(this.action.dispatch);
 				this.screenState.action.add(this.action.dispatch);
 
-				this.filters = [new DropShadowFilter(1, 90, 0xfff2b3, .2, 0, 0, 1, BitmapFilterQuality.MEDIUM, true)];
+				this.filters = [new DropShadowFilter(1, 90, 0xfff2b3, .2, 0, 0, 1, BitmapFilterQuality.HIGH, true)];
 
 				this.cacheAsBitmap = true;
 				this.isCreated = true;
