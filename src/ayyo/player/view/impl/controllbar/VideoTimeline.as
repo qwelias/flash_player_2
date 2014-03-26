@@ -224,7 +224,12 @@ package ayyo.player.view.impl.controllbar {
 		private function onThumbMouseUp(event : MouseEvent) : void {
 			this.thumb.signals.enterFrame.remove(this.onThumbEnterFrame);
 			this.stage.removeEventListener(MouseEvent.MOUSE_UP, this.onThumbMouseUp);
-			this.action.dispatch(PlayerCommands.SEEK, [this.thumb.view.x / this._widthOfTimeline * this._duration]);
+			this.seekTo(this.thumb.view.x / this._widthOfTimeline * this._duration);
+		}
+
+		private function seekTo(currentTime : uint) : void {
+			this.action.dispatch(PlayerCommands.SEEK, [currentTime]);
+			this.time = currentTime;
 		}
 
 		private function onMouseOver(event : MouseEvent) : void {
@@ -248,7 +253,7 @@ package ayyo.player.view.impl.controllbar {
 		}
 
 		private function onMouseClick(event : MouseEvent) : void {
-			this.action.dispatch(PlayerCommands.SEEK, [this.mouseX / this._widthOfTimeline * this._duration]);
+			this.seekTo(this.mouseX / this._widthOfTimeline * this._duration);
 		}
 	}
 }
