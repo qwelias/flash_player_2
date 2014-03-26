@@ -33,6 +33,10 @@ package ayyo.player.view.impl.controllbar {
 		 * @private
 		 */
 		private var _controlable : Boolean;
+		/**
+		 * @private
+		 */
+		private var _value : uint;
 
 		public function VideoTimer(autoCreate : Boolean = true, isUnderControlOfMediator : Boolean = true) {
 			this._controlable = isUnderControlOfMediator;
@@ -72,6 +76,7 @@ package ayyo.player.view.impl.controllbar {
 
 		public function set time(value : uint) : void {
 			this.textfield.text = (this.isEstimated ? "-" : (this.controlable ? " " : "")) + convertSecondsToString(value, this._duration, this.isEstimated);
+			this._value = value;
 		}
 
 		public function set duration(value : uint) : void {
@@ -89,6 +94,7 @@ package ayyo.player.view.impl.controllbar {
 		// Handlers
 		private function onSwitchCurrentToEstimated(event : MouseEvent) : void {
 			this.isEstimated = !this.isEstimated;
+			this.time = this._value;
 		}
 	}
 }
