@@ -1,6 +1,8 @@
 package ayyo.player.core.commands.hooks {
 	import robotlegs.bender.framework.api.ILogger;
+
 	import org.osmf.events.MediaErrorEvent;
+
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.events.PlayerEvent;
 
@@ -40,36 +42,44 @@ package ayyo.player.core.commands.hooks {
 		public function hook() : void {
 			var resource : URLResource = new URLResource(this.playerConfig.settings.screenshot);
 			this._image = this.player.mediaFactory.createMediaElement(resource) as ImageElement;
-			this._image.smoothing = true;
-			this._image.addEventListener(MediaElementEvent.TRAIT_ADD, this.onTraitAdded);
-			this._image.addEventListener(MediaErrorEvent.MEDIA_ERROR, this.onMediaError);
-			var layout : LayoutMetadata = new LayoutMetadata();
-			layout.scaleMode = ScaleMode.LETTERBOX;
-			layout.verticalAlign = VerticalAlign.MIDDLE;
-			layout.horizontalAlign = HorizontalAlign.CENTER;
-			layout.percentWidth = 100;
-			layout.percentHeight = 100;
-			this._image.addMetadata(LayoutMetadata.LAYOUT_NAMESPACE, layout);
-			this.player.media = this._image;
+			if (this._image) {
+				this._image.smoothing = true;
+				this._image.addEventListener(MediaElementEvent.TRAIT_ADD, this.onTraitAdded);
+				this._image.addEventListener(MediaErrorEvent.MEDIA_ERROR, this.onMediaError);
+				var layout : LayoutMetadata = new LayoutMetadata();
+				layout.scaleMode = ScaleMode.LETTERBOX;
+				layout.verticalAlign = VerticalAlign.MIDDLE;
+				layout.horizontalAlign = HorizontalAlign.CENTER;
+				layout.percentWidth = 100;
+				layout.percentHeight = 100;
+				this._image.addMetadata(LayoutMetadata.LAYOUT_NAMESPACE, layout);
+				this.player.media = this._image;
+			} else {
+				this.onError("Check image url: " + this.playerConfig.settings.screenshot + ". It seems to be wrong.");
+			}
 		}
-		
+
 		private function dispose() : void {
-			this._image.removeEventListener(MediaElementEvent.TRAIT_ADD, this.onTraitAdded);
-			this._image.removeEventListener(MediaErrorEvent.MEDIA_ERROR, this.onMediaError);
+			this._image && this._image.hasEventListener(MediaElementEvent.TRAIT_ADD) && this._image.removeEventListener(MediaElementEvent.TRAIT_ADD, this.onTraitAdded);
+			this._image && this._image.hasEventListener(MediaErrorEvent.MEDIA_ERROR) && this._image.removeEventListener(MediaErrorEvent.MEDIA_ERROR, this.onMediaError);
 			this._image = null;
 			this.playerConfig = null;
 			this.dispatcher = null;
 			this.logger = null;
 		}
-		
+
 		private function nextStep() : void {
 			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.SPLASH_LOADED));
 			this.dispose();
 		}
 
-		private function onMediaError(event : MediaErrorEvent) : void {
-			this.logger.error(event.error.message);
+		private function onError(message : String) : void {
+			this.logger.error(message);
 			this.nextStep();
+		}
+
+		private function onMediaError(event : MediaErrorEvent) : void {
+			this.onError(event.error.message);
 		}
 
 		private function onTraitAdded(event : MediaElementEvent) : void {

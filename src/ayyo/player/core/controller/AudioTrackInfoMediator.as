@@ -33,7 +33,7 @@ package ayyo.player.core.controller {
 		private var _trait : AlternativeAudioTrait;
 
 		public function initialize() : void {
-			this.player.media.hasTrait(MediaTraitType.ALTERNATIVE_AUDIO) ? this.extrackAudioTrackData(this.player.media.getTrait(MediaTraitType.ALTERNATIVE_AUDIO) as AlternativeAudioTrait) : this.dispatcher.addEventListener(PlayerEvent.ALTERNATIVE_AUDIO, this.onNumAlternativeAudioChange);
+			this.player.media && this.player.media.hasTrait(MediaTraitType.ALTERNATIVE_AUDIO) ? this.extrackAudioTrackData(this.player.media.getTrait(MediaTraitType.ALTERNATIVE_AUDIO) as AlternativeAudioTrait) : this.dispatcher.addEventListener(PlayerEvent.ALTERNATIVE_AUDIO, this.onNumAlternativeAudioChange);
 			this.audioTrackInfo.changeTrack.add(this.onChangeTrack);
 		}
 
