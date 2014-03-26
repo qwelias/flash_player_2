@@ -40,7 +40,7 @@ package ayyo.player.view.impl {
 	public class PlayerControllBar extends Sprite implements IPlayerControllBar {
 		private static const MARGIN : Number = 30;
 		private static const HEIGHT : Number = 40;
-		private static const PADDING : Number = 10;
+		private static const PADDING : Number = 25;
 		/**
 		 * @private
 		 */
@@ -185,9 +185,9 @@ package ayyo.player.view.impl {
 				this.timer.view.x = this.audioTrack.view.x - this.timer.view.width - PADDING;
 				this.timer.view.y = HEIGHT - this.timer.view.height >> 1;
 
-				this.timeline.view.x = this.playPause.view.x + this.playPause.view.width + PADDING;
+				this.timeline.view.x = this.playPause.view.x + this.playPause.view.width + PADDING / 5;
 				this.timeline.view.y = HEIGHT - 14 >> 1;
-				this.timeline.view.width = screen.width - (screen.width - this.timer.view.x) - this.timeline.view.x - PADDING;
+				this.timeline.view.width = screen.width - (screen.width - this.timer.view.x) - this.timeline.view.x - PADDING / 5;
 			}
 		}
 

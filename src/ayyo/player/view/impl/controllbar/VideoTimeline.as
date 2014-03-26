@@ -70,6 +70,10 @@ package ayyo.player.view.impl.controllbar {
 		 * @private
 		 */
 		private var _container : Sprite;
+		/**
+		 * @private
+		 */
+		private var isThumbPressed : Boolean;
 
 		/**
 		 * @private
@@ -83,7 +87,8 @@ package ayyo.player.view.impl.controllbar {
 				this.container.filters = [new DropShadowFilter(1, -90, 0x232323, 1, 0, 0, 1, BitmapFilterQuality.HIGH, true)];
 
 				this.pointer.graphics.lineStyle(1, 0xffffff, .7);
-				this.pointer.graphics.lineTo(0, 15);
+				this.pointer.graphics.moveTo(0, 1);
+				this.pointer.graphics.lineTo(0, 13);
 				this.pointer.visible = false;
 
 				this.container.addChild(this.buffered);
@@ -100,7 +105,7 @@ package ayyo.player.view.impl.controllbar {
 
 				this.thumb.view.y = 7;
 				this.thumb.view.x = this.thumb.view.width >> 1;
-				this._timer.textfield.defaultTextFormat = new TextFormat("Arial", 9, 0xffffff);
+				this._timer.textfield.defaultTextFormat = new TextFormat("Arial Bold", 9, 0xffffff, true);
 				this._timer.mouseEnabled = false;
 				this.timer.time = 0;
 				this.timer.view.y = -this.timer.view.height;
@@ -178,11 +183,10 @@ package ayyo.player.view.impl.controllbar {
 				if (!isNaN(this._widthOfTimeline)) {
 					if (Math.abs(percent * this._widthOfTimeline - this.played.width) >= 1) {
 						this.thumb.view.x = (this.thumb.view.width >> 1) + percent * (this._widthOfTimeline - this.thumb.view.width);
-						
+
 						this.played.graphics.clear();
 						this.played.graphics.beginFill(0x006fff);
-						this.played.graphics.drawRoundRectComplex(0, 0, this.thumb.view.x, 13, 6, 0, 6, 0);
-
+						this.played.graphics.drawRoundRect(0, 1, this.thumb.view.x, 12, 6);
 
 						this._value = value;
 					}
@@ -197,7 +201,7 @@ package ayyo.player.view.impl.controllbar {
 			this.thumb.enable();
 			this.signals.click.add(this.onMouseClick);
 		}
-		
+
 		public function get controlable() : Boolean {
 			return true;
 		}
@@ -215,6 +219,7 @@ package ayyo.player.view.impl.controllbar {
 			this.action.dispatch(PlayerCommands.PAUSE, null);
 			this.stage.addEventListener(MouseEvent.MOUSE_UP, this.onThumbMouseUp);
 			this.thumb.signals.enterFrame.add(this.onThumbEnterFrame);
+			this.isThumbPressed = true;
 		}
 
 		private function onThumbEnterFrame(event : Event) : void {
@@ -225,6 +230,7 @@ package ayyo.player.view.impl.controllbar {
 			this.thumb.signals.enterFrame.remove(this.onThumbEnterFrame);
 			this.stage.removeEventListener(MouseEvent.MOUSE_UP, this.onThumbMouseUp);
 			this.seekTo(this.thumb.view.x / this._widthOfTimeline * this._duration);
+			this.isThumbPressed = false;
 		}
 
 		private function seekTo(currentTime : uint) : void {
@@ -233,9 +239,11 @@ package ayyo.player.view.impl.controllbar {
 		}
 
 		private function onMouseOver(event : MouseEvent) : void {
-			this.signals.enterFrame.add(this.onUpdatePointerPosition);
+			if (!this.isThumbPressed) {
+				this.signals.enterFrame.add(this.onUpdatePointerPosition);
+				this.pointer.visible = true;
+			}
 			this.signals.mouseOut.addOnce(this.onMouseOut);
-			this.pointer.visible = true;
 		}
 
 		private function onMouseOut(event : MouseEvent) : void {
