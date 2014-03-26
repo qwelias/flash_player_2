@@ -225,7 +225,6 @@ package ayyo.player.view.impl.controllbar {
 			this.thumb.signals.enterFrame.remove(this.onThumbEnterFrame);
 			this.stage.removeEventListener(MouseEvent.MOUSE_UP, this.onThumbMouseUp);
 			this.action.dispatch(PlayerCommands.SEEK, [this.thumb.view.x / this._widthOfTimeline * this._duration]);
-			this.action.dispatch(PlayerCommands.PLAY, null);
 		}
 
 		private function onMouseOver(event : MouseEvent) : void {
