@@ -53,6 +53,7 @@ package ayyo.player.plugins.subtitles.impl {
 
 		public function dispose() : void {
 			this.disposeTimelineData();
+			this.subField.text = "";
 			this.subs = null;
 		}
 

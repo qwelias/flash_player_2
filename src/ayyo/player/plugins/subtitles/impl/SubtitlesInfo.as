@@ -78,6 +78,7 @@ package ayyo.player.plugins.subtitles.impl {
 			this.container = resource.getMetadataValue(PluginMetadata.CONTAINER) as DisplayObjectContainer;
 			this.dispatcher = resource.getMetadataValue(PluginMetadata.DISPATCHER) as IEventDispatcher;
 			this.dispatcher.addEventListener(PlayerCommands.SUBTITLES_ON, this.onSubtitlesOn);
+			this.dispatcher.addEventListener(PlayerCommands.SEEK, this.clearSubtitlesOnSeek);
 		}
 
 		public function get subtitles() : Vector.<Subtitle> {
@@ -137,6 +138,15 @@ package ayyo.player.plugins.subtitles.impl {
 			}
 			this.isSubitlesParsed = true;
 		}
+		
+		private function disposeSubtitles() : void {
+			const length : uint = this.elements.length;
+			for (var i : int = 0; i < length; i++) {
+				this.elements[i].dispose();
+			}
+			while(this.subtitles.length > 0) this.subtitles.pop().dispose();
+			this.isSubitlesParsed = false;
+		}
 
 		// Handlers
 		private function onSubtitlesLoaded(event : Event) : void {
@@ -155,13 +165,12 @@ package ayyo.player.plugins.subtitles.impl {
 				this.urlLoader.load(new URLRequest(configItem.url));
 			}
 		}
-
-		private function disposeSubtitles() : void {
+		
+		private function clearSubtitlesOnSeek(event : PlayerEvent) : void {
 			const length : uint = this.elements.length;
 			for (var i : int = 0; i < length; i++) {
-				this.elements[i].dispose();
+				this.elements[i].subField.text = "";
 			}
-			this.isSubitlesParsed = false;
 		}
 	}
 }

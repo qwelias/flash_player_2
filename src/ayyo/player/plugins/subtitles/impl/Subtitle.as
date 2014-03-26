@@ -32,6 +32,12 @@ package ayyo.player.plugins.subtitles.impl {
 			}
 		}
 
+		public function dispose() : void {
+			while(this.lines.length > 0) this.lines.pop();
+			this._lines = null;
+			this._interval = null;
+		}
+
 		public function get lines() : Vector.<String> {
 			return _lines ||= new Vector.<String>();
 		}
