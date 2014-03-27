@@ -173,10 +173,10 @@ package ayyo.player.view.impl {
 				this.playPause.view.x = 3;
 				this.playPause.view.y = (HEIGHT - this.playPause.view.height >> 1) + 1;
 
-				this.screenState.view.x = screen.width - MARGIN * 2 - this.screenState.view.width - PADDING;
+				this.screenState.view.x = screen.width - MARGIN * 2 - this.screenState.view.width - PADDING + 15;
 				this.screenState.view.y = HEIGHT - this.screenState.view.height >> 1;
 
-				this.volume.view.x = this.screenState.view.x - this.volume.view.width - PADDING;
+				this.volume.view.x = this.screenState.view.x - this.volume.view.width - PADDING + 10;
 				this.volume.view.y = HEIGHT - this.volume.view.height >> 1;
 
 				this.audioTrack.view.x = this.volume.view.x - this.audioTrack.view.width - PADDING;
