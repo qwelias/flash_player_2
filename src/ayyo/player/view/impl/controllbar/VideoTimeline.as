@@ -182,7 +182,11 @@ package ayyo.player.view.impl.controllbar {
 				var percent : Number = value / this._duration;
 				if (!isNaN(this._widthOfTimeline)) {
 					if (Math.abs(percent * this._widthOfTimeline - this.played.width) >= 1) {
-						this.thumb.view.x = (this.thumb.view.width >> 1) + percent * (this._widthOfTimeline - this.thumb.view.width);
+						var thumbXPosition : int = percent * this._widthOfTimeline;
+						if (thumbXPosition < this.thumb.view.width >> 1) thumbXPosition = this.thumb.view.width >> 1;
+						else if(thumbXPosition > this._widthOfTimeline - this.thumb.view.width / 2) thumbXPosition = this._widthOfTimeline - this.thumb.view.width / 2;
+						
+						this.thumb.view.x = thumbXPosition;
 
 						this.played.graphics.clear();
 						this.played.graphics.beginFill(0x006fff);
