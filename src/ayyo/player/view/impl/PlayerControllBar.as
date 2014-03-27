@@ -227,15 +227,18 @@ package ayyo.player.view.impl {
 
 		private function removeListeners() : void {
 			this.stage.removeEventListener(Event.MOUSE_LEAVE, this.onMouseLeave);
+			this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, this.onKeyDown);
 		}
 
 		// Handlers
 		private function onMouseLeave(event : Event) : void {
 			clearTimeout(this.hideTimeoutID);
-			this.enterFrame.removeAll();
 			this.mousePoint.x = this.mouseX;
 			this.mousePoint.y = this.mouseY;
-			this.hideTimeoutID = setTimeout(this.hide, 1000);
+			if (!this.getBounds(this).containsPoint(this.mousePoint)) {
+				this.enterFrame.removeAll();
+				this.hideTimeoutID = setTimeout(this.hide, 1000);
+			}
 		}
 
 		private function onEnterFrame(event : Event) : void {
