@@ -30,6 +30,10 @@ package ayyo.player.plugins.subtitles.impl {
 		 * @private
 		 */
 		private var _subField : SubtextField;
+		/**
+		 * @private
+		 */
+		private var _currentCuePoint : CuePoint;
 
 		public function SubtitlesProxyElement(element : MediaElement = null) {
 			super(element);
@@ -56,7 +60,6 @@ package ayyo.player.plugins.subtitles.impl {
 			this.subField.text = "";
 			this.subs = null;
 		}
-
 
 		public function initialize(subtitles : Vector.<Subtitle>) : void {
 			if (this.proxiedElement != null) {
@@ -105,12 +108,14 @@ package ayyo.player.plugins.subtitles.impl {
 		}
 
 		private function onSubtitlesShow(event : TimelineMetadataEvent) : void {
-			var cue : CuePoint = event.marker as CuePoint;
-			this.subField.htmlText = cue.parameters as String;
+			this._currentCuePoint = event.marker as CuePoint;
+			this.subField.htmlText = this._currentCuePoint.parameters as String;
 		}
 
 		private function onSubtitlesHide(event : TimelineMetadataEvent) : void {
-			this.subField.text = "";
+			var cue : CuePoint = event.marker as CuePoint;
+			if (cue == this._currentCuePoint)
+				this.subField.text = "";
 		}
 	}
 }
