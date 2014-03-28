@@ -1,6 +1,12 @@
 package ayyo.player.core.controller {
+	import robotlegs.bender.framework.api.ILogger;
+	import ayyo.player.core.model.ApplicationVariables;
+	import ayyo.player.core.model.PlayerCommands;
 	import ayyo.player.events.PlayerEvent;
 	import ayyo.player.view.api.IVideoTimeline;
+	import ayyo.player.view.impl.controllbar.ThumbAction;
+
+	import me.scriptor.mvc.model.api.IApplicationModel;
 
 	import robotlegs.bender.extensions.mediatorMap.api.IMediator;
 
@@ -19,6 +25,10 @@ package ayyo.player.core.controller {
 		[Inject]
 		public var player : MediaPlayerSprite;
 		[Inject]
+		public var model : IApplicationModel;
+		[Inject]
+		public var logger : ILogger;
+		[Inject]
 		public var dispatcher : IEventDispatcher;
 
 		public function initialize() : void {
@@ -31,6 +41,8 @@ package ayyo.player.core.controller {
 			this.player = null;
 			this.timeline = null;
 			this.dispatcher = null;
+			this.logger = null;
+			this.model = null;
 		}
 
 		private function onBufferTrait(event : PlayerEvent) : void {
@@ -43,13 +55,19 @@ package ayyo.player.core.controller {
 		}
 
 		private function onBufferingChange(event : BufferEvent) : void {
+			event.buffering && this.logger.info("Buffering video.");
+			this.dispatcher.dispatchEvent(new PlayerEvent(event.buffering ? PlayerEvent.SHOW_PRELOADER : PlayerEvent.HIDE_PRELOADER));
 		}
 
 		private function onBufferTimeChange(event : BufferEvent) : void {
 		}
-		
+
 		private function onTimeLineAction(action : String, params : Array) : void {
 			this.dispatcher.dispatchEvent(new PlayerEvent(action, params));
+			if (action == ThumbAction.PRESSED) {
+				this.model.setVariable(ApplicationVariables.PLAYING, this.player.mediaPlayer.playing);
+				this.dispatcher.dispatchEvent(new PlayerEvent(PlayerCommands.PAUSE));
+			}
 		}
 	}
 }

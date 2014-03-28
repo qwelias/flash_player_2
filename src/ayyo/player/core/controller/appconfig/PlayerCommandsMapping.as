@@ -9,7 +9,6 @@ package ayyo.player.core.controller.appconfig {
 	import ayyo.player.core.commands.SetVolume;
 	import ayyo.player.core.commands.SwitchPlayPause;
 	import ayyo.player.core.commands.SwitchScreenState;
-	import ayyo.player.core.commands.guards.OnlyIfPreloaderExists;
 	import ayyo.player.core.commands.guards.OnlyIfTypeIsAssets;
 	import ayyo.player.core.commands.hooks.CheckAvaliableAssets;
 	import ayyo.player.core.commands.hooks.CreatePreloader;
@@ -47,21 +46,24 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.map(ResizeEvent.RESIZE, ResizeEvent).toCommand(NullCommand).withHooks(SaveScreen);
 
 			this.commandMap.map(ApplicationEvent.LAUNCH).toCommand(GetApplicationConfig).withHooks(InitStageOptions, InitMediaPlayer).once();
-			this.commandMap.map(BinDataEvent.LOAD, BinDataEvent).toCommand(LoadBinData).withHooks(CreatePreloader);
+			this.commandMap.map(BinDataEvent.LOAD, BinDataEvent).toCommand(LoadBinData);
 			this.commandMap.map(BinDataEvent.LOADED, BinDataEvent).toCommand(RegisterAsset).withGuards(OnlyIfTypeIsAssets);
 			this.commandMap.map(AssetEvent.REGISTRED).toCommand(NullCommand).withHooks(CheckAvaliableAssets);
 			this.commandMap.map(PluginEvent.LOAD).toCommand(LoadPlugins);
 
 			this.commandMap.map(ApplicationEvent.READY).toCommand(NullCommand).withHooks(LoadSplashScreen);
 
-			this.commandMap.map(PlayerEvent.SPLASH_LOADED, PlayerEvent).toCommand(ConnectToVideo).once();
-			this.commandMap.map(PlayerEvent.CAN_LOAD, PlayerEvent).toCommand(NullCommand).withHooks(InitInterface, DisposePreloader).withGuards(OnlyIfPreloaderExists);
+			this.commandMap.map(PlayerEvent.SPLASH_LOADED, PlayerEvent).toCommand(ConnectToVideo);
+			this.commandMap.map(PlayerEvent.CAN_LOAD, PlayerEvent).toCommand(NullCommand).withHooks(InitInterface);
 			this.commandMap.map(PlayerCommands.FULLSCREEN, PlayerEvent).toCommand(SwitchScreenState);
 			this.commandMap.map(PlayerCommands.NORMALSCREEN, PlayerEvent).toCommand(SwitchScreenState);
 			this.commandMap.map(PlayerCommands.PLAY, PlayerEvent).toCommand(SwitchPlayPause);
 			this.commandMap.map(PlayerCommands.PAUSE, PlayerEvent).toCommand(SwitchPlayPause);
 			this.commandMap.map(PlayerCommands.SEEK, PlayerEvent).toCommand(SeekVideo);
 			this.commandMap.map(PlayerCommands.VOLUME, PlayerEvent).toCommand(SetVolume);
+			
+			this.commandMap.map(PlayerEvent.SHOW_PRELOADER, PlayerEvent).toCommand(NullCommand).withHooks(CreatePreloader);
+			this.commandMap.map(PlayerEvent.HIDE_PRELOADER, PlayerEvent).toCommand(NullCommand).withHooks(DisposePreloader);
 		}
 
 		[PreDestroy]
@@ -69,7 +71,8 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.unmap(BinDataEvent.LOAD, BinDataEvent).fromCommand(LoadBinData);
 			this.commandMap.unmap(BinDataEvent.LOADED, BinDataEvent).fromCommand(RegisterAsset);
 			this.commandMap.unmap(ResizeEvent.RESIZE, ResizeEvent).fromCommand(NullCommand);
-
+			
+			this.commandMap.unmap(PlayerEvent.SPLASH_LOADED, PlayerEvent).fromCommand(ConnectToVideo);
 			this.commandMap.unmap(PlayerEvent.CAN_LOAD, PlayerEvent).fromCommand(NullCommand);
 			this.commandMap.unmap(PlayerCommands.FULLSCREEN, PlayerEvent).fromCommand(SwitchScreenState);
 			this.commandMap.unmap(PlayerCommands.NORMALSCREEN, PlayerEvent).fromCommand(SwitchScreenState);
@@ -77,6 +80,9 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.unmap(PlayerCommands.PAUSE, PlayerEvent).fromCommand(SwitchPlayPause);
 			this.commandMap.unmap(PlayerCommands.SEEK, PlayerEvent).fromCommand(SeekVideo);
 			this.commandMap.unmap(PlayerCommands.VOLUME, PlayerEvent).fromCommand(SetVolume);
+			
+			this.commandMap.unmap(PlayerEvent.HIDE_PRELOADER, PlayerEvent).fromCommand(NullCommand);
+			this.commandMap.unmap(PlayerEvent.SHOW_PRELOADER, PlayerEvent).fromCommand(NullCommand);
 
 			this.commandMap = null;
 

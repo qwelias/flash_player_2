@@ -43,6 +43,8 @@ package ayyo.player.core.commands {
 			this.media.addEventListener(MediaErrorEvent.MEDIA_ERROR, this.onErrorOccured);
 
 			(this.media.getTrait(MediaTraitType.LOAD) as LoadTrait).load();
+			
+			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.HIDE_PRELOADER));
 		}
 
 		private function onErrorOccured(event : MediaErrorEvent) : void {

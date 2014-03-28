@@ -39,7 +39,7 @@ package me.scriptor.mvc.model.impl {
 		public function removeVariable(variableName : String) : Boolean {
 			var result : Boolean = (this._model[variableName] != undefined || this._model[variableName] != null);
 			var index : int = this._list.indexOf(variableName);
-			if (index > 0) {
+			if (index >= 0) {
 				this._list.splice(index, 1);
 				delete this._model[variableName];
 			}

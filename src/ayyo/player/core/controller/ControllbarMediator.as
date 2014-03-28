@@ -1,14 +1,20 @@
 package ayyo.player.core.controller {
-	import ayyo.player.view.api.PlayPauseState;
+	import ayyo.player.core.model.ApplicationVariables;
+	import me.scriptor.mvc.model.api.IApplicationModel;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.core.model.PlayerCommands;
+	import ayyo.player.events.ApplicationEvent;
 	import ayyo.player.events.PlayerEvent;
 	import ayyo.player.view.api.IPlayerControllBar;
+	import ayyo.player.view.api.PlayPauseState;
 	import ayyo.player.view.impl.controllbar.ActiveZone;
+
 	import robotlegs.bender.extensions.mediatorMap.api.IMediator;
 	import robotlegs.bender.framework.api.ILogger;
+
 	import org.osmf.events.TimeEvent;
 	import org.osmf.media.MediaElement;
+
 	import flash.events.IEventDispatcher;
 	import flash.events.MouseEvent;
 
@@ -20,6 +26,8 @@ package ayyo.player.core.controller {
 		public var controlls : IPlayerControllBar;
 		[Inject]
 		public var logger : ILogger;
+		[Inject]
+		public var model : IApplicationModel;
 		[Inject]
 		public var playerConfig : IAyyoPlayerConfig;
 		[Inject]
@@ -51,6 +59,7 @@ package ayyo.player.core.controller {
 			this.controlls.action.remove(this.onControlAction);
 			this.controlls = null;
 			this.logger = null;
+			this.model = null;
 			this.playerConfig = null;
 			this.dispatcher = null;
 		}
@@ -78,6 +87,9 @@ package ayyo.player.core.controller {
 		
 		private function onPlaybackComplete(event : TimeEvent) : void {
 			this.controlls.playPause.state = PlayPauseState.PLAY;
+			this.model.setVariable(ApplicationVariables.PLAYING, false);
+			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerCommands.SEEK, [0]));
+			this.dispatcher.dispatchEvent(new ApplicationEvent(ApplicationEvent.READY));
 		}
 	}
 }

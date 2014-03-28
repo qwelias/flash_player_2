@@ -11,6 +11,8 @@ package ayyo.player.events {
 		public static const CAN_PLAY : String = "playTrait";
 		public static const TIME_TRAIT : String = "timeTrait";
 		public static const BUFFER_TRAIT : String = "bufferTrait";
+		public static const SHOW_PRELOADER : String = "showPreloader";
+		public static const HIDE_PRELOADER : String = "hidePreloader";
 		/**
 		 * @private
 		 */

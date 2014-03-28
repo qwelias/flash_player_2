@@ -1,4 +1,5 @@
 package ayyo.player.core.commands {
+	import ayyo.player.events.PlayerEvent;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.core.model.api.IInfoObject;
 	import ayyo.player.events.BinDataEvent;
@@ -41,6 +42,7 @@ package ayyo.player.core.commands {
 			this.createLoader();
 			this.currentInfoObject = this.playerConfig.assets.shift();
 			this.currentInfoObject && this.binLoader.load(new URLRequest(this.currentInfoObject.url));
+			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.SHOW_PRELOADER));
 		}
 
 		private function createLoader() : void {

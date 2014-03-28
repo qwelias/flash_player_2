@@ -220,7 +220,7 @@ package ayyo.player.view.impl.controllbar {
 		}
 
 		private function onThumbMouseDown(event : MouseEvent) : void {
-			this.action.dispatch(PlayerCommands.PAUSE, null);
+			this.action.dispatch(ThumbAction.PRESSED, null);
 			this.stage.addEventListener(MouseEvent.MOUSE_UP, this.onThumbMouseUp);
 			this.thumb.signals.enterFrame.add(this.onThumbEnterFrame);
 			this.isThumbPressed = true;
@@ -233,13 +233,14 @@ package ayyo.player.view.impl.controllbar {
 		private function onThumbMouseUp(event : MouseEvent) : void {
 			this.thumb.signals.enterFrame.remove(this.onThumbEnterFrame);
 			this.stage.removeEventListener(MouseEvent.MOUSE_UP, this.onThumbMouseUp);
-			this.seekTo(this.thumb.view.x / this._widthOfTimeline * this._duration);
+			this.action.dispatch(ThumbAction.RELEASED, null);
 			this.isThumbPressed = false;
+			this.seekTo(this.thumb.view.x / this._widthOfTimeline * this._duration);
 		}
 
 		private function seekTo(currentTime : uint) : void {
-			this.action.dispatch(PlayerCommands.SEEK, [currentTime]);
 			this.time = currentTime;
+			this.action.dispatch(PlayerCommands.SEEK, [currentTime]);
 		}
 
 		private function onMouseOver(event : MouseEvent) : void {
