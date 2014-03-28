@@ -48,7 +48,7 @@ package ayyo.player.view.impl.controllbar {
 			 if(this._id > 0) {
 				this._subicon = new SubGraphics() as Bitmap;
 				this.addChild(this._subicon);
-				this._subicon.x = this.textfield.x + this.textfield.width + 9;
+				this._subicon.x = this.textfield.x + this.textfield.width + 10;
 				this._subicon.y = this._icon.height - this._subicon.height >> 1;
 				this.textfield.appendText(" +    RU");
 			 }
@@ -56,7 +56,7 @@ package ayyo.player.view.impl.controllbar {
 
 		public function get textfield() : TextField {
 			if(!this._textfield) {
-				var format : TextFormat = new TextFormat("Arial", 11, 0xffffff);
+				var format : TextFormat = new TextFormat("Trebuchet MS", 11, 0xffffff);
 				this._textfield = new TextField();
 				this._textfield.selectable = false;
 				this._textfield.embedFonts = true;

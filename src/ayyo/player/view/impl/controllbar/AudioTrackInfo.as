@@ -49,7 +49,7 @@ package ayyo.player.view.impl.controllbar {
 				item = new TrackItem(i);
 				item.language = items[i].info["language"];
 				item.action.add(this.onAction);
-				item.view.x = i == 0 ? 0 : this.width + 10;
+				item.view.x = i == 0 ? 0 : this.width + 13;
 				if (i != 0 ) item.enable();
 				else {
 					item.disable();
