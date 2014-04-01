@@ -47,6 +47,8 @@ package ayyo.player.view.impl.controllbar {
 			if (!this.isCreated) {
 				this.addChild(this.textfield);
 				this.addEventListener(MouseEvent.CLICK, this.onSwitchCurrentToEstimated);
+				this.addEventListener(MouseEvent.ROLL_OVER, this.onRolloveroutHandler);
+				this.addEventListener(MouseEvent.ROLL_OUT, this.onRolloveroutHandler);
 				this.time = 0;
 				this.isCreated = true;
 			}
@@ -95,6 +97,13 @@ package ayyo.player.view.impl.controllbar {
 		private function onSwitchCurrentToEstimated(event : MouseEvent) : void {
 			this.isEstimated = !this.isEstimated;
 			this.time = this._value;
+		}
+		
+		private function onRolloveroutHandler(event : MouseEvent) : void {
+			var format : TextFormat = new TextFormat("Arial", 12);
+			format.color = event.type == MouseEvent.ROLL_OVER ? 0xc4eff4 : 0xffffff;
+			this.textfield.defaultTextFormat = format;
+			this.textfield.text = this.textfield.text;
 		}
 	}
 }

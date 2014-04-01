@@ -1,4 +1,5 @@
 package ayyo.player.view.impl.controllbar {
+	import flash.text.engine.FontWeight;
 	import flash.text.engine.TextBlock;
 	import flash.text.engine.TextLine;
 	import flash.display.Bitmap;
@@ -51,7 +52,7 @@ package ayyo.player.view.impl.controllbar {
 				this._subicon.y = this._icon.height - this._subicon.height >> 1;
 				value += " +    RU";
 			}
-			var fontDescription : FontDescription = new FontDescription("Trebuchet MS");
+			var fontDescription : FontDescription = new FontDescription("Trebuchet MS", FontWeight.BOLD);
 			var format : ElementFormat = new ElementFormat(fontDescription, 11, 0xffffff);
 			var text : TextElement = new TextElement(value.toUpperCase(), format);
 			this._textBlock = new TextBlock();
@@ -62,11 +63,8 @@ package ayyo.player.view.impl.controllbar {
 			line.x = this._icon.x + this._icon.width + 2;
 			if(this._subicon) this._subicon.x = line.x + 26;
 			this.addChild(line);
-
-			/**
-			 * TODO Заплатка. Все id отличные от 0 имют субтитры
-			 * 0 - дорожка по умолчанию
-			 */
+			
+			this.cacheAsBitmap = true;
 		}
 
 		public function get textLine() : TextLine {
