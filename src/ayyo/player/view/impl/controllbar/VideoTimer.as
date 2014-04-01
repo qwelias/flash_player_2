@@ -67,7 +67,7 @@ package ayyo.player.view.impl.controllbar {
 
 		public function get textfield() : TextField {
 			if (!this._textfield) {
-				var format : TextFormat = new TextFormat("Arial", 12, 0xffffff);
+				var format : TextFormat = new TextFormat("Arial", 11, 0x959595);
 				this._textfield = new TextField();
 				this._textfield.selectable = false;
 				this._textfield.embedFonts = true;
@@ -102,8 +102,8 @@ package ayyo.player.view.impl.controllbar {
 		}
 		
 		private function onRolloveroutHandler(event : MouseEvent) : void {
-			var format : TextFormat = new TextFormat("Arial", 12);
-			format.color = event.type == MouseEvent.ROLL_OVER ? 0xc4eff4 : 0xffffff;
+			var format : TextFormat = new TextFormat("Arial", 11);
+			format.color = event.type == MouseEvent.ROLL_OVER ? 0xc4eff4 : 0x959595;
 			this.textfield.defaultTextFormat = format;
 			this.textfield.text = this.textfield.text;
 		}

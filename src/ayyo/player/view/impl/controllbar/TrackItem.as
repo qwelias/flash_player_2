@@ -1,4 +1,6 @@
 package ayyo.player.view.impl.controllbar {
+	import flash.geom.Matrix;
+	import flash.display.BitmapData;
 	import flash.text.engine.FontWeight;
 	import flash.text.engine.TextBlock;
 	import flash.text.engine.TextLine;
@@ -62,9 +64,16 @@ package ayyo.player.view.impl.controllbar {
 			line.y = (line.height - this._icon.height >> 1) + Math.floor(line.height) - 1;
 			line.x = this._icon.x + this._icon.width + 2;
 			if(this._subicon) this._subicon.x = line.x + 26;
-			this.addChild(line);
 			
-			this.cacheAsBitmap = true;
+			var data : BitmapData = new BitmapData(line.width, line.height, true, 0xcccccc);
+			var matrix : Matrix = new Matrix();
+			var bitmap : Bitmap = new Bitmap(data);
+			
+			matrix.translate(0, line.ascent + (line.descent >> 1));
+			bitmap.bitmapData.draw(line, matrix, null, null, null, true);
+			bitmap.x = line.x;
+			bitmap.y = line.height - this._icon.height >> 1;
+			this.addChild(bitmap);
 		}
 
 		public function get textLine() : TextLine {
