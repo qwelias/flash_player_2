@@ -235,7 +235,8 @@ package ayyo.player.view.impl.controllbar {
 			this.stage.removeEventListener(MouseEvent.MOUSE_UP, this.onThumbMouseUp);
 			this.action.dispatch(ThumbAction.RELEASED, null);
 			this.isThumbPressed = false;
-			this.seekTo(this.thumb.view.x / this._widthOfTimeline * this._duration);
+			var time : uint = this.thumb.view.x <= this.thumb.view.width >> 1 ? 0 : (this.thumb.view.x >= this._widthOfTimeline - (this.thumb.view.width >> 1) ? this._duration - 1 : this.thumb.view.x / this._widthOfTimeline * this._duration);
+			this.seekTo(time);
 		}
 
 		private function seekTo(currentTime : uint) : void {

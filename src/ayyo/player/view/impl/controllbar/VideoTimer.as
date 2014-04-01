@@ -47,8 +47,8 @@ package ayyo.player.view.impl.controllbar {
 			if (!this.isCreated) {
 				this.addChild(this.textfield);
 				this.addEventListener(MouseEvent.CLICK, this.onSwitchCurrentToEstimated);
-				this.addEventListener(MouseEvent.ROLL_OVER, this.onRolloveroutHandler);
-				this.addEventListener(MouseEvent.ROLL_OUT, this.onRolloveroutHandler);
+				this.controlable && this.addEventListener(MouseEvent.ROLL_OVER, this.onRolloveroutHandler);
+				this.controlable && this.addEventListener(MouseEvent.ROLL_OUT, this.onRolloveroutHandler);
 				this.time = 0;
 				this.isCreated = true;
 			}
@@ -58,6 +58,8 @@ package ayyo.player.view.impl.controllbar {
 			if (this.isCreated) {
 				this.textfield.parent && this.textfield.parent.removeChild(this.textfield);
 				this.removeEventListener(MouseEvent.CLICK, this.onSwitchCurrentToEstimated);
+				this.controlable && this.removeEventListener(MouseEvent.ROLL_OVER, this.onRolloveroutHandler);
+				this.controlable && this.removeEventListener(MouseEvent.ROLL_OUT, this.onRolloveroutHandler);
 				this.isCreated = false;
 				this.parent && this.parent.removeChild(this);
 			}
