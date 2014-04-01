@@ -46,6 +46,7 @@ package ayyo.player.core.controller {
 			this.trait = event.params[0] as TimeTrait;
 			this.trait.addEventListener(TimeEvent.DURATION_CHANGE, this.onDurationChange);
 			this.trait.addEventListener(TimeEvent.COMPLETE, this.dispatcher.dispatchEvent);
+			this.trait != null && !isNaN(this.trait.duration) && this.trait.duration != 0 && this.onDurationChange(null);
 		}
 
 		private function onDurationChange(event : TimeEvent) : void {

@@ -179,10 +179,11 @@ package ayyo.player.view.impl {
 				this.volume.view.x = this.screenState.view.x - this.volume.view.width - PADDING + 10;
 				this.volume.view.y = HEIGHT - this.volume.view.height >> 1;
 
-				this.audioTrack.view.x = this.volume.view.x - this.audioTrack.view.width - PADDING + 5;
+				this.audioTrack.view.x = this.volume.view.x;
+				this.audioTrack.view.x -= this.audioTrack.view.width > 0 ? this.audioTrack.view.width - PADDING + 5 : 0;
 				this.audioTrack.view.y = HEIGHT - 10 >> 1;
 
-				this.timer.view.x = this.audioTrack.view.x - this.timer.view.width - PADDING;
+				this.timer.view.x = this.audioTrack.view.x - this.timer.view.width - (this.audioTrack.view.width > 0 ? PADDING : PADDING - 10);
 				this.timer.view.y = HEIGHT - this.timer.view.height >> 1;
 
 				this.timeline.view.x = this.playPause.view.x + this.playPause.view.width + PADDING / 5 + 8;
