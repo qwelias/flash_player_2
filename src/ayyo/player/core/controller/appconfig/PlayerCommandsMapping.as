@@ -72,6 +72,8 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.unmap(BinDataEvent.LOADED, BinDataEvent).fromCommand(RegisterAsset);
 			this.commandMap.unmap(ResizeEvent.RESIZE, ResizeEvent).fromCommand(NullCommand);
 			
+			this.commandMap.unmap(ApplicationEvent.READY).fromCommand(NullCommand);
+			
 			this.commandMap.unmap(PlayerEvent.SPLASH_LOADED, PlayerEvent).fromCommand(ConnectToVideo);
 			this.commandMap.unmap(PlayerEvent.CAN_LOAD, PlayerEvent).fromCommand(NullCommand);
 			this.commandMap.unmap(PlayerCommands.FULLSCREEN, PlayerEvent).fromCommand(SwitchScreenState);

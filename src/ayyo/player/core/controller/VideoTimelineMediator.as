@@ -1,5 +1,4 @@
 package ayyo.player.core.controller {
-	import robotlegs.bender.framework.api.ILogger;
 	import ayyo.player.core.model.ApplicationVariables;
 	import ayyo.player.core.model.PlayerCommands;
 	import ayyo.player.events.PlayerEvent;
@@ -9,10 +8,12 @@ package ayyo.player.core.controller {
 	import me.scriptor.mvc.model.api.IApplicationModel;
 
 	import robotlegs.bender.extensions.mediatorMap.api.IMediator;
+	import robotlegs.bender.framework.api.ILogger;
 
 	import org.osmf.events.BufferEvent;
 	import org.osmf.media.MediaPlayerSprite;
 	import org.osmf.traits.BufferTrait;
+	import org.osmf.traits.MediaTraitType;
 
 	import flash.events.IEventDispatcher;
 
@@ -32,7 +33,7 @@ package ayyo.player.core.controller {
 		public var dispatcher : IEventDispatcher;
 
 		public function initialize() : void {
-			this.dispatcher.addEventListener(PlayerEvent.BUFFER_TRAIT, this.onBufferTrait);
+			this.player.media.hasTrait(MediaTraitType.BUFFER) ? this.parseBufferTrait(this.player.media.getTrait(MediaTraitType.BUFFER) as BufferTrait) : this.dispatcher.addEventListener(PlayerEvent.BUFFER_TRAIT, this.onBufferTrait);
 			this.timeline.action.add(this.onTimeLineAction);
 		}
 
@@ -45,13 +46,17 @@ package ayyo.player.core.controller {
 			this.model = null;
 		}
 
-		private function onBufferTrait(event : PlayerEvent) : void {
-			this.dispatcher.removeEventListener(PlayerEvent.BUFFER_TRAIT, this.onBufferTrait);
-			var trait : BufferTrait = event.params[0] as BufferTrait;
+		private function parseBufferTrait(bufferTrait : BufferTrait) : void {
+			var trait : BufferTrait = bufferTrait;
 			if (trait) {
 				trait.addEventListener(BufferEvent.BUFFERING_CHANGE, this.onBufferingChange);
 				trait.addEventListener(BufferEvent.BUFFER_TIME_CHANGE, this.onBufferTimeChange);
 			}
+		}
+
+		private function onBufferTrait(event : PlayerEvent) : void {
+			this.dispatcher.removeEventListener(PlayerEvent.BUFFER_TRAIT, this.onBufferTrait);
+			this.parseBufferTrait(event.params[0] as BufferTrait);
 		}
 
 		private function onBufferingChange(event : BufferEvent) : void {

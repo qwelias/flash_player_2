@@ -171,7 +171,7 @@ package ayyo.player.view.impl.controllbar {
 
 		override public function set width(value : Number) : void {
 			this.container.graphics.clear();
-			this.container.graphics.beginFill(0, .8);
+			this.container.graphics.beginFill(0, .7);
 			this.container.graphics.drawRoundRect(0, 0, value, 15, 6);
 			this._widthOfTimeline = value;
 			this.time = this._value;
