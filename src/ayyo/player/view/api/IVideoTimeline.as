@@ -11,5 +11,7 @@ package ayyo.player.view.api {
 		function get played() : Shape;
 
 		function get thumb() : IButton;
+
+		function set loaded(value : Number) : void;
 	}
 }

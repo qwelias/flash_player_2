@@ -184,8 +184,8 @@ package ayyo.player.view.impl.controllbar {
 					if (Math.abs(percent * this._widthOfTimeline - this.played.width) >= 1) {
 						var thumbXPosition : int = percent * this._widthOfTimeline;
 						if (thumbXPosition < this.thumb.view.width >> 1) thumbXPosition = this.thumb.view.width >> 1;
-						else if(thumbXPosition > this._widthOfTimeline - this.thumb.view.width / 2) thumbXPosition = this._widthOfTimeline - this.thumb.view.width / 2;
-						
+						else if (thumbXPosition > this._widthOfTimeline - this.thumb.view.width / 2) thumbXPosition = this._widthOfTimeline - this.thumb.view.width / 2;
+
 						this.thumb.view.x = thumbXPosition;
 
 						this.played.graphics.clear();
@@ -212,6 +212,12 @@ package ayyo.player.view.impl.controllbar {
 
 		public function get action() : ISignal {
 			return this._action ||= new Signal(String, Array);
+		}
+
+		public function set loaded(value : Number) : void {
+			this.buffered.graphics.clear();
+			this.buffered.graphics.beginFill(0x0c2d59);
+			this.buffered.graphics.drawRoundRect(0, 1, value * this._widthOfTimeline, 12, 6);
 		}
 
 		private function setTimerPositionAccordingBy(value : Number) : void {

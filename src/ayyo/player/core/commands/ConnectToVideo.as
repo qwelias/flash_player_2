@@ -54,9 +54,11 @@ package ayyo.player.core.commands {
 		private function onAddMediaTrait(event : MediaElementEvent) : void {
 			if (event.traitType == MediaTraitType.LOAD) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.CAN_LOAD, [this.media.getTrait(event.traitType)]));
 			else if (event.traitType == MediaTraitType.ALTERNATIVE_AUDIO) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.ALTERNATIVE_AUDIO, [this.media.getTrait(event.traitType)]));
+			else if (event.traitType == MediaTraitType.AUDIO) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.AUDIO, [this.media.getTrait(event.traitType)]));
 			else if (event.traitType == MediaTraitType.PLAY) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.CAN_PLAY, [this.media]));
 			else if (event.traitType == MediaTraitType.TIME) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.TIME_TRAIT, [this.media.getTrait(event.traitType)]));
 			else if (event.traitType == MediaTraitType.BUFFER) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.BUFFER_TRAIT, [this.media.getTrait(event.traitType)]));
+			else if (event.traitType == MediaTraitType.DYNAMIC_STREAM) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.DYNAMIC_STREAM_TRAIT, [this.media.getTrait(event.traitType)]));
 		}
 	}
 }
