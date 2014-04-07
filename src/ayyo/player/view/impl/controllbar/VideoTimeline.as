@@ -1,8 +1,12 @@
 package ayyo.player.view.impl.controllbar {
+	import com.greensock.easing.Quad;
+
 	import ayyo.player.core.model.PlayerCommands;
 	import ayyo.player.view.api.IButton;
 	import ayyo.player.view.api.IVideoTimeline;
 	import ayyo.player.view.api.IVideoTimer;
+
+	import com.greensock.TweenLite;
 
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
@@ -74,6 +78,23 @@ package ayyo.player.view.impl.controllbar {
 		 * @private
 		 */
 		private var isThumbPressed : Boolean;
+		/**
+		 * @private
+		 */
+		private var _bitrate : Number;
+		/**
+		 * @private
+		 */
+		private var _seekedValue : uint;
+		/**
+		 * @private
+		 */
+		private var _currentOffset : Number = 0;
+		public var amount : Number;
+		/**
+		 * @private
+		 */
+		private var currentBufferBarWidth : Number;
 
 		/**
 		 * @private
@@ -215,9 +236,32 @@ package ayyo.player.view.impl.controllbar {
 		}
 
 		public function set loaded(value : Number) : void {
+			if (!isNaN(this._bitrate) && !isNaN(this._duration)) {
+				const bytesTotal : uint = ((this._bitrate * this._duration) / 8) * 1024;
+				const currentPercent : Number = value / bytesTotal;
+				const startPosition : Number = (this._seekedValue / this._duration) * this._widthOfTimeline;
+				this._currentOffset += this._widthOfTimeline * currentPercent;
+				if (this._currentOffset + startPosition > this._widthOfTimeline) {
+					this._currentOffset = this._widthOfTimeline - startPosition;
+				}
+				this.amount = 0;
+				this.currentBufferBarWidth = this.buffered.width;
+				trace('this._currentOffset: ' + (this._currentOffset));
+				trace('this.currentBufferBarWidth: ' + (this.currentBufferBarWidth));
+				TweenLite.killTweensOf(this);
+				TweenLite.to(this, .7, {amount:1, onUpdate:this.updateBufferBar, onUpdateParams:[startPosition], ease:Quad.easeOut});
+			}
+		}
+
+		public function set bitrate(value : Number) : void {
+			this._bitrate = value;
+		}
+
+		private function updateBufferBar(startPosition : Number) : void {
+			var widthPosition : Number = this.currentBufferBarWidth + (this._currentOffset - this.currentBufferBarWidth) * this.amount;
 			this.buffered.graphics.clear();
 			this.buffered.graphics.beginFill(0x0c2d59);
-			this.buffered.graphics.drawRoundRect(0, 1, value * this._widthOfTimeline, 12, 6);
+			this.buffered.graphics.drawRoundRect(startPosition, 1, widthPosition, 12, 6);
 		}
 
 		private function setTimerPositionAccordingBy(value : Number) : void {
@@ -246,6 +290,8 @@ package ayyo.player.view.impl.controllbar {
 		}
 
 		private function seekTo(currentTime : uint) : void {
+			this._seekedValue = currentTime;
+			this._currentOffset = 0;
 			this.time = currentTime;
 			this.action.dispatch(PlayerCommands.SEEK, [currentTime]);
 		}

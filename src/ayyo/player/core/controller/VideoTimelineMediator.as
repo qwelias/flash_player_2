@@ -1,4 +1,5 @@
 package ayyo.player.core.controller {
+	import flash.events.ProgressEvent;
 	import ayyo.player.core.model.ApplicationVariables;
 	import ayyo.player.core.model.PlayerCommands;
 	import ayyo.player.events.PlayerEvent;
@@ -31,13 +32,22 @@ package ayyo.player.core.controller {
 		public var logger : ILogger;
 		[Inject]
 		public var dispatcher : IEventDispatcher;
+		/**
+		 * @private
+		 */
+		private var trait : BufferTrait;
 
 		public function initialize() : void {
 			this.player.media.hasTrait(MediaTraitType.BUFFER) ? this.parseBufferTrait(this.player.media.getTrait(MediaTraitType.BUFFER) as BufferTrait) : this.dispatcher.addEventListener(PlayerEvent.BUFFER_TRAIT, this.onBufferTrait);
+			this.dispatcher.addEventListener(ProgressEvent.PROGRESS, this.onLoadProgress);
 			this.timeline.action.add(this.onTimeLineAction);
 		}
 
 		public function destroy() : void {
+			this.trait.hasEventListener(BufferEvent.BUFFERING_CHANGE) && this.trait.removeEventListener(BufferEvent.BUFFERING_CHANGE, this.onBufferingChange);
+			this.trait.hasEventListener(BufferEvent.BUFFER_TIME_CHANGE) && this.trait.removeEventListener(BufferEvent.BUFFER_TIME_CHANGE, this.onBufferTimeChange);
+			this.trait = null;
+			this.dispatcher.hasEventListener(ProgressEvent.PROGRESS) && this.dispatcher.removeEventListener(ProgressEvent.PROGRESS, this.onLoadProgress);
 			this.timeline.dispose();
 			this.player = null;
 			this.timeline = null;
@@ -47,7 +57,7 @@ package ayyo.player.core.controller {
 		}
 
 		private function parseBufferTrait(bufferTrait : BufferTrait) : void {
-			var trait : BufferTrait = bufferTrait;
+			this.trait = bufferTrait;
 			if (trait) {
 				trait.addEventListener(BufferEvent.BUFFERING_CHANGE, this.onBufferingChange);
 				trait.addEventListener(BufferEvent.BUFFER_TIME_CHANGE, this.onBufferTimeChange);
@@ -73,6 +83,10 @@ package ayyo.player.core.controller {
 				this.model.setVariable(ApplicationVariables.PLAYING, this.player.mediaPlayer.playing);
 				this.dispatcher.dispatchEvent(new PlayerEvent(PlayerCommands.PAUSE));
 			}
+		}
+		
+		private function onLoadProgress(event : ProgressEvent) : void {
+			this.timeline.loaded = event.bytesLoaded;
 		}
 	}
 }

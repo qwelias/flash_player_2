@@ -1,11 +1,6 @@
 package ayyo.player.core.commands {
-	import flash.events.NetStatusEvent;
-	import org.osflash.signals.natives.sets.NetStreamSignalSet;
-	import flash.net.NetStream;
-
-	import org.osmf.net.NetStreamLoadTrait;
-	import org.osmf.traits.LoadState;
-
+	import org.osmf.events.DynamicStreamEvent;
+	import flash.events.ProgressEvent;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.events.PlayerEvent;
 
@@ -29,7 +24,6 @@ package ayyo.player.core.commands {
 	import org.osmf.traits.TimeTrait;
 
 	import flash.events.IEventDispatcher;
-	import flash.events.ProgressEvent;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -60,7 +54,7 @@ package ayyo.player.core.commands {
 		/**
 		 * @private
 		 */
-		private var netStream : NetStream;
+		private var lastBytesLoadedValue : Number;
 
 		public function execute() : void {
 			var resource : URLResource = new URLResource(this.playerConfig.video.url);
@@ -71,7 +65,6 @@ package ayyo.player.core.commands {
 			this.media.addEventListener(MediaErrorEvent.MEDIA_ERROR, this.onErrorOccured);
 
 			this.player.mediaPlayer.addEventListener(LoadEvent.BYTES_LOADED_CHANGE, this.onLoadedBytesChange);
-			this.player.mediaPlayer.addEventListener(LoadEvent.LOAD_STATE_CHANGE, this.onLoadedStateChange);
 			(this.media.getTrait(MediaTraitType.LOAD) as LoadTrait).load();
 
 			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.HIDE_PRELOADER));
@@ -80,6 +73,7 @@ package ayyo.player.core.commands {
 		private function parseTrait(trait : MediaTraitBase) : void {
 			if (trait is DynamicStreamTrait) {
 				this.dynamicStreamTrait = trait as DynamicStreamTrait;
+				this.dynamicStreamTrait.addEventListener(DynamicStreamEvent.SWITCHING_CHANGE, this.onDynamicStreamChange);
 			} else if (trait is TimeTrait) {
 				this.timeTrait = trait as TimeTrait;
 				this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.TIME_TRAIT, [trait]));
@@ -100,27 +94,13 @@ package ayyo.player.core.commands {
 		}
 
 		private function onLoadedBytesChange(event : LoadEvent) : void {
-			if (this.dynamicStreamTrait && this.timeTrait && !isNaN(this.timeTrait.duration) && this.timeTrait.duration > 0) {
-				var bytesTotal : Number = (this.dynamicStreamTrait.getBitrateForIndex(this.dynamicStreamTrait.currentIndex) * this.timeTrait.duration) / 8;
-				this.dispatcher.dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, this.player.mediaPlayer.bytesLoaded, bytesTotal));
-			}
+			var bytesLoaded : Number = this.player.mediaPlayer.bytesLoaded - (isNaN(this.lastBytesLoadedValue) ? 0 : this.lastBytesLoadedValue);
+			this.lastBytesLoadedValue = this.player.mediaPlayer.bytesLoaded;
+			this.dispatcher.dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, bytesLoaded * 8));
 		}
-
-		private function onLoadedStateChange(event : LoadEvent) : void {
-			trace("ConnectToVideo.onLoadedStateChange(event)");
-			trace('event.loadState: ' + (event.loadState));
-			var netStreamLoadTrait : NetStreamLoadTrait = this.media.getTrait(MediaTraitType.LOAD) as NetStreamLoadTrait;
-			trace('netStreamLoadTrait: ' + (netStreamLoadTrait));
-			if (netStreamLoadTrait) {
-				this.netStream = netStreamLoadTrait.netStream;
-				var signals : NetStreamSignalSet = new NetStreamSignalSet(this.netStream);
-				signals.netStatus.add(this.onNetStatusChange);
-				trace('this.netStream.bytesTotal: ' + (this.netStream.bytesTotal));
-			}
-		}
-
-		private function onNetStatusChange(event : NetStatusEvent) : void {
-			trace('event.info["code"]: ' + (event.info["code"]));
+		
+		private function onDynamicStreamChange(event : DynamicStreamEvent) : void {
+			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.DYNAMIC_STREAM_CHANGE, [this.dynamicStreamTrait.getBitrateForIndex(this.dynamicStreamTrait.currentIndex)]));
 		}
 	}
 }

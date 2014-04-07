@@ -15,6 +15,7 @@ package ayyo.player.events {
 		public static const DYNAMIC_STREAM_TRAIT : String = "dynamicStreamTrait";
 		public static const SHOW_PRELOADER : String = "showPreloader";
 		public static const HIDE_PRELOADER : String = "hidePreloader";
+		public static const DYNAMIC_STREAM_CHANGE : String = "dynamicStreamChange";
 		/**
 		 * @private
 		 */

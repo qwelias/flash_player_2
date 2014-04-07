@@ -86,6 +86,9 @@ package ayyo.player.view.impl.controllbar {
 		public function set duration(value : uint) : void {
 			this._duration = value;
 		}
+		
+		public function set bitrate(value : Number) : void {
+		}
 
 		public function get view() : DisplayObject {
 			return this;

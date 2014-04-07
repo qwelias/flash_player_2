@@ -18,7 +18,6 @@ package ayyo.player.core.commands.hooks {
 			this.player.mediaPlayer.autoDynamicStreamSwitch = true;
 			this.player.mediaPlayer.autoRewind = false;
 			this.player.mediaPlayer.autoPlay = false;
-			this.player.mediaPlayer.bufferTime = 10;
 			this.player.scaleMode = ScaleMode.LETTERBOX;
 
 			this.contextView.view.addChild(this.player);

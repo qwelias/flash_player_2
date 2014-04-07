@@ -1,4 +1,5 @@
 package ayyo.player.view.impl.controllbar {
+	import flash.display.Shape;
 	import ayyo.player.view.api.IVolumeBar;
 
 	import org.osflash.signals.ISignal;
@@ -16,7 +17,7 @@ package ayyo.player.view.impl.controllbar {
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
 	public class VolumeBar extends Sprite implements IVolumeBar {
-		private static const WIDTH : Number = 40;
+		private static const WIDTH : uint = 40;
 		[Embed(source="./../../../../../../assets/controlbar/icon.audio.png")]
 		private var AudioGraphics : Class;
 		/**
@@ -51,6 +52,10 @@ package ayyo.player.view.impl.controllbar {
 		 * @private
 		 */
 		private var _currentVolume : Number;
+		/**
+		 * @private
+		 */
+		private var _bar : Shape;
 
 		public function VolumeBar(autoCreate : Boolean = true) {
 			autoCreate && this.create();
@@ -63,7 +68,12 @@ package ayyo.player.view.impl.controllbar {
 				this._icon = new AudioGraphics() as Bitmap;
 				this._pattern = new DashedPattern();
 				this._alphaPattern = new AlphaDashedPattern();
+				this._bar = new Shape();
+				
+				this._bar.x = 11;
+				
 				this.addChild(this._icon);
+				this.addChild(this._bar);
 				this.alpha = .8;
 				this.volume = 1;
 				this.isCreated = true;
@@ -105,11 +115,11 @@ package ayyo.player.view.impl.controllbar {
 				value = value < 0 ? 0 : (value > 1 ? 1 : value);
 				this._icon.alpha = value == 0 ? .3 : 1;
 				const visibleBar : uint = value * WIDTH;
-				this.graphics.clear();
-				this.graphics.beginBitmapFill(this._alphaPattern);
-				this.graphics.drawRect(4 + this._icon.width + this._icon.x, 0, WIDTH, 10);
-				this.graphics.beginBitmapFill(this._pattern);
-				this.graphics.drawRect(4 + this._icon.width + this._icon.x, 0, visibleBar, 10);
+				this._bar.graphics.clear();
+				this._bar.graphics.beginBitmapFill(this._alphaPattern);
+				this._bar.graphics.drawRect(0, 0, WIDTH, 10);
+				this._bar.graphics.beginBitmapFill(this._pattern);
+				this._bar.graphics.drawRect(0, 0, visibleBar, 10);
 				
 				this._currentVolume = value;
 				this.action.dispatch(this._currentVolume);
