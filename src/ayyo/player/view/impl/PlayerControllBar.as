@@ -164,7 +164,7 @@ package ayyo.player.view.impl {
 				this.graphics.clear();
 				this._matrix.identity();
 				this._matrix.createGradientBox(screen.width - MARGIN * 2, HEIGHT, -Math.PI / 2);
-				this.graphics.beginGradientFill(GradientType.LINEAR, [0x000d21, 0x001e21], [.9, .9], [0, 0xff], this._matrix);
+				this.graphics.beginGradientFill(GradientType.LINEAR, [0x000d21, 0x001e21], [.8, .8], [0, 0xff], this._matrix);
 				this.graphics.drawRoundRect(0, 0, screen.width - MARGIN * 2, HEIGHT, 12);
 
 				this.x = MARGIN;
@@ -173,16 +173,17 @@ package ayyo.player.view.impl {
 				this.playPause.view.x = 3;
 				this.playPause.view.y = (HEIGHT - this.playPause.view.height >> 1) + 1;
 
-				this.screenState.view.x = screen.width - MARGIN * 2 - this.screenState.view.width - PADDING + 15;
+				this.screenState.view.x = screen.width - MARGIN * 2 - this.screenState.view.width - PADDING + 12;
 				this.screenState.view.y = HEIGHT - this.screenState.view.height >> 1;
 
 				this.volume.view.x = this.screenState.view.x - this.volume.view.width - PADDING + 10;
 				this.volume.view.y = HEIGHT - this.volume.view.height >> 1;
 
-				this.audioTrack.view.x = this.volume.view.x - this.audioTrack.view.width - PADDING + 5;
+				this.audioTrack.view.x = this.volume.view.x;
+				this.audioTrack.view.x -= this.audioTrack.view.width > 0 ? this.audioTrack.view.width + PADDING - 5 : 0;
 				this.audioTrack.view.y = HEIGHT - 10 >> 1;
 
-				this.timer.view.x = this.audioTrack.view.x - this.timer.view.width - PADDING;
+				this.timer.view.x = this.audioTrack.view.x - this.timer.view.width - (this.audioTrack.view.width > 0 ? PADDING : PADDING - 10);
 				this.timer.view.y = HEIGHT - this.timer.view.height >> 1;
 
 				this.timeline.view.x = this.playPause.view.x + this.playPause.view.width + PADDING / 5 + 8;

@@ -136,6 +136,14 @@ package osmf.patch {
 	 **/
 	public class LightweightVideoElement extends LoadableElementBase {
 		/**
+		 * @private
+		 */
+		private var timeTrait : TimeTrait;
+		/**
+		 * @private
+		 */
+		private var seekTrait : SeekTrait;
+		/**
 		 * Constructor.
 		 * 
 		 * @param resource URLResource that points to the video source that the LightweightVideoElement
@@ -433,13 +441,12 @@ package osmf.patch {
 				}
 
 				// setup time trait
-				if (!this.hasTrait(MediaTraitType.TIME)) {
-					var timeTrait : TimeTrait = loadTrait.getTrait(MediaTraitType.TIME) as TimeTrait;
-					if (timeTrait == null) {
-						timeTrait = new NetStreamTimeTrait(stream, loadTrait.resource, defaultDuration);
-					}
-					addTrait(MediaTraitType.TIME, timeTrait);
+				this.hasTrait(MediaTraitType.TIME) && this.removeTrait(MediaTraitType.TIME);
+				this.timeTrait = loadTrait.getTrait(MediaTraitType.TIME) as TimeTrait;
+				if (timeTrait == null) {
+					timeTrait = new NetStreamTimeTrait(stream, loadTrait.resource, defaultDuration);
 				}
+				addTrait(MediaTraitType.TIME, timeTrait);
 
 				// setup display object trait
 				if (!this.hasTrait(MediaTraitType.DISPLAY_OBJECT)) {
@@ -466,7 +473,7 @@ package osmf.patch {
 
 				// setup seek trait
 				if (!this.hasTrait(MediaTraitType.SEEK)) {
-					var seekTrait : SeekTrait = loadTrait.getTrait(MediaTraitType.SEEK) as SeekTrait;
+					this.seekTrait = loadTrait.getTrait(MediaTraitType.SEEK) as SeekTrait;
 					if (seekTrait == null && NetStreamUtils.getStreamType(resource) != StreamType.LIVE) {
 						seekTrait = new NetStreamSeekTrait(timeTrait, loadTrait, stream, videoSurface);
 					}
@@ -475,17 +482,7 @@ package osmf.patch {
 						// otherwise the user might try to seek when a seek cannot actually
 						// be executed (FM-440).
 						if (isNaN(timeTrait.duration) || timeTrait.duration == 0) {
-							var onDurationChange : Function = function(event : TimeEvent) : void {
-								timeTrait.removeEventListener(TimeEvent.DURATION_CHANGE, onDurationChange);
-
-								// Rustem
-								try {
-									addTrait(MediaTraitType.SEEK, seekTrait);
-								} catch (err : Error) {
-								}
-								// Rustem/
-							};
-							timeTrait.addEventListener(TimeEvent.DURATION_CHANGE, onDurationChange);
+							timeTrait.addEventListener(TimeEvent.DURATION_CHANGE, this.onDurationChange);
 						} else {
 							addTrait(MediaTraitType.SEEK, seekTrait);
 						}
@@ -531,6 +528,15 @@ package osmf.patch {
 						addTrait(MediaTraitType.ALTERNATIVE_AUDIO, aaTrait);
 					}
 				}
+			}
+		}
+
+		private function onDurationChange(event : TimeEvent) : void {
+			timeTrait.removeEventListener(TimeEvent.DURATION_CHANGE, this.onDurationChange);
+			// Rustem
+			try {
+				addTrait(MediaTraitType.SEEK, this.seekTrait);
+			} catch (err : Error) {
 			}
 		}
 

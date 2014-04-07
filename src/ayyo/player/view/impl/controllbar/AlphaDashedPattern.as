@@ -12,7 +12,7 @@ package ayyo.player.view.impl.controllbar {
 			var sprite : Shape = new Shape();
 			sprite.graphics.beginFill(0xffffff, .3);
 			sprite.graphics.drawRect(0, 0, 2, 10);
-			sprite.graphics.beginFill(0);
+			sprite.graphics.beginFill(0, 0);
 			sprite.graphics.drawRect(2, 0, 2, 10);
 
 			this.draw(sprite);

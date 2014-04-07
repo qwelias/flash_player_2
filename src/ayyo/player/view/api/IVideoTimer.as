@@ -8,6 +8,8 @@ package ayyo.player.view.api {
 	public interface IVideoTimer extends IHaveView, IDisposable {
 		function set time(value : uint) : void;
 
+		function set bitrate(value : Number) : void;
+
 		function set duration(value : uint) : void;
 
 		function get controlable() : Boolean;

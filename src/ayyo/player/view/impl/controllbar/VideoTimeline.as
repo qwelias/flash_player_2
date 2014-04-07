@@ -1,8 +1,12 @@
 package ayyo.player.view.impl.controllbar {
+	import com.greensock.easing.Quad;
+
 	import ayyo.player.core.model.PlayerCommands;
 	import ayyo.player.view.api.IButton;
 	import ayyo.player.view.api.IVideoTimeline;
 	import ayyo.player.view.api.IVideoTimer;
+
+	import com.greensock.TweenLite;
 
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
@@ -74,6 +78,23 @@ package ayyo.player.view.impl.controllbar {
 		 * @private
 		 */
 		private var isThumbPressed : Boolean;
+		/**
+		 * @private
+		 */
+		private var _bitrate : Number;
+		/**
+		 * @private
+		 */
+		private var _seekedValue : uint;
+		/**
+		 * @private
+		 */
+		private var _currentOffset : Number = 0;
+		public var amount : Number;
+		/**
+		 * @private
+		 */
+		private var currentBufferBarWidth : Number;
 
 		/**
 		 * @private
@@ -171,7 +192,7 @@ package ayyo.player.view.impl.controllbar {
 
 		override public function set width(value : Number) : void {
 			this.container.graphics.clear();
-			this.container.graphics.beginFill(0, .8);
+			this.container.graphics.beginFill(0, .7);
 			this.container.graphics.drawRoundRect(0, 0, value, 15, 6);
 			this._widthOfTimeline = value;
 			this.time = this._value;
@@ -184,8 +205,8 @@ package ayyo.player.view.impl.controllbar {
 					if (Math.abs(percent * this._widthOfTimeline - this.played.width) >= 1) {
 						var thumbXPosition : int = percent * this._widthOfTimeline;
 						if (thumbXPosition < this.thumb.view.width >> 1) thumbXPosition = this.thumb.view.width >> 1;
-						else if(thumbXPosition > this._widthOfTimeline - this.thumb.view.width / 2) thumbXPosition = this._widthOfTimeline - this.thumb.view.width / 2;
-						
+						else if (thumbXPosition > this._widthOfTimeline - this.thumb.view.width / 2) thumbXPosition = this._widthOfTimeline - this.thumb.view.width / 2;
+
 						this.thumb.view.x = thumbXPosition;
 
 						this.played.graphics.clear();
@@ -214,6 +235,35 @@ package ayyo.player.view.impl.controllbar {
 			return this._action ||= new Signal(String, Array);
 		}
 
+		public function set loaded(value : Number) : void {
+			if (!isNaN(this._bitrate) && !isNaN(this._duration)) {
+				const bytesTotal : uint = ((this._bitrate * this._duration) / 8) * 1024;
+				const currentPercent : Number = value / bytesTotal;
+				const startPosition : Number = (this._seekedValue / this._duration) * this._widthOfTimeline;
+				this._currentOffset += this._widthOfTimeline * currentPercent;
+				if (this._currentOffset + startPosition > this._widthOfTimeline) {
+					this._currentOffset = this._widthOfTimeline - startPosition;
+				}
+				this.amount = 0;
+				this.currentBufferBarWidth = this.buffered.width;
+				trace('this._currentOffset: ' + (this._currentOffset));
+				trace('this.currentBufferBarWidth: ' + (this.currentBufferBarWidth));
+				TweenLite.killTweensOf(this);
+				TweenLite.to(this, .7, {amount:1, onUpdate:this.updateBufferBar, onUpdateParams:[startPosition], ease:Quad.easeOut});
+			}
+		}
+
+		public function set bitrate(value : Number) : void {
+			this._bitrate = value;
+		}
+
+		private function updateBufferBar(startPosition : Number) : void {
+			var widthPosition : Number = this.currentBufferBarWidth + (this._currentOffset - this.currentBufferBarWidth) * this.amount;
+			this.buffered.graphics.clear();
+			this.buffered.graphics.beginFill(0x0c2d59);
+			this.buffered.graphics.drawRoundRect(startPosition, 1, widthPosition, 12, 6);
+		}
+
 		private function setTimerPositionAccordingBy(value : Number) : void {
 			if (value > this.timer.view.width >> 1 && value < this._widthOfTimeline - this.timer.view.width) this.timer.view.x = value - this.timer.view.width / 2;
 			else this.timer.view.x = value <= this.timer.view.width >> 1 ? 0 : this._widthOfTimeline - this.timer.view.width;
@@ -235,10 +285,13 @@ package ayyo.player.view.impl.controllbar {
 			this.stage.removeEventListener(MouseEvent.MOUSE_UP, this.onThumbMouseUp);
 			this.action.dispatch(ThumbAction.RELEASED, null);
 			this.isThumbPressed = false;
-			this.seekTo(this.thumb.view.x / this._widthOfTimeline * this._duration);
+			var time : uint = this.thumb.view.x <= this.thumb.view.width >> 1 ? 0 : (this.thumb.view.x >= this._widthOfTimeline - (this.thumb.view.width >> 1) ? this._duration - 1 : this.thumb.view.x / this._widthOfTimeline * this._duration);
+			this.seekTo(time);
 		}
 
 		private function seekTo(currentTime : uint) : void {
+			this._seekedValue = currentTime;
+			this._currentOffset = 0;
 			this.time = currentTime;
 			this.action.dispatch(PlayerCommands.SEEK, [currentTime]);
 		}

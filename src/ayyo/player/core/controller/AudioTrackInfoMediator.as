@@ -39,12 +39,7 @@ package ayyo.player.core.controller {
 
 		public function destroy() : void {
 		}
-
-		private function onNumAlternativeAudioChange(event : PlayerEvent) : void {
-			this.dispatcher.hasEventListener(PlayerEvent.ALTERNATIVE_AUDIO) && this.dispatcher.removeEventListener(PlayerEvent.ALTERNATIVE_AUDIO, this.onNumAlternativeAudioChange);
-			this.extrackAudioTrackData(event.params[0] as AlternativeAudioTrait);
-		}
-
+		
 		private function extrackAudioTrackData(trait : AlternativeAudioTrait) : void {
 			this._trait = trait;
 			this.logger.debug("This stream contains {0} alternative audio", [trait.numAlternativeAudioStreams]);
@@ -53,7 +48,7 @@ package ayyo.player.core.controller {
 			const length : uint = trait.numAlternativeAudioStreams;
 			for (var i : int = 0; i < length; i++)
 				tracks.push(trait.getItemForIndex(i));
-			length > 0 && this.audioTrackInfo.initialize(tracks);
+			length > 1 && this.audioTrackInfo.initialize(tracks);
 			length > 0 && this.dispatcher.dispatchEvent(new Event(Event.RESIZE));
 		}
 
@@ -67,6 +62,11 @@ package ayyo.player.core.controller {
 				}
 			}
 			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerCommands.SUBTITLES_ON, [this._trait.getItemForIndex(trackID).info["language"]]));
+		}
+
+		private function onNumAlternativeAudioChange(event : PlayerEvent) : void {
+			this.dispatcher.hasEventListener(PlayerEvent.ALTERNATIVE_AUDIO) && this.dispatcher.removeEventListener(PlayerEvent.ALTERNATIVE_AUDIO, this.onNumAlternativeAudioChange);
+			this.extrackAudioTrackData(event.params[0] as AlternativeAudioTrait);
 		}
 	}
 }

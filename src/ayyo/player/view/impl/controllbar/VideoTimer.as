@@ -47,6 +47,8 @@ package ayyo.player.view.impl.controllbar {
 			if (!this.isCreated) {
 				this.addChild(this.textfield);
 				this.addEventListener(MouseEvent.CLICK, this.onSwitchCurrentToEstimated);
+				this.controlable && this.addEventListener(MouseEvent.ROLL_OVER, this.onRolloveroutHandler);
+				this.controlable && this.addEventListener(MouseEvent.ROLL_OUT, this.onRolloveroutHandler);
 				this.time = 0;
 				this.isCreated = true;
 			}
@@ -56,6 +58,8 @@ package ayyo.player.view.impl.controllbar {
 			if (this.isCreated) {
 				this.textfield.parent && this.textfield.parent.removeChild(this.textfield);
 				this.removeEventListener(MouseEvent.CLICK, this.onSwitchCurrentToEstimated);
+				this.controlable && this.removeEventListener(MouseEvent.ROLL_OVER, this.onRolloveroutHandler);
+				this.controlable && this.removeEventListener(MouseEvent.ROLL_OUT, this.onRolloveroutHandler);
 				this.isCreated = false;
 				this.parent && this.parent.removeChild(this);
 			}
@@ -63,7 +67,7 @@ package ayyo.player.view.impl.controllbar {
 
 		public function get textfield() : TextField {
 			if (!this._textfield) {
-				var format : TextFormat = new TextFormat("Arial", 12, 0xffffff);
+				var format : TextFormat = new TextFormat("Arial", 11, 0x959595);
 				this._textfield = new TextField();
 				this._textfield.selectable = false;
 				this._textfield.embedFonts = true;
@@ -82,6 +86,9 @@ package ayyo.player.view.impl.controllbar {
 		public function set duration(value : uint) : void {
 			this._duration = value;
 		}
+		
+		public function set bitrate(value : Number) : void {
+		}
 
 		public function get view() : DisplayObject {
 			return this;
@@ -95,6 +102,13 @@ package ayyo.player.view.impl.controllbar {
 		private function onSwitchCurrentToEstimated(event : MouseEvent) : void {
 			this.isEstimated = !this.isEstimated;
 			this.time = this._value;
+		}
+		
+		private function onRolloveroutHandler(event : MouseEvent) : void {
+			var format : TextFormat = new TextFormat("Arial", 11);
+			format.color = event.type == MouseEvent.ROLL_OVER ? 0xc4eff4 : 0x959595;
+			this.textfield.defaultTextFormat = format;
+			this.textfield.text = this.textfield.text;
 		}
 	}
 }
