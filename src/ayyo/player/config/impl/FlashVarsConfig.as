@@ -1,5 +1,4 @@
 package ayyo.player.config.impl {
-	import ayyo.player.plugins.info.impl.AyyoPlugin;
 	import ayyo.player.asstes.info.impl.AssetInfo;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.config.api.IAyyoPlayerSettings;
@@ -11,6 +10,7 @@ package ayyo.player.config.impl {
 	import ayyo.player.config.impl.support.ReplaceWordList;
 	import ayyo.player.config.impl.support.VideoSettings;
 	import ayyo.player.core.model.api.IInfoObject;
+	import ayyo.player.plugins.info.impl.AyyoPlugin;
 
 	import by.blooddy.crypto.serialization.JSON;
 
@@ -60,7 +60,7 @@ package ayyo.player.config.impl {
 			settingsSource["free"] = source["free"];
 			settingsSource["timeLeft"] = source["hours_until_stop"];
 			settingsSource["autoplay"] = source["autoplay"] == "true";
-			
+
 			videoSource["url"] = source["url"];
 			videoSource["token"] = source["token"];
 
@@ -78,8 +78,8 @@ package ayyo.player.config.impl {
 
 			replaceWordSource["timeLeft"] = source["N"];
 
-			source["assets"] && this.parseVector(this.assets, String(source["assets"]).split(";"), AssetInfo);
-			source["plugins"] && this.parseVector(this.plugins, String(source["plugins"]).split(";"), AyyoPlugin);
+			source["assets"] && this.parseVector(this.assets, by.blooddy.crypto.serialization.JSON.decode(source["assets"]), AssetInfo);
+			source["plugins"] && this.parseVector(this.plugins, by.blooddy.crypto.serialization.JSON.decode(source["plugins"]), AyyoPlugin);
 
 			this.settings.initialize(settingsSource);
 			this.tooltip.initialize(tooltipSource);
@@ -96,7 +96,7 @@ package ayyo.player.config.impl {
 		public function get assets() : Vector.<IInfoObject> {
 			return this._assets ||= new Vector.<IInfoObject>();
 		}
-		
+
 		public function get plugins() : Vector.<IInfoObject> {
 			return _plugins ||= new Vector.<IInfoObject>();
 		}
@@ -112,16 +112,21 @@ package ayyo.player.config.impl {
 		public function get ready() : ISignal {
 			return this._ready ||= new Signal();
 		}
-		
+
 		public function get video() : IAyyoVideoSettings {
 			return this._video ||= new VideoSettings();
 		}
 
-		private function parseVector(vector : Vector.<IInfoObject>, source : Array, type : Class) : void {
-			var length : uint = source.length;
-			var i : int = 0;
-			for (i = 0; i < length; i++) {
-				vector.push(new type(by.blooddy.crypto.serialization.JSON.decode(source[i])));
+		private function parseVector(vector : Vector.<IInfoObject>, source : Object, type : Class) : void {
+			if (source is Array) {
+				var array : Array = source as Array;
+				var i : int;
+				const length : uint = array.length;
+				for (i = 0; i < length; i++) {
+					vector.push(new type(array[i]));
+				}
+			} else {
+				vector.push(new type(source));
 			}
 		}
 	}
