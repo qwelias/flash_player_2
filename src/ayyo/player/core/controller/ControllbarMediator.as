@@ -1,4 +1,5 @@
 package ayyo.player.core.controller {
+	import ayyo.player.config.impl.support.PlayerType;
 	import ayyo.player.core.model.ApplicationVariables;
 	import me.scriptor.mvc.model.api.IApplicationModel;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
@@ -43,6 +44,7 @@ package ayyo.player.core.controller {
 
 		public function initialize() : void {
 			this.controlls.show();
+			this.controlls.timer.view.visible = this.playerConfig.settings.type == PlayerType.MOVIE;
 			this.controlls.action.add(this.onControlAction);
 			this.controlls.view.parent.addChildAt(this.activeZone, this.controlls.view.parent.getChildIndex(this.controlls.view));
 

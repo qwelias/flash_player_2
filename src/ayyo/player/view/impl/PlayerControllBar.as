@@ -188,7 +188,7 @@ package ayyo.player.view.impl {
 
 				this.timeline.view.x = this.playPause.view.x + this.playPause.view.width + PADDING / 5 + 8;
 				this.timeline.view.y = HEIGHT - 14 >> 1;
-				this.timeline.view.width = screen.width - (screen.width - this.timer.view.x) - this.timeline.view.x - PADDING / 5 + 8;
+				this.timeline.view.width = screen.width - (screen.width - (this.timer.view.visible ? this.timer.view.x : this.volume.view.x - PADDING / 2)) - this.timeline.view.x - PADDING / 5 + 8;
 			}
 		}
 
