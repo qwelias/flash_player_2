@@ -1,4 +1,5 @@
 package ayyo.player.view.impl.controllbar {
+	import flash.geom.Rectangle;
 	import flash.display.Shape;
 	import ayyo.player.view.api.IVolumeBar;
 
@@ -76,6 +77,12 @@ package ayyo.player.view.impl.controllbar {
 				this.addChild(this._bar);
 				this.alpha = .8;
 				this.volume = 1;
+				
+				const rect : Rectangle = this.getBounds(this);
+				this.graphics.clear();
+				this.graphics.beginFill(0, 0);
+				this.graphics.drawRect(rect.x, rect.y, rect.width, rect.height);
+				
 				this.isCreated = true;
 			}
 		}

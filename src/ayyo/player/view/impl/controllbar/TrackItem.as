@@ -1,4 +1,5 @@
 package ayyo.player.view.impl.controllbar {
+	import flash.geom.Rectangle;
 	import flash.geom.Matrix;
 	import flash.display.BitmapData;
 	import flash.text.engine.FontWeight;
@@ -74,6 +75,10 @@ package ayyo.player.view.impl.controllbar {
 			bitmap.x = line.x;
 			bitmap.y = line.height - this._icon.height >> 1;
 			this.addChild(bitmap);
+			var rect : Rectangle = this.getBounds(this);
+			this.graphics.clear();
+			this.graphics.beginFill(0, 0);
+			this.graphics.drawRect(rect.x, rect.y, rect.width, rect.height);
 		}
 
 		public function get textLine() : TextLine {
