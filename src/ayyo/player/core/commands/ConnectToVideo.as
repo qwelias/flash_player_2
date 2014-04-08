@@ -1,6 +1,4 @@
 package ayyo.player.core.commands {
-	import org.osmf.events.DynamicStreamEvent;
-	import flash.events.ProgressEvent;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.events.PlayerEvent;
 
@@ -11,6 +9,7 @@ package ayyo.player.core.commands {
 	import robotlegs.bender.extensions.commandCenter.api.ICommand;
 	import robotlegs.bender.framework.api.ILogger;
 
+	import org.osmf.events.DynamicStreamEvent;
 	import org.osmf.events.LoadEvent;
 	import org.osmf.events.MediaElementEvent;
 	import org.osmf.events.MediaErrorEvent;
@@ -24,6 +23,7 @@ package ayyo.player.core.commands {
 	import org.osmf.traits.TimeTrait;
 
 	import flash.events.IEventDispatcher;
+	import flash.events.ProgressEvent;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -98,7 +98,7 @@ package ayyo.player.core.commands {
 			this.lastBytesLoadedValue = this.player.mediaPlayer.bytesLoaded;
 			this.dispatcher.dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, bytesLoaded * 8));
 		}
-		
+
 		private function onDynamicStreamChange(event : DynamicStreamEvent) : void {
 			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.DYNAMIC_STREAM_CHANGE, [this.dynamicStreamTrait.getBitrateForIndex(this.dynamicStreamTrait.currentIndex)]));
 		}

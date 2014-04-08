@@ -47,6 +47,7 @@ package ayyo.player.core.controller.appconfig {
 
 			this.config = null;
 			this.screen = null;
+			this.player = null;
 
 			this.context = null;
 		}

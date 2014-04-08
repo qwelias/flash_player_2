@@ -15,12 +15,10 @@ package ayyo.player.core.commands {
 		public var player : MediaPlayerSprite;
 		[Inject]
 		public var event : PlayerEvent;
-		
+
 		public function execute() : void {
-			this.player.mediaPlayer.canPlay && event.type == PlayerCommands.PLAY && this.player.mediaPlayer.play() ||
-			this.player.mediaPlayer.canPause && event.type == PlayerCommands.PAUSE && this.player.mediaPlayer.pause() ||
-			!this.player.mediaPlayer.canPlay && !this.player.mediaPlayer.canPause && this.switchMedia();
-			
+			this.player.mediaPlayer.canPlay && event.type == PlayerCommands.PLAY && this.player.mediaPlayer.play() || this.player.mediaPlayer.canPause && event.type == PlayerCommands.PAUSE && this.player.mediaPlayer.pause() || !this.player.mediaPlayer.canPlay && !this.player.mediaPlayer.canPause && this.switchMedia();
+
 			this.dispose();
 		}
 
