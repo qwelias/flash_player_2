@@ -54,13 +54,13 @@ package ayyo.player.core.controller.appconfig {
 		public function initialize() : void {
 			this.initMatchers();
 
-			this.mediatorMap.mapMatcher(this.resizable).toMediator(ResizeObjectMediator);
 			this.mediatorMap.mapMatcher(this.subtextField).toMediator(SubtitlesMediator);
 			this.mediatorMap.mapMatcher(this.controllBar).toMediator(ControllbarMediator);
 			this.mediatorMap.mapMatcher(this.volumeBar).toMediator(VolumeBarMediator);
 			this.mediatorMap.mapMatcher(this.videoTimer).toMediator(VideoTimerMediator);
 			this.mediatorMap.mapMatcher(this.timeline).toMediator(VideoTimelineMediator);
 			this.mediatorMap.map(AudioTrackInfo).toMediator(AudioTrackInfoMediator);
+			this.mediatorMap.mapMatcher(this.resizable).toMediator(ResizeObjectMediator);
 		}
 
 		private function initMatchers() : void {

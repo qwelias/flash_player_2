@@ -29,6 +29,10 @@ package ayyo.player.config.impl.support {
 		 * @private
 		 */
 		private var _autoplay : Boolean;
+		/**
+		 * @private
+		 */
+		private var _buffer : Number;
 
 		public function initialize(source : Object) : void {
 			for (var property : String in source) {
@@ -58,6 +62,10 @@ package ayyo.player.config.impl.support {
 
 		public function get autoplay() : Boolean {
 			return this._autoplay;
+		}
+
+		public function get buffer() : Number {
+			return this._buffer;
 		}
 	}
 }

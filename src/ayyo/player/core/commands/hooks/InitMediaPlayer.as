@@ -1,4 +1,6 @@
 package ayyo.player.core.commands.hooks {
+	import ayyo.player.config.api.IAyyoPlayerConfig;
+
 	import robotlegs.bender.extensions.contextView.ContextView;
 	import robotlegs.bender.framework.api.IHook;
 
@@ -13,12 +15,14 @@ package ayyo.player.core.commands.hooks {
 		public var player : MediaPlayerSprite;
 		[Inject]
 		public var contextView : ContextView;
+		[Inject]
+		public var playerConfig : IAyyoPlayerConfig;
 
 		public function hook() : void {
 			this.player.mediaPlayer.autoDynamicStreamSwitch = true;
 			this.player.mediaPlayer.autoRewind = false;
 			this.player.mediaPlayer.autoPlay = false;
-			this.player.mediaPlayer.bufferTime = 50;
+			this.player.mediaPlayer.bufferTime = this.playerConfig.settings.buffer;
 			this.player.scaleMode = ScaleMode.LETTERBOX;
 
 			this.contextView.view.addChild(this.player);

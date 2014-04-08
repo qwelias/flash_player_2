@@ -58,20 +58,30 @@ package ayyo.player.core.commands {
 
 		public function execute() : void {
 			var resource : URLResource = new URLResource(this.playerConfig.video.url);
-			(this.player.mediaFactory as SmoothedMediaFactory).customToken = this.playerConfig.video.token;
+			if (this.playerConfig.video.url.toLowerCase().indexOf("f4m") != -1) (this.player.mediaFactory as SmoothedMediaFactory).customToken = this.playerConfig.video.token;
 			this.media = this.player.mediaFactory.createMediaElement(resource);
 
-			this.media.addEventListener(MediaElementEvent.TRAIT_ADD, this.onAddMediaTrait);
-			this.media.addEventListener(MediaErrorEvent.MEDIA_ERROR, this.onErrorOccured);
+			if (!this.media) {
+				this.onError("Please check video url. It seems to be broken.");
+			} else {
+				this.media.addEventListener(MediaElementEvent.TRAIT_ADD, this.onAddMediaTrait);
+				this.media.addEventListener(MediaErrorEvent.MEDIA_ERROR, this.onErrorOccured);
 
-			this.player.mediaPlayer.addEventListener(LoadEvent.BYTES_LOADED_CHANGE, this.onLoadedBytesChange);
-			(this.media.getTrait(MediaTraitType.LOAD) as LoadTrait).load();
+				this.player.mediaPlayer.addEventListener(LoadEvent.BYTES_LOADED_CHANGE, this.onLoadedBytesChange);
+				var loadTrait : LoadTrait = this.media.getTrait(MediaTraitType.LOAD) as LoadTrait;
+				loadTrait && this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.CAN_LOAD));
+				loadTrait && loadTrait.load();
 
-			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.HIDE_PRELOADER));
+				this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.HIDE_PRELOADER));
+			}
 		}
 
 		private function parseTrait(trait : MediaTraitBase) : void {
-			if (trait is DynamicStreamTrait) {
+			if (trait.traitType == MediaTraitType.ALTERNATIVE_AUDIO) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.ALTERNATIVE_AUDIO, [trait]));
+			else if (trait.traitType == MediaTraitType.AUDIO) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.AUDIO, [trait]));
+			else if (trait.traitType == MediaTraitType.PLAY) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.CAN_PLAY, [this.media]));
+			else if (trait.traitType == MediaTraitType.BUFFER) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.BUFFER_TRAIT, [trait]));
+			else if (trait is DynamicStreamTrait) {
 				this.dynamicStreamTrait = trait as DynamicStreamTrait;
 				this.dynamicStreamTrait.addEventListener(DynamicStreamEvent.SWITCHING_CHANGE, this.onDynamicStreamChange);
 			} else if (trait is TimeTrait) {
@@ -80,17 +90,16 @@ package ayyo.player.core.commands {
 			}
 		}
 
+		private function onError(message : String) : void {
+			this.logger.error(message);
+		}
+
 		private function onErrorOccured(event : MediaErrorEvent) : void {
-			this.logger.error(event.error.message);
+			this.onError(event.error.message);
 		}
 
 		private function onAddMediaTrait(event : MediaElementEvent) : void {
-			if (event.traitType == MediaTraitType.LOAD) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.CAN_LOAD, [this.media.getTrait(event.traitType)]));
-			else if (event.traitType == MediaTraitType.ALTERNATIVE_AUDIO) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.ALTERNATIVE_AUDIO, [this.media.getTrait(event.traitType)]));
-			else if (event.traitType == MediaTraitType.AUDIO) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.AUDIO, [this.media.getTrait(event.traitType)]));
-			else if (event.traitType == MediaTraitType.PLAY) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.CAN_PLAY, [this.media]));
-			else if (event.traitType == MediaTraitType.BUFFER) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.BUFFER_TRAIT, [this.media.getTrait(event.traitType)]));
-			else if (event.traitType == MediaTraitType.DYNAMIC_STREAM || event.traitType == MediaTraitType.TIME) this.parseTrait(this.media.getTrait(event.traitType));
+			this.parseTrait(this.media.getTrait(event.traitType));
 		}
 
 		private function onLoadedBytesChange(event : LoadEvent) : void {

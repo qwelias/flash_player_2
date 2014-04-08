@@ -54,7 +54,7 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.map(ApplicationEvent.READY).toCommand(NullCommand).withHooks(LoadSplashScreen);
 
 			this.commandMap.map(PlayerEvent.SPLASH_LOADED, PlayerEvent).toCommand(ConnectToVideo);
-			this.commandMap.map(PlayerEvent.CAN_LOAD, PlayerEvent).toCommand(NullCommand).withHooks(InitInterface);
+			this.commandMap.map(PlayerEvent.CAN_LOAD, PlayerEvent).toCommand(NullCommand).withHooks(InitInterface).once();
 			this.commandMap.map(PlayerCommands.FULLSCREEN, PlayerEvent).toCommand(SwitchScreenState);
 			this.commandMap.map(PlayerCommands.NORMALSCREEN, PlayerEvent).toCommand(SwitchScreenState);
 			this.commandMap.map(PlayerCommands.PLAY, PlayerEvent).toCommand(SwitchPlayPause);
@@ -75,7 +75,6 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.unmap(ApplicationEvent.READY).fromCommand(NullCommand);
 			
 			this.commandMap.unmap(PlayerEvent.SPLASH_LOADED, PlayerEvent).fromCommand(ConnectToVideo);
-			this.commandMap.unmap(PlayerEvent.CAN_LOAD, PlayerEvent).fromCommand(NullCommand);
 			this.commandMap.unmap(PlayerCommands.FULLSCREEN, PlayerEvent).fromCommand(SwitchScreenState);
 			this.commandMap.unmap(PlayerCommands.NORMALSCREEN, PlayerEvent).fromCommand(SwitchScreenState);
 			this.commandMap.unmap(PlayerCommands.PLAY, PlayerEvent).fromCommand(SwitchPlayPause);

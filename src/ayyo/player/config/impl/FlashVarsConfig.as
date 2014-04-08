@@ -60,6 +60,7 @@ package ayyo.player.config.impl {
 			settingsSource["free"] = source["free"];
 			settingsSource["timeLeft"] = source["hours_until_stop"];
 			settingsSource["autoplay"] = source["autoplay"] == "true";
+			settingsSource["buffer"] = source["buffer_size"] || 60;
 
 			videoSource["url"] = source["url"];
 			videoSource["token"] = source["token"];
