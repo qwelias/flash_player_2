@@ -16,8 +16,8 @@ package ayyo.player.core.commands.hooks {
 
 		public function hook() : void {
 			var preloader : IAyyoPreloader = this.model.getVariable(PlayerConstants.PRELOADER) as IAyyoPreloader;
-			preloader.animationComplete.add(onTweenComplete);
-			preloader.hide();
+			preloader && preloader.animationComplete.add(onTweenComplete);
+			preloader && preloader.hide();
 		}
 
 		private function onTweenComplete(type : String, preloader : IAyyoPreloader) : void {
