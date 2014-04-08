@@ -267,6 +267,7 @@ package ayyo.player.view.impl.controllbar {
 		private function setTimerPositionAccordingBy(value : Number) : void {
 			if (value > this.timer.view.width >> 1 && value < this._widthOfTimeline - this.timer.view.width) this.timer.view.x = value - this.timer.view.width / 2;
 			else this.timer.view.x = value <= this.timer.view.width >> 1 ? 0 : this._widthOfTimeline - this.timer.view.width;
+			this.timer.time = this._value;
 		}
 
 		private function onThumbMouseDown(event : MouseEvent) : void {

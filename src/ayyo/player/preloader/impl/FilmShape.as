@@ -1,18 +1,23 @@
 package ayyo.player.preloader.impl {
-	import flash.geom.Point;
+	import flash.display.Bitmap;
 	import me.scriptor.additional.api.IDisposable;
 
-	import flash.display.Shape;
+	import flash.display.Sprite;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
 	 */
-	public class FilmShape extends Shape implements IDisposable {
-		private static const CIRCLE_COUNT : Number = 5;
+	public class FilmShape extends Sprite implements IDisposable {
+		[Embed(source="./../../../../../assets/preloader/preloader.png")]
+		private var PreloaderBitmap : Class;
 		/**
 		 * @private
 		 */
 		private var isCreated : Boolean;
+		/**
+		 * @private
+		 */
+		private var _bitmap : Bitmap;
 
 		public function FilmShape(autoCreate : Boolean = true) {
 			autoCreate && this.create();
@@ -20,23 +25,16 @@ package ayyo.player.preloader.impl {
 
 		public function create() : void {
 			if (!this.isCreated) {
-				this.graphics.beginFill(AyyoPreloader.COLOR);
-				this.graphics.drawCircle(0, 0, AyyoPreloader.BOUNDS);
-				var point : Point = new Point();
-				var step : Number = Math.PI * 2 / FilmShape.CIRCLE_COUNT;
-				for (var i : int = 0; i < FilmShape.CIRCLE_COUNT; i++) {
-					point.x = Math.cos(i * step) * (AyyoPreloader.BOUNDS >> 1);
-					point.y = Math.sin(i * step) * (AyyoPreloader.BOUNDS >> 1);
-					this.graphics.drawCircle(point.x, point.y, AyyoPreloader.BOUNDS >> 2);
-				}
-				this.graphics.drawCircle(0, 0, AyyoPreloader.BOUNDS >> 3);
-				this.isCreated = true;
+				this._bitmap = new PreloaderBitmap();
+				this._bitmap.x = -this._bitmap.width >> 1;
+				this._bitmap.y = -this._bitmap.height >> 1;
+				this._bitmap.smoothing = true;
+				this.addChild(this._bitmap);
 			}
 		}
 
 		public function dispose() : void {
 			if (this.isCreated) {
-				this.graphics.clear();
 				this.isCreated = false;
 				this.parent && this.parent.removeChild(this);
 			}
