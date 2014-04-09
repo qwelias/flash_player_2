@@ -18,17 +18,7 @@ var flashvars = {
 	player_type:"movie",
 	assets:'{"name":"arialFontFamily","url":"./assets/fonts/arial.swf","type":"font"}',
 	plugins:'{"url":"file:///Users/zaynutdinov/Documents/Projects/Private/AyyoPlayer/bin/plugins/SubtitlesPlugin.swf", "config":[{"url":"./force.srt","id":"ru","name":"Force russian"}, {"url":"http://cdn.ayyo.ru/u22/ec/96/VForVendetta-Feat-PAL-16x9-2.35_Russian.srt","id":"en","name":"English"}]}',
-	tooltip_play_button:"Смотреть",
-	tooltip_pause_button:"Пауза",
-	tooltip_license_icon:"У вас осталось N часов, чтобы посмотреть фильм",
-	tooltip_timer:"Посмотреть сколько осталось",
-	tooltip_timer_reverse:"Посмотреть продолжительность",
-	tooltip_HQ_icon_on:"Включить отличное качество",
-	tooltip_HQ_icon_off:"Включить стандартное качество",
-	tooltip_sound_icon_on:"Включить звук",
-	tooltip_sound_icon_off:"Выключить звук",
-	tooltip_fullscreen:"Развернуть на весь экран",
-	tooltip_unfullscreen:"Свернуть",
+	buffer_size: 60
 };
 
 var params = {};
@@ -44,12 +34,48 @@ swfobject.createCSS("body", "margin:0; padding:0; overflow:hidden; height:100%;"
 swfobject.embedSWF("AyyoPlayer-v2.0.0b1.swf", "flashContent", "852", "480",  swfVersionStr, xiSwfUrlStr, flashvars, params, attributes);
 </script>
 ```
-Из данного примера видно, что проигрывателю передается token (`token`), ссылка на проигрываемый контент (`url`), ссылка на скриншот контента (`screenshot`), тип проигрывателя (`player_type`, может быть `trailer`, `movie`), список ассетов (`assets`, в нашем случае шрифт, которым отображаются подсказки и субтитры), список подключаемых модулей (`plugins`, в нашем случае модуль субтитров) и ряд подсказок.
+Из данного примера видно, что проигрывателю передается token (`token`), ссылка на проигрываемый контент (`url`), ссылка на скриншот контента (`screenshot`), тип проигрывателя (`player_type`, может быть `trailer`, `movie`), список ассетов (`assets`, в нашем случае шрифт, которым отображаются подсказки и субтитры), список подключаемых модулей (`plugins`, в нашем случае модуль субтитров).
 
 ## Что нового?
 В новой версии все параметры асболютно те же самые, что были и раньше (обратная приемственность), но добавились новые, поскольку необходимо обеспечить новый функционал. В нашем случае (build v2.01b) это `assets` и `plugins`.
 + `assets` хранит в себе список ассетов: шрифты, изображения, swf-ролики;
 + `plugins` содержит список подключаемых модулей.
+
+Подключаемые модули и набор ресурсов представлены в виде строки `JSON`-формата. Приложение производит декодировку автоматически. Передать объект через `flashvars` иным образом не представляется возможным Adobe Flashplayer'ом.
+Переменные представлены в виде массива. В случае, когда модули и ресурсы включают в себя один единственный объект, указание массива необязательно.
+Например
+```js
+var flashvars = {
+	assets:'[
+		{
+			"name":"arialFontFamily",
+			"url":"./assets/fonts/arial.swf",
+			"type":"font"
+		},
+		{
+			"name":"trebuchetMSFontFamily",
+			"url":"./assets/fonts/trebuchet.swf",
+			"type":"font"
+		}
+	]',
+	plugins:'{
+		"url":"./plugins/SubtitlesPlugin.swf",
+		"config":[
+			{
+				"url":"./force.srt",
+				"id":"ru",
+				"name":"Force russian"
+			},
+			{
+				"url":"http://cdn.ayyo.ru/u22/ec/96/VForVendetta-Feat-PAL-16x9-2.35_Russian.srt",
+				"id":"en",
+				"name":"English"
+			}
+		]
+	}',
+}
+```
+В примере указан массив ресурсов и один подключаемый модуль.
 
 ## Assets
 Для загрузки всех необходимых ассетов (в нашем конкретном случае шрифт) в приложении существует менеджер ассетов, который грузит все необходимое до запуска приложения. `AssetManager` поддерживает следующие типы:
