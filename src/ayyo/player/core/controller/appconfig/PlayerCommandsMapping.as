@@ -46,7 +46,7 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.map(ResizeEvent.RESIZE, ResizeEvent).toCommand(NullCommand).withHooks(SaveScreen);
 
 			this.commandMap.map(ApplicationEvent.LAUNCH).toCommand(GetApplicationConfig).withHooks(InitStageOptions, InitMediaPlayer).once();
-			this.commandMap.map(BinDataEvent.LOAD, BinDataEvent).toCommand(LoadBinData);
+			this.commandMap.map(BinDataEvent.LOAD, BinDataEvent).toCommand(LoadBinData).withHooks(CheckAvaliableAssets);
 			this.commandMap.map(BinDataEvent.LOADED, BinDataEvent).toCommand(RegisterAsset).withGuards(OnlyIfTypeIsAssets);
 			this.commandMap.map(AssetEvent.REGISTRED).toCommand(NullCommand).withHooks(CheckAvaliableAssets);
 			this.commandMap.map(PluginEvent.LOAD).toCommand(LoadPlugins);
