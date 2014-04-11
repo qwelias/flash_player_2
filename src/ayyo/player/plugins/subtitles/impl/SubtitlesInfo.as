@@ -13,6 +13,7 @@ package ayyo.player.plugins.subtitles.impl {
 	import org.osmf.utils.OSMFStrings;
 
 	import flash.display.DisplayObjectContainer;
+	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	import flash.events.IOErrorEvent;
@@ -153,7 +154,7 @@ package ayyo.player.plugins.subtitles.impl {
 			this.parseSubtitles();
 		}
 
-		private function onSubtitlesLoadingError(event : SecurityErrorEvent) : void {
+		private function onSubtitlesLoadingError(event : ErrorEvent) : void {
 			// TODO log error
 		}
 
