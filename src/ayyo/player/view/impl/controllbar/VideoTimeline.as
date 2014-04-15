@@ -246,8 +246,6 @@ package ayyo.player.view.impl.controllbar {
 				}
 				this.amount = 0;
 				this.currentBufferBarWidth = this.buffered.width;
-				trace('this._currentOffset: ' + (this._currentOffset));
-				trace('this.currentBufferBarWidth: ' + (this.currentBufferBarWidth));
 				TweenLite.killTweensOf(this);
 				TweenLite.to(this, .7, {amount:1, onUpdate:this.updateBufferBar, onUpdateParams:[startPosition], ease:Quad.easeOut});
 			}

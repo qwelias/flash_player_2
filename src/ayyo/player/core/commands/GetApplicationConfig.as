@@ -1,12 +1,14 @@
 package ayyo.player.core.commands {
-	import robotlegs.bender.framework.api.ILogger;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.core.model.DataType;
+	import ayyo.player.events.AssetEvent;
 	import ayyo.player.events.BinDataEvent;
 
 	import robotlegs.bender.extensions.commandCenter.api.ICommand;
 	import robotlegs.bender.extensions.contextView.ContextView;
+	import robotlegs.bender.framework.api.ILogger;
 
+	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 
 	/**
@@ -34,7 +36,8 @@ package ayyo.player.core.commands {
 
 		private function onConfigParsed() : void {
 			this.logger.debug("Config successfully parsed");
-			this.dispatcher.dispatchEvent(new BinDataEvent(BinDataEvent.LOAD, DataType.ASSETS));
+			var event : Event = this.playerConfig.assets.length > 0 ? new BinDataEvent(BinDataEvent.LOAD, DataType.ASSETS) : new AssetEvent(AssetEvent.REGISTRED);
+			this.dispatcher.dispatchEvent(event);
 			this.dispose();
 		}
 

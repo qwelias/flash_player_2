@@ -23,6 +23,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 package ayyo.player.bundles {
+	import robotlegs.bender.extensions.mosterDebugerLogger.MonsterDebuggerExtension;
 	import robotlegs.bender.extensions.contextView.ContextViewExtension;
 	import robotlegs.bender.extensions.contextView.ContextViewListenerConfig;
 	import robotlegs.bender.extensions.contextView.StageSyncExtension;
@@ -52,6 +53,7 @@ package ayyo.player.bundles {
 				//	Trace/log section
 				TraceLoggingExtension,
 				SOSMaxTracerExtension,
+				MonsterDebuggerExtension,
 				InjectableLoggerExtension,
 				
 				//	Mediator map section
