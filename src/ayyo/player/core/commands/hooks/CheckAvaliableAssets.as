@@ -26,7 +26,7 @@ package ayyo.player.core.commands.hooks {
 		public function hook() : void {
 			var event : Event = this.playerConfig.assets.length > 0 ? new BinDataEvent(BinDataEvent.LOAD, DataType.ASSETS) : new PluginEvent(PluginEvent.LOAD);
 			this.dispacther.dispatchEvent(event);
-			this.commandMap.unmap(AssetEvent.REGISTRED).fromCommand(NullCommand);
+			event is PluginEvent && this.commandMap.unmap(AssetEvent.REGISTRED).fromCommand(NullCommand);
 			event = null;
 			this.dispose();
 		}

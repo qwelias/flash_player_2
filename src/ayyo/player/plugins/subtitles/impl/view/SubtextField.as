@@ -39,6 +39,8 @@ package ayyo.player.plugins.subtitles.impl.view {
 				this.wordWrap = true;
 				this.selectable = false;
 				this.defaultTextFormat = format;
+				
+				this.mouseEnabled = false;
 
 				this.filters = [new GlowFilter(0, 1.0, 0, 0, 2, BitmapFilterQuality.MEDIUM), new DropShadowFilter(2, 45, 0, 0.75, 1, 1, 1, BitmapFilterQuality.MEDIUM)];
 
