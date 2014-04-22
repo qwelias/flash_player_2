@@ -43,6 +43,8 @@ package ayyo.player.core.controller {
 		private var _activeZone : ActiveZone;
 
 		public function initialize() : void {
+			this.controlls.margin = this.playerConfig.settings.type == PlayerType.MOVIE ? 30 : 10;
+			this.controlls.bottomPadding = this.playerConfig.settings.type == PlayerType.MOVIE ? 25 : 6;
 			this.controlls.show();
 			this.controlls.timer.view.visible = this.playerConfig.settings.type == PlayerType.MOVIE;
 			this.controlls.action.add(this.onControlAction);
