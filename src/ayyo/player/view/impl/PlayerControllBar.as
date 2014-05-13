@@ -95,11 +95,11 @@ package ayyo.player.view.impl {
 		/**
 		 * @private
 		 */
-		private var _margin : uint = 30;
+		private var _margin : Number = .035;
 		/**
 		 * @private
 		 */
-		private var _bottomPadding : uint = 25;
+		private var _bottomPadding : Number = .058;
 
 		public function PlayerControllBar(autoCreate : Boolean = true) {
 			autoCreate && this.create();
@@ -170,17 +170,17 @@ package ayyo.player.view.impl {
 			if (screen) {
 				this.graphics.clear();
 				this._matrix.identity();
-				this._matrix.createGradientBox(screen.width - this.margin * 2, HEIGHT, -Math.PI / 2);
+				this._matrix.createGradientBox(screen.width * (1 - this.margin * 2), HEIGHT, -Math.PI / 2);
 				this.graphics.beginGradientFill(GradientType.LINEAR, [0x000d21, 0x001e21], [.8, .8], [0, 0xff], this._matrix);
-				this.graphics.drawRoundRect(0, 0, screen.width - this.margin * 2, HEIGHT, 12);
+				this.graphics.drawRoundRect(0, 0, screen.width * (1 - this.margin * 2), HEIGHT, 12);
 
-				this.x = this.margin;
-				this.y = screen.height - this.height - this.bottomPadding;
+				this.x = this.margin * screen.width;
+				this.y = screen.height - this.height - this.bottomPadding * screen.height;
 
 				this.playPause.view.x = 3;
 				this.playPause.view.y = (HEIGHT - this.playPause.view.height >> 1) + 1;
 
-				this.screenState.view.x = screen.width - this.margin * 2 - this.screenState.view.width - PADDING + 12;
+				this.screenState.view.x = screen.width * (1 - this.margin * 2) - this.screenState.view.width - PADDING + 12;
 				this.screenState.view.y = HEIGHT - this.screenState.view.height >> 1;
 
 				this.volume.view.x = this.screenState.view.x - this.volume.view.width - PADDING + 10;
@@ -269,19 +269,19 @@ package ayyo.player.view.impl {
 			else if (event.keyCode == Keyboard.F) this.screenState.click();
 		}
 
-		public function set margin(value : uint) : void {
+		public function set margin(value : Number) : void {
 			if(this._margin != value) this._margin = value;
 		}
 
-		public function get margin() : uint {
+		public function get margin() : Number {
 			return this._margin;
 		}
 		
-		public function set bottomPadding(value : uint) : void {
+		public function set bottomPadding(value : Number) : void {
 			if(this._bottomPadding != value) this._bottomPadding = value;
 		}
 
-		public function get bottomPadding() : uint {
+		public function get bottomPadding() : Number {
 			return this._bottomPadding;
 		}
 	}

@@ -1,8 +1,7 @@
 package ayyo.player.core.controller {
+	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.config.impl.support.PlayerType;
 	import ayyo.player.core.model.ApplicationVariables;
-	import me.scriptor.mvc.model.api.IApplicationModel;
-	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.core.model.PlayerCommands;
 	import ayyo.player.events.ApplicationEvent;
 	import ayyo.player.events.PlayerEvent;
@@ -10,12 +9,15 @@ package ayyo.player.core.controller {
 	import ayyo.player.view.api.PlayPauseState;
 	import ayyo.player.view.impl.controllbar.ActiveZone;
 
+	import me.scriptor.mvc.model.api.IApplicationModel;
+
 	import robotlegs.bender.extensions.mediatorMap.api.IMediator;
 	import robotlegs.bender.framework.api.ILogger;
 
 	import org.osmf.events.TimeEvent;
 	import org.osmf.media.MediaElement;
 
+	import flash.display.StageDisplayState;
 	import flash.events.IEventDispatcher;
 	import flash.events.MouseEvent;
 
@@ -43,8 +45,8 @@ package ayyo.player.core.controller {
 		private var _activeZone : ActiveZone;
 
 		public function initialize() : void {
-			this.controlls.margin = this.playerConfig.settings.type == PlayerType.MOVIE ? 30 : 10;
-			this.controlls.bottomPadding = this.playerConfig.settings.type == PlayerType.MOVIE ? 25 : 6;
+			this.controlls.margin = this.controlls.view.stage.displayState == StageDisplayState.FULL_SCREEN ? .17 : .035;
+			this.controlls.bottomPadding = this.controlls.view.stage.displayState == StageDisplayState.FULL_SCREEN ? .03 : .058;
 			this.controlls.show();
 			this.controlls.timer.view.visible = this.playerConfig.settings.type == PlayerType.MOVIE;
 			this.controlls.action.add(this.onControlAction);

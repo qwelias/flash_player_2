@@ -20,13 +20,13 @@ package ayyo.player.view.api {
 
 		function get screenState() : IButton;
 
-		function set margin(value : uint) : void;
+		function set margin(value : Number) : void;
 
-		function get margin() : uint;
+		function get margin() : Number;
 
-		function set bottomPadding(value : uint) : void;
+		function set bottomPadding(value : Number) : void;
 
-		function get bottomPadding() : uint;
+		function get bottomPadding() : Number;
 
 		function show() : void;
 
