@@ -2,6 +2,11 @@
     <head>
         <title>ayyoPlayerMovie</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <style type="text/css">
+            #ayyoPlayerMovie {
+                border: 2px dashed #0f0;
+            }
+        </style>
         <script type="text/javascript" src="http://flash.staging.ayyo.ru/swfobject.js"></script>
         <script type="text/javascript" src="http://flash.staging.ayyo.ru/jquery.js"></script>
         <script type="text/javascript">
@@ -54,7 +59,7 @@
                 console.log(window.flashvars, window.params)
                 swfobject.createCSS("html", "height:100%; background-color: #000000;");
                 swfobject.createCSS("body", "margin:0; padding:0; height:100%;");
-                swfobject.embedSWF("ayyoPlayerMovie.swf", "flashContent", "850", "477",  swfVersionStr, xiSwfUrlStr, window.flashvars, window.params, attributes);
+                swfobject.embedSWF("ayyoPlayerMovie.swf", "flashContent", $('#width').val(), $('#height').val(),  swfVersionStr, xiSwfUrlStr, window.flashvars, window.params, attributes);
             }
 
               $(function(){
@@ -63,8 +68,10 @@
                 $form.submit(function(e){
                   e.preventDefault();
                   replacePlayer();
-
-                })
+                });
+                $('#width, #height').bind('change', function(){
+                    replacePlayer();
+                });
 
                 replacePlayer();
             })
@@ -95,6 +102,10 @@
                 <p><label>salign</label>                      <input name="salign", type="text" value="lb"/></p>
                 <p><label>allowscriptaccess</label>           <input name="allowscriptaccess", type="text" value="sameDomain"/></p>
                 <p><label>allowFullScreenInteractive</label>  <input name="allowFullScreenInteractive", type="text" value="true"/></p>
+            </fieldset>
+            <fieldset id="dimensions" style="float: left; color: white;">
+                <p><label>width</label>                     <input name="width"  id="width"  type="text" value="850"/></p>
+                <p><label>height</label>                    <input name="height" id="height" type="text" value="477"/></p>
             </fieldset>
         </form>
     </body>
