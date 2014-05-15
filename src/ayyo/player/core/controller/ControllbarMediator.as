@@ -17,7 +17,6 @@ package ayyo.player.core.controller {
 	import org.osmf.events.TimeEvent;
 	import org.osmf.media.MediaElement;
 
-	import flash.display.StageDisplayState;
 	import flash.events.IEventDispatcher;
 	import flash.events.MouseEvent;
 
@@ -45,8 +44,6 @@ package ayyo.player.core.controller {
 		private var _activeZone : ActiveZone;
 
 		public function initialize() : void {
-			this.controlls.margin = this.controlls.view.stage.displayState == StageDisplayState.FULL_SCREEN ? .17 : .035;
-			this.controlls.bottomPadding = this.controlls.view.stage.displayState == StageDisplayState.FULL_SCREEN ? .03 : .058;
 			this.controlls.show();
 			this.controlls.timer.view.visible = this.playerConfig.settings.type == PlayerType.MOVIE;
 			this.controlls.action.add(this.onControlAction);

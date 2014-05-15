@@ -1,9 +1,4 @@
 package ayyo.player.view.impl {
-	import flash.ui.Keyboard;
-	import flash.events.KeyboardEvent;
-	import flash.ui.Mouse;
-	import flash.geom.Point;
-
 	import ayyo.player.view.api.IButton;
 	import ayyo.player.view.api.IPlayerControllBar;
 	import ayyo.player.view.api.IVideoTimeline;
@@ -26,11 +21,16 @@ package ayyo.player.view.impl {
 	import flash.display.DisplayObject;
 	import flash.display.GradientType;
 	import flash.display.Sprite;
+	import flash.display.StageDisplayState;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.filters.BitmapFilterQuality;
 	import flash.filters.DropShadowFilter;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.ui.Keyboard;
+	import flash.ui.Mouse;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
 
@@ -92,14 +92,6 @@ package ayyo.player.view.impl {
 		 * @private
 		 */
 		private var _mousePoint : Point;
-		/**
-		 * @private
-		 */
-		private var _margin : Number = .035;
-		/**
-		 * @private
-		 */
-		private var _bottomPadding : Number = .058;
 
 		public function PlayerControllBar(autoCreate : Boolean = true) {
 			autoCreate && this.create();
@@ -269,20 +261,12 @@ package ayyo.player.view.impl {
 			else if (event.keyCode == Keyboard.F) this.screenState.click();
 		}
 
-		public function set margin(value : Number) : void {
-			if (this._margin != value) this._margin = value;
-		}
-
 		public function get margin() : Number {
-			return this._margin;
-		}
-
-		public function set bottomPadding(value : Number) : void {
-			if (this._bottomPadding != value) this._bottomPadding = value;
+			return this.stage.displayState == StageDisplayState.FULL_SCREEN ? .17 : .035;
 		}
 
 		public function get bottomPadding() : Number {
-			return this._bottomPadding;
+			return this.stage.displayState == StageDisplayState.FULL_SCREEN ? .03 : .058;
 		}
 	}
 }
