@@ -1,5 +1,4 @@
 package ayyo.player.core.controller {
-	import flash.events.ProgressEvent;
 	import ayyo.player.core.model.ApplicationVariables;
 	import ayyo.player.core.model.PlayerCommands;
 	import ayyo.player.events.PlayerEvent;
@@ -17,6 +16,7 @@ package ayyo.player.core.controller {
 	import org.osmf.traits.MediaTraitType;
 
 	import flash.events.IEventDispatcher;
+	import flash.events.ProgressEvent;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -38,6 +38,10 @@ package ayyo.player.core.controller {
 		private var trait : BufferTrait;
 
 		public function initialize() : void {
+			this.player.media != null ? this.check() : this.dispatcher.addEventListener(PlayerEvent.MEDIA_CHANGED, this.onMediaChanged);
+		}
+
+		private function check() : void {
 			this.player.media.hasTrait(MediaTraitType.BUFFER) ? this.parseBufferTrait(this.player.media.getTrait(MediaTraitType.BUFFER) as BufferTrait) : this.dispatcher.addEventListener(PlayerEvent.BUFFER_TRAIT, this.onBufferTrait);
 			this.dispatcher.addEventListener(ProgressEvent.PROGRESS, this.onLoadProgress);
 			this.timeline.action.add(this.onTimeLineAction);
@@ -84,9 +88,13 @@ package ayyo.player.core.controller {
 				this.dispatcher.dispatchEvent(new PlayerEvent(PlayerCommands.PAUSE));
 			}
 		}
-		
+
 		private function onLoadProgress(event : ProgressEvent) : void {
 			this.timeline.loaded = event.bytesLoaded;
+		}
+
+		private function onMediaChanged(event : PlayerEvent) : void {
+			this.dispatcher.removeEventListener(PlayerEvent.MEDIA_CHANGED, this.onMediaChanged);
 		}
 	}
 }

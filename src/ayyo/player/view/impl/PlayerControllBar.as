@@ -175,7 +175,7 @@ package ayyo.player.view.impl {
 				this.graphics.drawRoundRect(0, 0, screen.width * (1 - this.margin * 2), HEIGHT, 12);
 
 				this.x = this.margin * screen.width;
-				this.y = screen.height - this.height - this.bottomPadding * screen.height;
+				this.y = screen.height * (1 - this.bottomPadding) - HEIGHT;
 
 				this.playPause.view.x = 3;
 				this.playPause.view.y = (HEIGHT - this.playPause.view.height >> 1) + 1;
@@ -270,15 +270,15 @@ package ayyo.player.view.impl {
 		}
 
 		public function set margin(value : Number) : void {
-			if(this._margin != value) this._margin = value;
+			if (this._margin != value) this._margin = value;
 		}
 
 		public function get margin() : Number {
 			return this._margin;
 		}
-		
+
 		public function set bottomPadding(value : Number) : void {
-			if(this._bottomPadding != value) this._bottomPadding = value;
+			if (this._bottomPadding != value) this._bottomPadding = value;
 		}
 
 		public function get bottomPadding() : Number {

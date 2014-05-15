@@ -27,6 +27,10 @@ package ayyo.player.core.controller {
 		private var trait : TimeTrait;
 
 		public function initialize() : void {
+			this.player.media != null ? this.check() : this.dispatcher.addEventListener(PlayerEvent.MEDIA_CHANGED, this.onMediaChanged);
+		}
+
+		private function check() : void {
 			if (this.timer.controlable) {
 				this.player.media.hasTrait(MediaTraitType.TIME) ? this.parseTimeTrait(this.player.media.getTrait(MediaTraitType.TIME) as TimeTrait) : this.dispatcher.addEventListener(PlayerEvent.TIME_TRAIT, this.onTimeTrait);
 				this.player.mediaPlayer.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, this.onCurrentTimeChange);
@@ -72,6 +76,10 @@ package ayyo.player.core.controller {
 
 		private function onDynamicStreamChange(event : PlayerEvent) : void {
 			this.timer.bitrate = event.params[0];
+		}
+		
+		private function onMediaChanged(event : PlayerEvent) : void {
+			this.dispatcher.removeEventListener(PlayerEvent.MEDIA_CHANGED, this.onMediaChanged);
 		}
 	}
 }
