@@ -25,6 +25,10 @@ package ayyo.player.view.impl.controllbar {
 		 * @private
 		 */
 		private var _signals : InteractiveObjectSignalSet;
+		/**
+		 * @private
+		 */
+		private var _state : String;
 
 		public function AbstractButton(autoCreate : Boolean = true) {
 			// TODO disable instanciation of abstract class
@@ -100,6 +104,11 @@ package ayyo.player.view.impl.controllbar {
 		}
 
 		public function set state(value : String) : void {
+			this._state = value;
+		}
+
+		public function get state() : String {
+			return this._state ||= "";
 		}
 	}
 }

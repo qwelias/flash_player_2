@@ -1,4 +1,8 @@
 package ayyo.player.core.controller {
+	import ayyo.player.view.api.ScreenModeState;
+	import flash.display.StageDisplayState;
+	import flash.display.Stage;
+	import flash.events.Event;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.config.impl.support.PlayerType;
 	import ayyo.player.core.model.ApplicationVariables;
@@ -48,6 +52,7 @@ package ayyo.player.core.controller {
 			this.controlls.timer.view.visible = this.playerConfig.settings.type == PlayerType.MOVIE;
 			this.controlls.action.add(this.onControlAction);
 			this.controlls.view.parent.addChildAt(this.activeZone, this.controlls.view.parent.getChildIndex(this.controlls.view));
+			this.controlls.view.stage.addEventListener(Event.FULLSCREEN, this.onChangeFullscreen);
 
 			this.activeZone.addEventListener(MouseEvent.CLICK, this.onActiveZoneClick);
 			this.dispatcher.addEventListener(PlayerEvent.CAN_PLAY, this.onMediaPlayable);
@@ -55,6 +60,8 @@ package ayyo.player.core.controller {
 		}
 
 		public function destroy() : void {
+			this.controlls.view.stage.hasEventListener(Event.FULLSCREEN) && this.controlls.view.stage.removeEventListener(Event.FULLSCREEN, this.onChangeFullscreen);
+			
 			this.activeZone.removeEventListener(MouseEvent.CLICK, this.onActiveZoneClick);
 			this.activeZone.parent && this.activeZone.parent.removeChild(this.activeZone);
 			this._activeZone = null;
@@ -93,6 +100,11 @@ package ayyo.player.core.controller {
 			this.model.setVariable(ApplicationVariables.PLAYING, false);
 			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerCommands.SEEK, [0]));
 			this.dispatcher.dispatchEvent(new ApplicationEvent(ApplicationEvent.READY));
+		}
+		
+		private function onChangeFullscreen(event : Event) : void {
+			var stage : Stage = event.target as Stage;
+			stage.displayState == StageDisplayState.NORMAL && this.controlls.screenState.state == ScreenModeState.NORMAL && this.controlls.screenState.click();
 		}
 	}
 }

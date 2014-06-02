@@ -23,7 +23,7 @@ package ayyo.player.core.commands.hooks {
 			this.player.mediaPlayer.autoRewind = false;
 			this.player.mediaPlayer.autoPlay = false;
 			this.player.mediaPlayer.bufferTime = this.playerConfig.settings.buffer;
-			this.player.scaleMode = ScaleMode.LETTERBOX;
+			this.player.scaleMode = ScaleMode.ZOOM;
 
 			this.contextView.view.addChild(this.player);
 
