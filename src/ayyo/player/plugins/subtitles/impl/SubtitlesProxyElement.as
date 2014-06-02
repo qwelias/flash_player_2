@@ -52,7 +52,7 @@ package ayyo.player.plugins.subtitles.impl {
 
 		public function set subContainer(value : DisplayObjectContainer) : void {
 			this._subContainer = value;
-			this._subContainer && this._subContainer.addChild(this.subField);
+			this._subContainer && this._subContainer.addChildAt(this.subField, 0);
 		}
 
 		public function dispose() : void {
