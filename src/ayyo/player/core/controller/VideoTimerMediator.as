@@ -1,4 +1,5 @@
 package ayyo.player.core.controller {
+	import ayyo.player.core.model.JavascriptFunctions;
 	import ayyo.player.events.PlayerEvent;
 	import ayyo.player.view.api.IVideoTimer;
 
@@ -71,6 +72,7 @@ package ayyo.player.core.controller {
 		}
 
 		private function onCurrentTimeChange(event : TimeEvent) : void {
+			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.SEND_TO_JS, [JavascriptFunctions.RECIEVE_FLASH_EVENT, "current_time.playbackevent", event.time]));
 			this.timer.time = event.time;
 		}
 

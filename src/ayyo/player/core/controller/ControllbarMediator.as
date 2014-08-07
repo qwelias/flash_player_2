@@ -1,16 +1,12 @@
 package ayyo.player.core.controller {
-	import ayyo.player.view.api.ScreenModeState;
-	import flash.display.StageDisplayState;
-	import flash.display.Stage;
-	import flash.events.Event;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.config.impl.support.PlayerType;
 	import ayyo.player.core.model.ApplicationVariables;
 	import ayyo.player.core.model.PlayerCommands;
-	import ayyo.player.events.ApplicationEvent;
 	import ayyo.player.events.PlayerEvent;
 	import ayyo.player.view.api.IPlayerControllBar;
 	import ayyo.player.view.api.PlayPauseState;
+	import ayyo.player.view.api.ScreenModeState;
 	import ayyo.player.view.impl.controllbar.ActiveZone;
 
 	import me.scriptor.mvc.model.api.IApplicationModel;
@@ -21,6 +17,9 @@ package ayyo.player.core.controller {
 	import org.osmf.events.TimeEvent;
 	import org.osmf.media.MediaElement;
 
+	import flash.display.Stage;
+	import flash.display.StageDisplayState;
+	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	import flash.events.MouseEvent;
 
@@ -98,8 +97,7 @@ package ayyo.player.core.controller {
 		private function onPlaybackComplete(event : TimeEvent) : void {
 			this.controlls.playPause.state = PlayPauseState.PLAY;
 			this.model.setVariable(ApplicationVariables.PLAYING, false);
-			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerCommands.SEEK, [0]));
-			this.dispatcher.dispatchEvent(new ApplicationEvent(ApplicationEvent.READY));
+			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.PLAYBACK_COMPLETE));
 		}
 		
 		private function onChangeFullscreen(event : Event) : void {

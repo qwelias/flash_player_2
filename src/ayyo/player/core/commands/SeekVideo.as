@@ -1,4 +1,5 @@
 package ayyo.player.core.commands {
+	import ayyo.player.core.model.JavascriptFunctions;
 	import flash.utils.setTimeout;
 	import flash.utils.clearTimeout;
 	import ayyo.player.core.model.ApplicationVariables;
@@ -32,7 +33,10 @@ package ayyo.player.core.commands {
 		
 		public function execute() : void {
 			clearTimeout(this.checkPlayingState);
-			this.player.mediaPlayer.canSeek && this.player.mediaPlayer.seek(this.event.params[0]);
+			if(this.player.mediaPlayer.canSeek){
+				this.player.mediaPlayer.seek(this.event.params[0]);
+				this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.SEND_TO_JS, [JavascriptFunctions.RECIEVE_FLASH_EVENT, "seek_to.seekevent", this.event.params[0]]));
+			}
 			this.checkPlayingState = setTimeout(this.checkPlayingStatus, 10);
 		}
 

@@ -4,6 +4,7 @@ package ayyo.player.core.controller.appconfig {
 	import ayyo.player.core.commands.LoadBinData;
 	import ayyo.player.core.commands.LoadPlugins;
 	import ayyo.player.core.commands.NullCommand;
+	import ayyo.player.core.commands.PlaybackComplete;
 	import ayyo.player.core.commands.RegisterAsset;
 	import ayyo.player.core.commands.SeekVideo;
 	import ayyo.player.core.commands.SetVolume;
@@ -61,6 +62,9 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.map(PlayerCommands.PAUSE, PlayerEvent).toCommand(SwitchPlayPause);
 			this.commandMap.map(PlayerCommands.SEEK, PlayerEvent).toCommand(SeekVideo);
 			this.commandMap.map(PlayerCommands.VOLUME, PlayerEvent).toCommand(SetVolume);
+
+			this.commandMap.map(PlayerEvent.PLAYBACK_COMPLETE).toCommand(PlaybackComplete);
+			this.commandMap.map(PlayerEvent.SEND_TO_JS, PlayerEvent).toCommand(SendToJavascript);
 			
 			this.commandMap.map(PlayerEvent.SHOW_PRELOADER, PlayerEvent).toCommand(NullCommand).withHooks(CreatePreloader);
 			this.commandMap.map(PlayerEvent.HIDE_PRELOADER, PlayerEvent).toCommand(NullCommand).withHooks(DisposePreloader);
@@ -81,6 +85,9 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.unmap(PlayerCommands.PAUSE, PlayerEvent).fromCommand(SwitchPlayPause);
 			this.commandMap.unmap(PlayerCommands.SEEK, PlayerEvent).fromCommand(SeekVideo);
 			this.commandMap.unmap(PlayerCommands.VOLUME, PlayerEvent).fromCommand(SetVolume);
+			
+			this.commandMap.unmap(PlayerEvent.PLAYBACK_COMPLETE).fromCommand(PlaybackComplete);
+			this.commandMap.unmap(PlayerEvent.SEND_TO_JS, PlayerEvent).fromCommand(SendToJavascript);
 			
 			this.commandMap.unmap(PlayerEvent.HIDE_PRELOADER, PlayerEvent).fromCommand(NullCommand);
 			this.commandMap.unmap(PlayerEvent.SHOW_PRELOADER, PlayerEvent).fromCommand(NullCommand);

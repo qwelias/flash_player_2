@@ -1,4 +1,6 @@
 package ayyo.player.core.commands {
+	import ayyo.player.core.model.JavascriptFunctions;
+
 	import flash.events.IEventDispatcher;
 
 	import ayyo.player.core.model.PlayerCommands;
@@ -26,9 +28,15 @@ package ayyo.player.core.commands {
 
 		private function check() : Boolean {
 			var result : Boolean = this.player != null && this.player.mediaPlayer != null && (this.player.mediaPlayer.canPlay && this.player.mediaPlayer.canPause);
-			this.player.mediaPlayer.canPlay && event.type == PlayerCommands.PLAY && this.player.mediaPlayer.play() ||
-			this.player.mediaPlayer.canPause && event.type == PlayerCommands.PAUSE && this.player.mediaPlayer.pause() ||
-			!this.player.mediaPlayer.canPlay && !this.player.mediaPlayer.canPause && this.switchMedia();
+			if (this.player.mediaPlayer.canPlay && event.type == PlayerCommands.PLAY) {
+				this.player.mediaPlayer.play();
+				this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.SEND_TO_JS, [JavascriptFunctions.RECIEVE_FLASH_EVENT, "play.playbackevent"]));
+			} else if (this.player.mediaPlayer.canPause && event.type == PlayerCommands.PAUSE) {
+				this.player.mediaPlayer.pause();
+				this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.SEND_TO_JS, [JavascriptFunctions.RECIEVE_FLASH_EVENT, "pause.playbackevent"]));
+			} else if (!this.player.mediaPlayer.canPlay && !this.player.mediaPlayer.canPause) {
+				this.switchMedia();
+			}
 			return result;
 		}
 

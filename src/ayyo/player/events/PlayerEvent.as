@@ -17,6 +17,8 @@ package ayyo.player.events {
 		public static const HIDE_PRELOADER : String = "hidePreloader";
 		public static const DYNAMIC_STREAM_CHANGE : String = "dynamicStreamChange";
 		public static const MEDIA_CHANGED : String = "mediaChanged";
+		public static const PLAYBACK_COMPLETE : String = "playbackComplete";
+		public static const SEND_TO_JS : String = "sendParamsToJS";
 		/**
 		 * @private
 		 */
