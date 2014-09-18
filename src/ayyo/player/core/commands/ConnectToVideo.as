@@ -67,6 +67,7 @@ package ayyo.player.core.commands {
 				this.media.addEventListener(MediaElementEvent.TRAIT_ADD, this.onAddMediaTrait);
 				this.media.addEventListener(MediaErrorEvent.MEDIA_ERROR, this.onErrorOccured);
 
+				this.player.mediaPlayer.addEventListener(MediaErrorEvent.MEDIA_ERROR, this.onErrorOccured);
 				this.player.mediaPlayer.addEventListener(LoadEvent.BYTES_LOADED_CHANGE, this.onLoadedBytesChange);
 				var loadTrait : LoadTrait = this.media.getTrait(MediaTraitType.LOAD) as LoadTrait;
 				loadTrait && this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.CAN_LOAD));
@@ -81,6 +82,7 @@ package ayyo.player.core.commands {
 			else if (trait.traitType == MediaTraitType.AUDIO) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.AUDIO, [trait]));
 			else if (trait.traitType == MediaTraitType.PLAY) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.CAN_PLAY, [this.media]));
 			else if (trait.traitType == MediaTraitType.BUFFER) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.BUFFER_TRAIT, [trait]));
+			else if (trait.traitType == MediaTraitType.DRM) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.DRM_TRAIT, [trait]));
 			else if (trait is DynamicStreamTrait) {
 				this.dynamicStreamTrait = trait as DynamicStreamTrait;
 				this.dynamicStreamTrait.addEventListener(DynamicStreamEvent.SWITCHING_CHANGE, this.onDynamicStreamChange);

@@ -18,7 +18,11 @@ package ayyo.player.core.controller.appconfig {
 			if (ExternalInterface.available) {
 				ExternalInterface.call.apply(null, this.event.params);
 				
-				this.logger.debug("Called '{0}' js-function", [this.event.params[0]]);
+				if(this.event.params.length > 1) {
+					this.logger.debug("Called '{0}' js-function with params: {1}, {2}", this.event.params);
+				} else {
+					this.logger.debug("Called '{0}' js-function", [this.event.params[0]]);
+				}
 			}
 			this.dispose();
 		}

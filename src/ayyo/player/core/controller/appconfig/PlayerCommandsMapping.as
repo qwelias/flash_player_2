@@ -1,5 +1,6 @@
 package ayyo.player.core.controller.appconfig {
 	import ayyo.player.core.commands.ConnectToVideo;
+	import ayyo.player.core.commands.FollowDRMData;
 	import ayyo.player.core.commands.GetApplicationConfig;
 	import ayyo.player.core.commands.LoadBinData;
 	import ayyo.player.core.commands.LoadPlugins;
@@ -63,7 +64,8 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.map(PlayerCommands.SEEK, PlayerEvent).toCommand(SeekVideo);
 			this.commandMap.map(PlayerCommands.VOLUME, PlayerEvent).toCommand(SetVolume);
 
-			this.commandMap.map(PlayerEvent.PLAYBACK_COMPLETE).toCommand(PlaybackComplete);
+			this.commandMap.map(PlayerEvent.DRM_TRAIT, PlayerEvent).toCommand(FollowDRMData);
+			this.commandMap.map(PlayerEvent.PLAYBACK_COMPLETE, PlayerEvent).toCommand(PlaybackComplete);
 			this.commandMap.map(PlayerEvent.SEND_TO_JS, PlayerEvent).toCommand(SendToJavascript);
 			
 			this.commandMap.map(PlayerEvent.SHOW_PRELOADER, PlayerEvent).toCommand(NullCommand).withHooks(CreatePreloader);
@@ -86,6 +88,7 @@ package ayyo.player.core.controller.appconfig {
 			this.commandMap.unmap(PlayerCommands.SEEK, PlayerEvent).fromCommand(SeekVideo);
 			this.commandMap.unmap(PlayerCommands.VOLUME, PlayerEvent).fromCommand(SetVolume);
 			
+			this.commandMap.unmap(PlayerEvent.DRM_TRAIT).fromCommand(FollowDRMData);
 			this.commandMap.unmap(PlayerEvent.PLAYBACK_COMPLETE).fromCommand(PlaybackComplete);
 			this.commandMap.unmap(PlayerEvent.SEND_TO_JS, PlayerEvent).fromCommand(SendToJavascript);
 			
