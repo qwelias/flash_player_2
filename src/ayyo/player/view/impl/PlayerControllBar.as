@@ -33,6 +33,8 @@ package ayyo.player.view.impl {
 	import flash.geom.Rectangle;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
+	
+	import flash.external.ExternalInterface;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -99,7 +101,7 @@ package ayyo.player.view.impl {
 		}
 
 		public function create() : void {
-			if (!this.isCreated) {
+			if (!this.isCreated && true) {
 				this._matrix = new Matrix();
 
 				this.addChild(this.playPause.view);
@@ -206,7 +208,7 @@ package ayyo.player.view.impl {
 
 		public function show() : void {
 			clearTimeout(this.hideTimeoutID);
-			this.tweener.play();
+			//this.tweener.play();
 			Mouse.show();
 		}
 

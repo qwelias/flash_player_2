@@ -59,6 +59,7 @@
 			<arg value="-output=${bin.loc}/${project.name.versioned}.swf" />
 			<arg value="-default-size=640,480" />
 			<arg value="-define=CONFIG::FLASH_10_1,true"/>
+			<arg value="-define=CONFIG::JSDEBUG,true"/>
 			<arg value="-define=CONFIG::LOGGING,true"/>
 			<arg value="-default-background-color=0x000000" />
 			<arg value="-library-path+=${lib.loc}" />
@@ -66,10 +67,11 @@
 			<arg value="-verbose-stacktraces=true" />
 			<arg value="-headless-server=false" />
 			<arg value="-debug=${debug}" />
+			<arg value="-static-link-runtime-shared-libraries=true" />
 		</java>
 		<echo>[compile] Release SWF ${project.name.versioned}.swf created successfully</echo>
 	</target>
-	
+
 	<!-- -omit-trace-statements=true -->
 
 	<!-- Run Unit Tests -->

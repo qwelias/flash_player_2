@@ -16,6 +16,8 @@ package ayyo.player {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
+	
+	import flash.external.ExternalInterface;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
