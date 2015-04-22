@@ -3,8 +3,6 @@ package ayyo.player.core.commands.hooks {
 
 	import robotlegs.bender.extensions.contextView.ContextView;
 	import robotlegs.bender.framework.api.IHook;
-	
-	import flash.external.ExternalInterface;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)

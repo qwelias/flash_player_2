@@ -33,8 +33,6 @@ package ayyo.player.view.impl {
 	import flash.geom.Rectangle;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
-	
-	import flash.external.ExternalInterface;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)

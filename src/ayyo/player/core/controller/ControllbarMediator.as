@@ -18,6 +18,7 @@ package ayyo.player.core.controller {
 
 	import flash.events.IEventDispatcher;
 	import flash.events.MouseEvent;
+	import flash.events.Event;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -76,6 +77,8 @@ package ayyo.player.core.controller {
 			if (event.params) this.video = event.params[0] as MediaElement;
 			this.controlls.playPause.enable();
 			this.playerConfig.settings.autoplay && this.controlls.playPause.click();
+			
+			//this.dispatcher.dispatchEvent(new Event(PlayerEvent.CAN_PLAY));
 		}
 
 		private function onControlAction(action : String) : void {

@@ -1,14 +1,14 @@
 package ayyo.player.core.commands {
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.events.PlayerEvent;
-
+	
+	import flash.events.Event;
+	import flash.events.IEventDispatcher;
+	import flash.events.ProgressEvent;
+	import flash.utils.setTimeout;
+	
 	import me.scriptor.mvc.model.api.IApplicationModel;
-
-	import osmf.patch.SmoothedMediaFactory;
-
-	import robotlegs.bender.extensions.commandCenter.api.ICommand;
-	import robotlegs.bender.framework.api.ILogger;
-
+	
 	import org.osmf.events.DynamicStreamEvent;
 	import org.osmf.events.LoadEvent;
 	import org.osmf.events.MediaElementEvent;
@@ -21,9 +21,11 @@ package ayyo.player.core.commands {
 	import org.osmf.traits.MediaTraitBase;
 	import org.osmf.traits.MediaTraitType;
 	import org.osmf.traits.TimeTrait;
-
-	import flash.events.IEventDispatcher;
-	import flash.events.ProgressEvent;
+	
+	import osmf.patch.SmoothedMediaFactory;
+	
+	import robotlegs.bender.extensions.commandCenter.api.ICommand;
+	import robotlegs.bender.framework.api.ILogger;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -58,7 +60,9 @@ package ayyo.player.core.commands {
 
 		public function execute() : void {
 			var resource : URLResource = new URLResource(this.playerConfig.video.url);
-			if (this.playerConfig.video.url.toLowerCase().indexOf("f4m") != -1) (this.player.mediaFactory as SmoothedMediaFactory).customToken = this.playerConfig.video.token;
+			if (this.playerConfig.video.url.toLowerCase().indexOf("f4m") != -1){
+				(this.player.mediaFactory as SmoothedMediaFactory).customToken = this.playerConfig.video.token;
+			}
 			this.media = this.player.mediaFactory.createMediaElement(resource);
 
 			if (!this.media) {
@@ -71,11 +75,12 @@ package ayyo.player.core.commands {
 				var loadTrait : LoadTrait = this.media.getTrait(MediaTraitType.LOAD) as LoadTrait;
 				loadTrait && this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.CAN_LOAD));
 				loadTrait && loadTrait.load();
-
+				
 				this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.HIDE_PRELOADER));
+				trace("-->", "HIDE");
 			}
 		}
-
+		
 		private function parseTrait(trait : MediaTraitBase) : void {
 			if (trait.traitType == MediaTraitType.ALTERNATIVE_AUDIO) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.ALTERNATIVE_AUDIO, [trait]));
 			else if (trait.traitType == MediaTraitType.AUDIO) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.AUDIO, [trait]));

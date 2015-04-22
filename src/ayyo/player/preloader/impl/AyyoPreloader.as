@@ -12,8 +12,6 @@ package ayyo.player.preloader.impl {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.geom.Rectangle;
-	
-	import flash.external.ExternalInterface;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -51,9 +49,6 @@ package ayyo.player.preloader.impl {
 		}
 
 		public function create() : void {
-			CONFIG::JSDEBUG {
-				if(ExternalInterface.available) ExternalInterface.call("console.log", "AyyoPreloader create()");
-			}
 			if (!this.isCreated && false) {
 				this.addChild(this.film);
 				this.hide(true);
@@ -84,9 +79,6 @@ package ayyo.player.preloader.impl {
 		}
 		
 		public function play() : void {
-			CONFIG::JSDEBUG {
-				if(ExternalInterface.available) ExternalInterface.call("console.log", "AyyoPreloader play()");
-			}
 			//this.animation.play(null, false);
 		}
 

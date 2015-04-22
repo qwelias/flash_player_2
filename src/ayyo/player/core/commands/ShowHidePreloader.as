@@ -9,8 +9,6 @@ package ayyo.player.core.commands {
 	import robotlegs.bender.extensions.commandCenter.api.ICommand;
 	import robotlegs.bender.framework.api.ILogger;
 	import robotlegs.bender.framework.impl.applyHooks;
-	
-	import flash.external.ExternalInterface;
 
 	/**
 	 * @author Aziz Zaynutdinov (aziz.zaynutdinov at playstorm.com)
@@ -24,9 +22,6 @@ package ayyo.player.core.commands {
 		public var logger : ILogger;
 
 		public function execute() : void {
-			CONFIG::JSDEBUG {
-				if(ExternalInterface.available) ExternalInterface.call("console.log", "ShowHidePreloader execute()");
-			}
 			var hook : Array = this.model.getVariable(PlayerConstants.PRELOADER) != null ? [DisposePreloader] : [CreatePreloader];
 			applyHooks(hook);
 			this.dispose();

@@ -1,11 +1,13 @@
 package ayyo.player.core.commands {
 	import ayyo.player.core.model.PlayerCommands;
 	import ayyo.player.events.PlayerEvent;
-
-	import robotlegs.bender.extensions.commandCenter.api.ICommand;
-
+	
+	import flash.external.ExternalInterface;
+	
 	import org.osmf.media.MediaElement;
 	import org.osmf.media.MediaPlayerSprite;
+	
+	import robotlegs.bender.extensions.commandCenter.api.ICommand;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -17,8 +19,9 @@ package ayyo.player.core.commands {
 		public var event : PlayerEvent;
 
 		public function execute() : void {
-			this.player.mediaPlayer.canPlay && event.type == PlayerCommands.PLAY && this.player.mediaPlayer.play() || this.player.mediaPlayer.canPause && event.type == PlayerCommands.PAUSE && this.player.mediaPlayer.pause() || !this.player.mediaPlayer.canPlay && !this.player.mediaPlayer.canPause && this.switchMedia();
-
+			this.player.mediaPlayer.canPlay && event.type == PlayerCommands.PLAY && this.player.mediaPlayer.play()
+				|| this.player.mediaPlayer.canPause && event.type == PlayerCommands.PAUSE && this.player.mediaPlayer.pause()
+				|| !this.player.mediaPlayer.canPlay && !this.player.mediaPlayer.canPause && this.switchMedia();
 			this.dispose();
 		}
 
@@ -28,6 +31,7 @@ package ayyo.player.core.commands {
 		}
 
 		private function switchMedia() : void {
+			ExternalInterface.call("console.log", this.event.params.length)
 			this.player.media = this.event.params[0] as MediaElement;
 			this.execute();
 		}
