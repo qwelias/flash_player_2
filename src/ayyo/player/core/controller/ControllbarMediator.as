@@ -60,7 +60,7 @@ package ayyo.player.core.controller {
 
 		public function destroy() : void {
 //			this.activeZone.removeEventListener(MouseEvent.CLICK, this.onActiveZoneClick);
-//			this.activeZone.parent && this.activeZone.parent.removeChild(this.activeZone);
+//			this.active	Zone.parent && this.activeZone.parent.removeChild(this.activeZone);
 			this._activeZone = null;
 			
 			this.controlls.action.remove(this.onControlAction);
@@ -96,11 +96,11 @@ package ayyo.player.core.controller {
 				|| action == PlayerCommands.PAUSE) this.dispatcher.dispatchEvent(new PlayerEvent(action, [this.video]));
 			else this.dispatcher.dispatchEvent(new PlayerEvent(action));
 		}
-		private function onWrapperAction(event:Event):void
+		private function onWrapperAction(event:WrapperEvent):void
 		{
-			trace("-->", "onWrapper", event.type)
-//			var action:String = (event.type == WrapperEvent.PLAY ? PlayerCommands.PLAY : PlayerCommands.PAUSE);
-//			this.dispatcher.dispatchEvent(new PlayerEvent(action, [this.video]));
+			trace("-->", "onWrapper", event.type);
+//			this.controlls.playPause.state == PlayPauseState.PAUSE && event.type == WrapperEvent.PLAY && this.controlls.playPause.click()
+//				|| this.controlls.playPause.state == PlayPauseState.PLAY && event.type == WrapperEvent.PAUSE && this.controlls.playPause.click();
 			this.controlls.playPause.click();
 		}
 

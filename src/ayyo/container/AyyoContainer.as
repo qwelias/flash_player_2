@@ -10,7 +10,11 @@ package ayyo.container
 	import flash.system.Security;
 	import flash.utils.setTimeout;
 	
+	import org.osmf.events.LoadEvent;
+	import org.osmf.events.LoaderEvent;
 	import org.osmf.events.MediaErrorEvent;
+	import org.osmf.events.TimeEvent;
+	import org.osmf.media.MediaPlayerSprite;
 	
 	import ru.yandex.video.IVideoContainer;
 	import ru.yandex.video.VideoContainerAPIVersion;
@@ -18,8 +22,23 @@ package ayyo.container
 	import ru.yandex.video.VideoContainerStates;
 	
 	public class AyyoContainer extends AyyoPlayer implements IVideoContainer
-	{		
+	{			
+		private var _player:MediaPlayerSprite;
+		private function get player():MediaPlayerSprite
+		{
+			return this.context.injector.getInstance(MediaPlayerSprite); 
+		}
+		
 		private var _state:String = VideoContainerStates.INACTIVE;
+		private var _volume:Number = 0.6;
+		private var _coid:String;
+		private var _seekable:Boolean = true;
+		private var _time:Number;
+		private var _duration:Number;
+		private var _bytesLoaded:uint;
+		private var _bytesOffset:uint;
+		private var _bytesTotal:uint;
+		private var _initBytesTotal:uint;
 		
 		private function dispatchSimpleEvent(eventName:String):void {
 			trace("-->", "DISPATCHING:", eventName);
@@ -41,15 +60,14 @@ package ayyo.container
 		{
 			Security.allowDomain("*");
 			super();
+			this.dispatcher.addEventListener(WrapperEvent.BEFORE_LOAD, this.onReadyToLoad);
 			this.dispatcher.addEventListener(WrapperEvent.PLAYABLE, this.onLoaded);
+			this.dispatcher.addEventListener(WrapperEvent.ERROR, this.onError);
 		}
 		
 		public function load(config:Object):void
 		{	
-			trace("-->", "config", config.toString())
-			if(this.state == VideoContainerStates.INITIALIZED){
-				this.setState(VideoContainerStates.READY);
-			}
+			//TODO
 		}
 		
 		public function start():void
@@ -61,10 +79,12 @@ package ayyo.container
 		
 		public function setAgeConfirmed(confirmed:Boolean):void
 		{
+			//TODO
 		}
 		
 		public function stop():void
 		{
+			//TODO
 			setState(VideoContainerStates.VIDEO_ENDED);
 			setState(VideoContainerStates.END);
 		}
@@ -84,24 +104,33 @@ package ayyo.container
 		
 		public function mute():void
 		{
+			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.VOLUME, [0]));
 			dispatchSimpleEvent(VideoContainerEvents.MUTED);
 		}
 		
 		public function unmute():void
 		{
+			this.volume = this.volume;
 			dispatchSimpleEvent(VideoContainerEvents.UNMUTED);
 		}
 		
 		public function beginSeek():void
 		{
+			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.PAUSE));
+			setState(VideoContainerStates.VIDEO_PAUSED);
 		}
 		
 		public function endSeek():void
 		{
+			this.resume();
 		}
 		
 		public function seek(timeInSeconds:Number):void
 		{
+			if(!isNaN(timeInSeconds) && this.seekAllowed)
+			{
+				this.player.mediaPlayer.seek(timeInSeconds);
+			}
 		}
 		
 		public function setFullscreen(state:Boolean):void
@@ -165,7 +194,7 @@ package ayyo.container
 		
 		public function get coid():String
 		{
-			return "test";
+			return "test" || this._coid;
 		}
 		
 		public function get state():String
@@ -175,42 +204,44 @@ package ayyo.container
 		
 		public function get duration():Number
 		{
-			return 0;
+			return this._duration;
 		}
 		
 		public function get time():Number
 		{
-			return 0;
+			return this._time;
 		}
 		
 		public function get seekAllowed():Boolean
 		{
-			return false;
+			return this._seekable;
 		}
 		
 		public function get volume():Number
 		{
-			return 0.6;
+			return this._volume;
 		}
 		
 		public function set volume(value:Number):void
 		{
+			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.VOLUME, [volume]));
+			this._volume = volume;
 			dispatchSimpleEvent(VideoContainerEvents.VOLUME_CHANGE);
 		}
 		
 		public function get bytesTotal():uint
 		{
-			return 0;
+			return this._initBytesTotal;
 		}
 		
 		public function get bytesOffset():uint
 		{
-			return 0;
+			return this._bytesOffset;
 		}
 		
 		public function get bytesLoaded():uint
 		{
-			return 0;
+			return this._bytesLoaded;
 		}
 		
 		//Handlers
@@ -218,28 +249,39 @@ package ayyo.container
 		{
 			this.setState(VideoContainerStates.ERROR);
 		}
-		private function onLoaded(event:Event):void
+		
+		private function onReadyToLoad(event:Event):void
 		{
-			if(this.state == VideoContainerStates.INACTIVE){
+			if(this.state == VideoContainerStates.INACTIVE
+				|| this.state == VideoContainerStates.END){
+				this.addEventListener(LoadEvent.BYTES_LOADED_CHANGE, this.onBytesLoaded);
+				this.addEventListener(LoadEvent.BYTES_TOTAL_CHANGE, this.onBytesTotal);
+				this.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, this.onTimeChange);
 				this.setState(VideoContainerStates.INITIALIZED);
 			}
+		}
+		private function onBytesLoaded(event:LoadEvent):void
+		{
+			trace(event.bytes);
+			this._bytesLoaded = event.bytes;
+		}
+		private function onBytesTotal(event:LoadEvent):void
+		{
+			this._bytesTotal = event.bytes;
+			this._bytesOffset = this._initBytesTotal - this._bytesTotal;
+		}
+		private function onTimeChange(event:TimeEvent):void
+		{
+			this._time = event.time;
+		}
+		
+		private function onLoaded(event:Event):void
+		{
 			if(this.state == VideoContainerStates.INITIALIZED){
-				//this.setState(VideoContainerStates.READY);
+				this._duration = this.player.mediaPlayer.duration;
+				this._initBytesTotal = this.player.mediaPlayer.bytesTotal;
+				this.setState(VideoContainerStates.READY);
 			}
-		}
-		private function onStart(event:Event):void
-		{
-			this.setState(VideoContainerStates.START);
-			this.setState(VideoContainerStates.VIDEO_PLAYING);
-		}
-		private function onPause(event:Event):void
-		{
-			this.setState(VideoContainerStates.VIDEO_PAUSED);
-		}
-		private function onEnd(event:Event):void
-		{
-			this.setState(VideoContainerStates.VIDEO_ENDED);
-			this.setState(VideoContainerStates.END);
 		}
 	}
 }

@@ -4,9 +4,13 @@ package ayyo.container
 	
 	public class WrapperEvent extends Event
 	{
+		public static const BEFORE_LOAD:String = "ayyoReadyToLoad";
 		public static const PLAYABLE:String = "ayyoReadyToPlay";
 		public static const PLAY:String = "ayyoDoPlay";
 		public static const PAUSE:String = "ayyoDoPause";
+		public static const VOLUME:String = "ayyoTweakVolume";
+		public static const ERROR:String = "ayyoError";
+		
 		
 		private var _params:Array;
 		

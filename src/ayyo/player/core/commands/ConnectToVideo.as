@@ -1,4 +1,5 @@
 package ayyo.player.core.commands {
+	import ayyo.container.WrapperEvent;
 	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.events.PlayerEvent;
 	
@@ -59,6 +60,7 @@ package ayyo.player.core.commands {
 		private var lastBytesLoadedValue : Number;
 
 		public function execute() : void {
+			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.BEFORE_LOAD));
 			var resource : URLResource = new URLResource(this.playerConfig.video.url);
 			if (this.playerConfig.video.url.toLowerCase().indexOf("f4m") != -1){
 				(this.player.mediaFactory as SmoothedMediaFactory).customToken = this.playerConfig.video.token;
@@ -101,6 +103,7 @@ package ayyo.player.core.commands {
 
 		private function onErrorOccured(event : MediaErrorEvent) : void {
 			this.onError(event.error.message);
+			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.ERROR));
 		}
 
 		private function onAddMediaTrait(event : MediaElementEvent) : void {
