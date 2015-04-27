@@ -1,8 +1,8 @@
 package ayyo.container
 {
 	import ayyo.player.AyyoPlayer;
-	import ayyo.player.events.*;
 	import ayyo.player.core.model.PlayerCommands;
+	import ayyo.player.events.*;
 	
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
@@ -41,12 +41,12 @@ package ayyo.container
 		{
 			Security.allowDomain("*");
 			super();
-			this.dispatcher.addEventListener(PlayerEvent.CAN_PLAY, this.onLoaded);
+			this.dispatcher.addEventListener(WrapperEvent.PLAYABLE, this.onLoaded);
 		}
 		
 		public function load(config:Object):void
 		{	
-			trace("-->", "config", config)
+			trace("-->", "config", config.toString())
 			if(this.state == VideoContainerStates.INITIALIZED){
 				this.setState(VideoContainerStates.READY);
 			}
@@ -54,7 +54,7 @@ package ayyo.container
 		
 		public function start():void
 		{
-			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerCommands.PLAY))
+			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.PLAY))
 			this.setState(VideoContainerStates.START);
 			this.setState(VideoContainerStates.VIDEO_PLAYING);
 		}
@@ -69,14 +69,16 @@ package ayyo.container
 			setState(VideoContainerStates.END);
 		}
 		
-		public function pause(adAllowed:Boolean=true):void
+		public function pause(adAllowed:Boolean=false):void
 		{
+			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.PAUSE))
 			setState(VideoContainerStates.VIDEO_PAUSED);
 		}
 		
 		public function resume():void
 		{
-			if (_state != VideoContainerStates.VIDEO_PAUSED) return;
+			if (this.state != VideoContainerStates.VIDEO_PAUSED) return;
+			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.PLAY))
 			setState(VideoContainerStates.VIDEO_PLAYING);
 		}
 		

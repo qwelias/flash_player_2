@@ -37,7 +37,7 @@ package ayyo.player.core.commands {
 
 		public function execute() : void {
 			var source : Object = this.contextView.view.root.loaderInfo.parameters;
-			trace("-->", "SOURCE", source);
+			trace("-->", "SOURCE", source.toString());
 			if (flashvars) {
 				this.playerConfig.ready.addOnce(this.onConfigParsed);
 				this.playerConfig.initialize(flashvars);

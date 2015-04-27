@@ -19,6 +19,7 @@ package ayyo.player.core.commands {
 		public var event : PlayerEvent;
 
 		public function execute() : void {
+			trace("-->", this.player.mediaPlayer.canPlay, this.player.mediaPlayer.canPause, "exe")
 			this.player.mediaPlayer.canPlay && event.type == PlayerCommands.PLAY && this.player.mediaPlayer.play()
 				|| this.player.mediaPlayer.canPause && event.type == PlayerCommands.PAUSE && this.player.mediaPlayer.pause()
 				|| !this.player.mediaPlayer.canPlay && !this.player.mediaPlayer.canPause && this.switchMedia();
@@ -31,7 +32,7 @@ package ayyo.player.core.commands {
 		}
 
 		private function switchMedia() : void {
-			ExternalInterface.call("console.log", this.event.params.length)
+			trace("-->", this.player.mediaPlayer.canPlay, this.player.mediaPlayer.canPause)
 			this.player.media = this.event.params[0] as MediaElement;
 			this.execute();
 		}

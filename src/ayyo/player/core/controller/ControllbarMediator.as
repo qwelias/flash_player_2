@@ -1,24 +1,28 @@
 package ayyo.player.core.controller {
+	import ayyo.container.WrapperEvent;
+	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.config.impl.support.PlayerType;
 	import ayyo.player.core.model.ApplicationVariables;
-	import me.scriptor.mvc.model.api.IApplicationModel;
-	import ayyo.player.config.api.IAyyoPlayerConfig;
 	import ayyo.player.core.model.PlayerCommands;
 	import ayyo.player.events.ApplicationEvent;
 	import ayyo.player.events.PlayerEvent;
 	import ayyo.player.view.api.IPlayerControllBar;
 	import ayyo.player.view.api.PlayPauseState;
 	import ayyo.player.view.impl.controllbar.ActiveZone;
-
-	import robotlegs.bender.extensions.mediatorMap.api.IMediator;
-	import robotlegs.bender.framework.api.ILogger;
-
-	import org.osmf.events.TimeEvent;
-	import org.osmf.media.MediaElement;
-
+	
+	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	import flash.events.MouseEvent;
-	import flash.events.Event;
+	import flash.external.ExternalInterface;
+	import flash.utils.setTimeout;
+	
+	import me.scriptor.mvc.model.api.IApplicationModel;
+	
+	import org.osmf.events.TimeEvent;
+	import org.osmf.media.MediaElement;
+	
+	import robotlegs.bender.extensions.mediatorMap.api.IMediator;
+	import robotlegs.bender.framework.api.ILogger;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -44,19 +48,19 @@ package ayyo.player.core.controller {
 		private var _activeZone : ActiveZone;
 
 		public function initialize() : void {
-			this.controlls.show();
+//			this.controlls.show();
 			this.controlls.timer.view.visible = this.playerConfig.settings.type == PlayerType.MOVIE;
 			this.controlls.action.add(this.onControlAction);
-			this.controlls.view.parent.addChildAt(this.activeZone, this.controlls.view.parent.getChildIndex(this.controlls.view));
+//			this.controlls.view.parent.addChildAt(this.activeZone, this.controlls.view.parent.getChildIndex(this.controlls.view));
 
-			this.activeZone.addEventListener(MouseEvent.CLICK, this.onActiveZoneClick);
+//			this.activeZone.addEventListener(MouseEvent.CLICK, this.onActiveZoneClick);
 			this.dispatcher.addEventListener(PlayerEvent.CAN_PLAY, this.onMediaPlayable);
 			this.dispatcher.addEventListener(TimeEvent.COMPLETE, this.onPlaybackComplete);
 		}
 
 		public function destroy() : void {
-			this.activeZone.removeEventListener(MouseEvent.CLICK, this.onActiveZoneClick);
-			this.activeZone.parent && this.activeZone.parent.removeChild(this.activeZone);
+//			this.activeZone.removeEventListener(MouseEvent.CLICK, this.onActiveZoneClick);
+//			this.activeZone.parent && this.activeZone.parent.removeChild(this.activeZone);
 			this._activeZone = null;
 			
 			this.controlls.action.remove(this.onControlAction);
@@ -73,17 +77,31 @@ package ayyo.player.core.controller {
 
 		// Handlers
 		private function onMediaPlayable(event : PlayerEvent) : void {
+			trace("-->", "OMP", event.params.length)
 			this.dispatcher.removeEventListener(PlayerEvent.CAN_PLAY, this.onMediaPlayable);
-			if (event.params) this.video = event.params[0] as MediaElement;
+			if (event.params){
+				this.video = event.params[0] as MediaElement;
+			}
 			this.controlls.playPause.enable();
 			this.playerConfig.settings.autoplay && this.controlls.playPause.click();
 			
-			//this.dispatcher.dispatchEvent(new Event(PlayerEvent.CAN_PLAY));
+			this.dispatcher.addEventListener(WrapperEvent.PLAY, this.onWrapperAction);
+			this.dispatcher.addEventListener(WrapperEvent.PAUSE, this.onWrapperAction);
+			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.PLAYABLE));
 		}
 
 		private function onControlAction(action : String) : void {
-			if (action == PlayerCommands.PLAY || action == PlayerCommands.PAUSE) this.dispatcher.dispatchEvent(new PlayerEvent(action, [this.video]));
+			trace("-->", "onControl", action)
+			if (action == PlayerCommands.PLAY
+				|| action == PlayerCommands.PAUSE) this.dispatcher.dispatchEvent(new PlayerEvent(action, [this.video]));
 			else this.dispatcher.dispatchEvent(new PlayerEvent(action));
+		}
+		private function onWrapperAction(event:Event):void
+		{
+			trace("-->", "onWrapper", event.type)
+//			var action:String = (event.type == WrapperEvent.PLAY ? PlayerCommands.PLAY : PlayerCommands.PAUSE);
+//			this.dispatcher.dispatchEvent(new PlayerEvent(action, [this.video]));
+			this.controlls.playPause.click();
 		}
 
 		private function onActiveZoneClick(event : MouseEvent) : void {

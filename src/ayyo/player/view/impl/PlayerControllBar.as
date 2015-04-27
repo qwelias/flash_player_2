@@ -100,23 +100,23 @@ package ayyo.player.view.impl {
 
 		public function create() : void {
 			if (!this.isCreated && true) {
-				this._matrix = new Matrix();
+//				this._matrix = new Matrix();
 
-				this.addChild(this.playPause.view);
-				this.addChild(this.timeline.view);
-				this.addChild(this.timer.view);
-				this.addChild(this.audioTrack.view);
-				this.addChild(this.volume.view);
-				this.addChild(this.screenState.view);
+//				this.addChild(this.playPause.view);
+//				this.addChild(this.timeline.view);
+//				this.addChild(this.timer.view);
+//				this.addChild(this.audioTrack.view);
+//				this.addChild(this.volume.view);
+//				this.addChild(this.screenState.view);
 
-				this.stage ? this.addListeners() : this.addEventListener(Event.ADDED_TO_STAGE, this.onAddedToStage);
+//				this.stage ? this.addListeners() : this.addEventListener(Event.ADDED_TO_STAGE, this.onAddedToStage);
 
 				this.alpha = 0;
 
 				this.playPause.action.add(this.action.dispatch);
 				this.screenState.action.add(this.action.dispatch);
 
-				this.filters = [new DropShadowFilter(1, 90, 0xfff2b3, .2, 0, 0, 1, BitmapFilterQuality.HIGH, true)];
+//				this.filters = [new DropShadowFilter(1, 90, 0xfff2b3, .2, 0, 0, 1, BitmapFilterQuality.HIGH, true)];
 
 				this.cacheAsBitmap = true;
 				this.isCreated = true;
@@ -160,7 +160,7 @@ package ayyo.player.view.impl {
 		}
 
 		public function resize(screen : Rectangle = null) : void {
-			if (screen) {
+			if (screen && false) {
 				this.graphics.clear();
 				this._matrix.identity();
 				this._matrix.createGradientBox(screen.width - MARGIN * 2, HEIGHT, -Math.PI / 2);
@@ -206,7 +206,7 @@ package ayyo.player.view.impl {
 
 		public function show() : void {
 			clearTimeout(this.hideTimeoutID);
-			//this.tweener.play();
+//			this.tweener.play();
 			Mouse.show();
 		}
 
