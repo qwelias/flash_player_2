@@ -25,13 +25,13 @@ package ayyo.player.core.commands {
 		public var logger : ILogger;
 
 		private var flashvars:Object = {
-			token:"begintokensessionid%3Dyb0y6wl9ki2yqlat57ulosv55bpbe9zn%2Ccontentid%3D185%2Ccountrycode%3Dru%2Cclientkey%3D6f17269e454fbbd63a1e3e9727ac89%3ASvbwhROcR1JZE6PJUJ03cAg-Qb4endtoken",
+//			token:"begintokensessionid%3Dyb0y6wl9ki2yqlat57ulosv55bpbe9zn%2Ccontentid%3D185%2Ccountrycode%3Dru%2Cclientkey%3D6f17269e454fbbd63a1e3e9727ac89%3ASvbwhROcR1JZE6PJUJ03cAg-Qb4endtoken",
+			token: "begintokensessionid%3Drepow44unrkvrgqffecisuewy9uwd54j%2Ccontentid%3D1275%2Ccountrycode%3Dru%2Cclientkey%3D6f17269e454fbbd63a1e3e9727ac89:D_Kys7l_HR8S7mJAi6Yiz7SG1IUendtoken",
 			autoplay: false,
-			url:"http://cdn.ayyo.ru/u18/1a/9c/Disney.Planes_Fire_And_Rescue@AT_trailer@lang_rus@R_SD.mp4",
-			screenshot:"https%3A%2F%2Fmedia.ayyo.ru%2Fmovies%2F185%2Fvideo_poster%2F850x477.jpg",
-			player_type:"trailer",
+			url:"http://cdn.ayyo.ru/u16/bf/91/b441e5cc-f1a0-4bf5-857e-1c47c98df669.f4m",
+			screenshot:"http://media.ayyo.ru/movies/1275/video_poster/850x477.jpg",
+			player_type:"movie",
 			//assets:'{"name":"arialFontFamily","url":"./assets/fonts/arial.swf","type":"font"}',
-			plugins:'{"url":"file:///Users/zaynutdinov/Documents/Projects/Private/AyyoPlayer/bin/plugins/SubtitlesPlugin.swf", "config":[{"url":"./force.srt","id":"ru","name":"Force russian"}, {"url":"http://cdn.ayyo.ru/u22/ec/96/VForVendetta-Feat-PAL-16x9-2.35_Russian.srt","id":"en","name":"English"}]}',
 			buffer_size: 60
 		};
 

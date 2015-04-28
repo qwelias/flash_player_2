@@ -3,6 +3,8 @@ package ayyo.container
 	import ayyo.player.AyyoPlayer;
 	import ayyo.player.core.model.PlayerCommands;
 	import ayyo.player.events.*;
+	import ayyo.player.view.api.IVideoTimeline;
+	import ayyo.player.view.impl.controllbar.VideoTimeline;
 	
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
@@ -15,6 +17,8 @@ package ayyo.container
 	import org.osmf.events.MediaErrorEvent;
 	import org.osmf.events.TimeEvent;
 	import org.osmf.media.MediaPlayerSprite;
+	import org.osmf.traits.MediaTraitType;
+	import org.osmf.traits.TimeTrait;
 	
 	import ru.yandex.video.IVideoContainer;
 	import ru.yandex.video.VideoContainerAPIVersion;
@@ -26,19 +30,24 @@ package ayyo.container
 		private var _player:MediaPlayerSprite;
 		private function get player():MediaPlayerSprite
 		{
-			return this.context.injector.getInstance(MediaPlayerSprite); 
+			return this._player ||=this.context.injector.getInstance(MediaPlayerSprite) as MediaPlayerSprite; 
 		}
+//		private var _timeline:IVideoTimeline;
+//		private function get timeline():IVideoTimeline
+//		{
+//			return this._timeline ||=this.context.injector.getInstance(IVideoTimeline) as IVideoTimeline; 
+//		}
 		
 		private var _state:String = VideoContainerStates.INACTIVE;
 		private var _volume:Number = 0.6;
 		private var _coid:String;
 		private var _seekable:Boolean = true;
 		private var _time:Number;
-		private var _duration:Number;
+		private var _duration:Number = 0;
 		private var _bytesLoaded:uint;
 		private var _bytesOffset:uint;
 		private var _bytesTotal:uint;
-		private var _initBytesTotal:uint;
+		private var _bitrate:Number = 0;
 		
 		private function dispatchSimpleEvent(eventName:String):void {
 			trace("-->", "DISPATCHING:", eventName);
@@ -61,8 +70,10 @@ package ayyo.container
 			Security.allowDomain("*");
 			super();
 			this.dispatcher.addEventListener(WrapperEvent.BEFORE_LOAD, this.onReadyToLoad);
+//			this.dispatcher.addEventListener(WrapperEvent.DURATION, this.onDuration);
 			this.dispatcher.addEventListener(WrapperEvent.PLAYABLE, this.onLoaded);
 			this.dispatcher.addEventListener(WrapperEvent.ERROR, this.onError);
+			this.dispatcher.addEventListener(PlayerEvent.DYNAMIC_STREAM_CHANGE, this.onBitrate);
 		}
 		
 		public function load(config:Object):void
@@ -73,6 +84,10 @@ package ayyo.container
 		public function start():void
 		{
 			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.PLAY))
+				
+//			this.player.media.hasTrait(MediaTraitType.TIME) ? dispatchSimpleEvent("HAS") : dispatchSimpleEvent("NOT_HAS");
+//			dispatchSimpleEvent("DUR"+this.player.mediaPlayer.duration);
+			
 			this.setState(VideoContainerStates.START);
 			this.setState(VideoContainerStates.VIDEO_PLAYING);
 		}
@@ -143,6 +158,8 @@ package ayyo.container
 		
 		public function setSize(width:Number, height:Number):void
 		{
+			this.player.width = width;
+			this.player.height = height;
 		}
 		
 		public function get quality():Object
@@ -231,7 +248,7 @@ package ayyo.container
 		
 		public function get bytesTotal():uint
 		{
-			return this._initBytesTotal;
+			return this._bitrate * this._duration / 8 * 1024;
 		}
 		
 		public function get bytesOffset():uint
@@ -253,35 +270,58 @@ package ayyo.container
 		private function onReadyToLoad(event:Event):void
 		{
 			if(this.state == VideoContainerStates.INACTIVE
-				|| this.state == VideoContainerStates.END){
-				this.addEventListener(LoadEvent.BYTES_LOADED_CHANGE, this.onBytesLoaded);
-				this.addEventListener(LoadEvent.BYTES_TOTAL_CHANGE, this.onBytesTotal);
-				this.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, this.onTimeChange);
+				|| this.state == VideoContainerStates.END){			
+				this.player.mediaPlayer.addEventListener(LoadEvent.BYTES_LOADED_CHANGE, this.onBytesLoaded);
+				this.player.mediaPlayer.addEventListener(LoadEvent.BYTES_TOTAL_CHANGE, this.onBytesTotal);
+				this.player.mediaPlayer.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, this.onTimeChange);
 				this.setState(VideoContainerStates.INITIALIZED);
 			}
-		}
-		private function onBytesLoaded(event:LoadEvent):void
-		{
-			trace(event.bytes);
-			this._bytesLoaded = event.bytes;
-		}
-		private function onBytesTotal(event:LoadEvent):void
-		{
-			this._bytesTotal = event.bytes;
-			this._bytesOffset = this._initBytesTotal - this._bytesTotal;
-		}
-		private function onTimeChange(event:TimeEvent):void
-		{
-			this._time = event.time;
 		}
 		
 		private function onLoaded(event:Event):void
 		{
-			if(this.state == VideoContainerStates.INITIALIZED){
-				this._duration = this.player.mediaPlayer.duration;
-				this._initBytesTotal = this.player.mediaPlayer.bytesTotal;
-				this.setState(VideoContainerStates.READY);
+			this._duration = this.player.mediaPlayer.duration;
+			this._bytesLoaded = this.player.mediaPlayer.bytesLoaded;
+			this.dispatchSimpleEvent("DURATION"+this.duration);
+		}
+		private function onBitrate(event:PlayerEvent):void
+		{
+			if(event.params[0])
+			{
+				this._bitrate = event.params[0];
+				dispatchSimpleEvent("btr"+this._bitrate);
+				dispatchSimpleEvent("BT"+this.bytesTotal);
+				if(this.state == VideoContainerStates.INITIALIZED){
+					setState(VideoContainerStates.READY);
+				}
 			}
 		}
+		
+		//Subhandlers
+		private function onBytesLoaded(event:LoadEvent):void
+		{
+			if(this.state == VideoContainerStates.INITIALIZED) return; 
+			this.dispatchSimpleEvent("BL"+event.bytes);
+			this._bytesLoaded = event.bytes;
+		}
+		private function onBytesTotal(event:LoadEvent):void
+		{
+			if(this.state == VideoContainerStates.INITIALIZED) return; 
+			this.dispatchSimpleEvent("BT"+event.bytes);
+			this._bytesTotal = event.bytes;
+			this._bytesOffset = this.bytesTotal > this._bytesTotal ? this.bytesTotal - this._bytesTotal : 0;
+			this.dispatchSimpleEvent("BO"+this.bytesOffset);
+		}
+		private function onTimeChange(event:TimeEvent):void
+		{
+			if(this.state == VideoContainerStates.INITIALIZED) return; 
+			this.dispatchSimpleEvent("TIME"+event.time);
+			this._time = event.time;
+		}
+		//		private function onDuration(event:WrapperEvent):void
+		//		{
+		//			this._duration = event.params[0];
+		//			this.dispatchSimpleEvent("DURATION"+this.duration);
+		//		}
 	}
 }

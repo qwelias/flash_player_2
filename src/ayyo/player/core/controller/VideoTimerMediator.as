@@ -71,6 +71,7 @@ package ayyo.player.core.controller {
 		}
 
 		private function onDynamicStreamChange(event : PlayerEvent) : void {
+//			trace("-->", event.params[0]);
 			this.timer.bitrate = event.params[0];
 		}
 	}

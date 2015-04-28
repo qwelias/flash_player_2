@@ -10,6 +10,7 @@ package ayyo.container
 		public static const PAUSE:String = "ayyoDoPause";
 		public static const VOLUME:String = "ayyoTweakVolume";
 		public static const ERROR:String = "ayyoError";
+//		public static const DURATION:String = "ayyoDuration";
 		
 		
 		private var _params:Array;

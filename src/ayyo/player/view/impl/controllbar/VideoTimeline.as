@@ -223,6 +223,7 @@ package ayyo.player.view.impl.controllbar {
 
 		public function set duration(value : uint) : void {
 			this._duration = value;
+			trace("-->", "Duration", value);
 			this.thumb.enable();
 			this.signals.click.add(this.onMouseClick);
 		}
@@ -238,6 +239,7 @@ package ayyo.player.view.impl.controllbar {
 		public function set loaded(value : Number) : void {
 			if (!isNaN(this._bitrate) && !isNaN(this._duration)) {
 				const bytesTotal : uint = ((this._bitrate * this._duration) / 8) * 1024;
+				trace("-->", "BytesTotal", bytesTotal);
 				const currentPercent : Number = value / bytesTotal;
 				const startPosition : Number = (this._seekedValue / this._duration) * this._widthOfTimeline;
 				this._currentOffset += this._widthOfTimeline * currentPercent;

@@ -22,7 +22,7 @@ package ayyo.player.config.impl.support {
 		}
 
 		public function get token() : String {
-			return "type=online," + this._token + ",os=" + escape(Capabilities.os) +",flashversion=" + escape(Capabilities.version) + ",browser=" + (ExternalInterface.available ? escape(ExternalInterface.call("window.navigator.userAgent.toString")):"unknown");
+			return "type=online," + this._token + ",os=" + escape(Capabilities.os) +",flashversion=" + escape(Capabilities.version) + ",browser=" + "unknown";
 		}
 
 		public function initialize(source : Object) : void {

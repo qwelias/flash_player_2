@@ -77,7 +77,7 @@ package ayyo.player.core.controller {
 
 		// Handlers
 		private function onMediaPlayable(event : PlayerEvent) : void {
-			trace("-->", "OMP", event.params.length)
+//			trace("-->", "OMP", event.params.length)
 			this.dispatcher.removeEventListener(PlayerEvent.CAN_PLAY, this.onMediaPlayable);
 			if (event.params){
 				this.video = event.params[0] as MediaElement;
@@ -87,18 +87,24 @@ package ayyo.player.core.controller {
 			
 			this.dispatcher.addEventListener(WrapperEvent.PLAY, this.onWrapperAction);
 			this.dispatcher.addEventListener(WrapperEvent.PAUSE, this.onWrapperAction);
+			setTimeout(this.toggle, 0);
+		}
+		private function toggle():void
+		{
+			this.controlls.playPause.click();
+			this.controlls.playPause.click();
 			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.PLAYABLE));
 		}
 
 		private function onControlAction(action : String) : void {
-			trace("-->", "onControl", action)
+//			trace("-->", "onControl", action)
 			if (action == PlayerCommands.PLAY
 				|| action == PlayerCommands.PAUSE) this.dispatcher.dispatchEvent(new PlayerEvent(action, [this.video]));
 			else this.dispatcher.dispatchEvent(new PlayerEvent(action));
 		}
 		private function onWrapperAction(event:WrapperEvent):void
 		{
-			trace("-->", "onWrapper", event.type);
+//			trace("-->", "onWrapper", event.type);
 //			this.controlls.playPause.state == PlayPauseState.PAUSE && event.type == WrapperEvent.PLAY && this.controlls.playPause.click()
 //				|| this.controlls.playPause.state == PlayPauseState.PLAY && event.type == WrapperEvent.PAUSE && this.controlls.playPause.click();
 			this.controlls.playPause.click();

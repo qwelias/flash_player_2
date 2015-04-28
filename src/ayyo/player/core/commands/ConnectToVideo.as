@@ -79,7 +79,7 @@ package ayyo.player.core.commands {
 				loadTrait && loadTrait.load();
 				
 				this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.HIDE_PRELOADER));
-				trace("-->", "HIDE");
+//				trace("-->", "HIDE");
 			}
 		}
 		
