@@ -10,6 +10,8 @@ package ayyo.container
 	import flash.events.IEventDispatcher;
 	import flash.media.StageVideo;
 	import flash.system.Security;
+	import flash.utils.clearInterval;
+	import flash.utils.setInterval;
 	import flash.utils.setTimeout;
 	
 	import org.osmf.events.LoadEvent;
@@ -48,6 +50,8 @@ package ayyo.container
 		private var _bytesOffset:uint;
 		private var _bytesTotal:uint;
 		private var _bitrate:Number = 0;
+		
+		private var buffering:uint;
 		
 		private function dispatchSimpleEvent(eventName:String):void {
 			trace("-->", "DISPATCHING:", eventName);
@@ -144,7 +148,16 @@ package ayyo.container
 		{
 			if(!isNaN(timeInSeconds) && this.seekAllowed)
 			{
+				dispatchSimpleEvent(VideoContainerEvents.BUFFERING);
 				this.player.mediaPlayer.seek(timeInSeconds);
+				this.buffering = setInterval(this.checkBuffering, 50);
+			}
+		}
+		private function checkBuffering():void
+		{
+			if(!this.player.mediaPlayer.buffering){
+				clearInterval(this.buffering);
+				dispatchSimpleEvent(VideoContainerEvents.BUFFERED);
 			}
 		}
 		
@@ -292,6 +305,7 @@ package ayyo.container
 				dispatchSimpleEvent("btr"+this._bitrate);
 				dispatchSimpleEvent("BT"+this.bytesTotal);
 				if(this.state == VideoContainerStates.INITIALIZED){
+					this.player.mediaPlayer.bufferTime = 60;
 					setState(VideoContainerStates.READY);
 				}
 			}
