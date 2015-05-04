@@ -48,7 +48,6 @@ package ayyo.player.bundles {
 	public class MinimalDebugBundle implements IBundle {
 		public function extend(context : IContext) : void {
 			context.logLevel = LogLevel.DEBUG;
-			
 			context.install(
 				//	Trace/log section
 				TraceLoggingExtension,
@@ -69,7 +68,7 @@ package ayyo.player.bundles {
 				new ModularityExtension(false, true)
 			);
 			//	configure <code>ContextView</code>
-			context.configure(ContextViewListenerConfig);
+//			context.configure(ContextViewListenerConfig);
 		}
 	}
 }

@@ -5,19 +5,18 @@ package ayyo.player {
 	import ayyo.player.core.controller.appconfig.PlayerLaunch;
 	import ayyo.player.core.controller.appconfig.PlayerMediatorsMapping;
 	import ayyo.player.events.ResizeEvent;
-
-	import robotlegs.bender.extensions.contextView.ContextView;
-	import robotlegs.bender.framework.api.IContext;
-	import robotlegs.bender.framework.impl.Context;
-
-	import org.osflash.signals.ISignal;
-	import org.osflash.signals.natives.NativeSignal;
-
+	
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
-	
 	import flash.external.ExternalInterface;
+	
+	import org.osflash.signals.ISignal;
+	import org.osflash.signals.natives.NativeSignal;
+	
+	import robotlegs.bender.extensions.contextView.ContextView;
+	import robotlegs.bender.framework.api.IContext;
+	import robotlegs.bender.framework.impl.Context;
 
 	/**
 	 * @author Aziz Zaynutdinov (actionsmile at icloud.com)
@@ -67,10 +66,12 @@ package ayyo.player {
 
 		// Handlers
 		private function onContextReady() : void {
+			trace("--> 1")
 			this.context.	configure(PlayerInjections, PlayerMediatorsMapping, PlayerCommandsMapping).
 							configure(PlayerLaunch);
+			trace("--> 2")
 			
-			this.resize.add(this.onStageReszied);
+//			this.resize.add(this.onStageReszied);
 			this.onStageReszied(null);
 		}
 		
@@ -78,7 +79,8 @@ package ayyo.player {
 		 * @eventType flash.events.Event.RESIZE
 		 */
 		private function onStageReszied(event : Event) : void {
-			this.dispatcher.dispatchEvent(new ResizeEvent(ResizeEvent.RESIZE, this.stage.stageWidth, this.stage.stageHeight));
+//			this.dispatcher.dispatchEvent(new ResizeEvent(ResizeEvent.RESIZE, this.stage.stageWidth, this.stage.stageHeight));
+			this.dispatcher.dispatchEvent(new ResizeEvent(ResizeEvent.RESIZE, 720, 480));
 		}
 	}
 }

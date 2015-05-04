@@ -77,7 +77,6 @@ package ayyo.player.core.controller {
 
 		// Handlers
 		private function onMediaPlayable(event : PlayerEvent) : void {
-//			trace("-->", "OMP", event.params.length)
 			this.dispatcher.removeEventListener(PlayerEvent.CAN_PLAY, this.onMediaPlayable);
 			if (event.params){
 				this.video = event.params[0] as MediaElement;

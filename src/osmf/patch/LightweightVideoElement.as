@@ -21,6 +21,18 @@
  *****************************************************/
 // Rustem OK
 package osmf.patch {
+	import flash.events.DRMErrorEvent;
+	import flash.events.DRMStatusEvent;
+	import flash.events.Event;
+	import flash.events.NetStatusEvent;
+	import flash.events.StatusEvent;
+	import flash.media.Video;
+	import flash.net.NetStream;
+	import flash.net.drm.DRMContentData;
+	import flash.system.SystemUpdater;
+	import flash.system.SystemUpdaterType;
+	import flash.utils.ByteArray;
+	
 	import org.osmf.events.DRMEvent;
 	import org.osmf.events.MediaError;
 	import org.osmf.events.MediaErrorCodes;
@@ -70,18 +82,6 @@ package osmf.patch {
 	import org.osmf.traits.TimeTrait;
 	import org.osmf.utils.OSMFSettings;
 	import org.osmf.utils.OSMFStrings;
-
-	import flash.events.DRMErrorEvent;
-	import flash.events.DRMStatusEvent;
-	import flash.events.Event;
-	import flash.events.NetStatusEvent;
-	import flash.events.StatusEvent;
-	import flash.media.Video;
-	import flash.net.NetStream;
-	import flash.net.drm.DRMContentData;
-	import flash.system.SystemUpdater;
-	import flash.system.SystemUpdaterType;
-	import flash.utils.ByteArray;
 
 	/**
 	 * LightweightVideoElement is a media element specifically created for video playback.
@@ -304,7 +304,8 @@ package osmf.patch {
 
 				// Set the video's dimensions so that it doesn't appear at the wrong size.
 				// We'll set the correct dimensions once the metadata is loaded.  (FM-206)
-				videoSurface = new VideoSurface(OSMFSettings.enableStageVideo && OSMFSettings.supportsStageVideo, createVideo);
+				this.dispatchEvent(new Event("BEFORE_VIDEOSURFACE"));
+				videoSurface = new VideoSurface(OSMFSettings.enableStageVideo, createVideo);
 				videoSurface.smoothing = _smoothing;
 				videoSurface.deblocking = _deblocking;
 				videoSurface.width = videoSurface.height = 0;

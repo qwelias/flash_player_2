@@ -19,25 +19,25 @@ package ayyo.player.core.commands {
 		public var playerConfig : IAyyoPlayerConfig;
 		[Inject]
 		public var dispatcher : IEventDispatcher;
-		[Inject]
-		public var contextView : ContextView;
+//		[Inject]
+//		public var contextView : ContextView;
 		[Inject]
 		public var logger : ILogger;
 
 		private var flashvars:Object = {
 //			token:"begintokensessionid%3Dyb0y6wl9ki2yqlat57ulosv55bpbe9zn%2Ccontentid%3D185%2Ccountrycode%3Dru%2Cclientkey%3D6f17269e454fbbd63a1e3e9727ac89%3ASvbwhROcR1JZE6PJUJ03cAg-Qb4endtoken",
-			token: "begintokensessionid%3Drepow44unrkvrgqffecisuewy9uwd54j%2Ccontentid%3D1275%2Ccountrycode%3Dru%2Cclientkey%3D6f17269e454fbbd63a1e3e9727ac89:D_Kys7l_HR8S7mJAi6Yiz7SG1IUendtoken",
+			token: "begintokensessionid%3Drepow44unrkvrgqffecisuewy9uwd54j%2Ccontentid%3D2404%2Ccountrycode%3Dru%2Cclientkey%3D6f17269e454fbbd63a1e3e9727ac89:0Dm5rQtp8CU9GWBUdNlINbu65-kendtoken",
 			autoplay: false,
-			url:"http://cdn.ayyo.ru/u16/bf/91/b441e5cc-f1a0-4bf5-857e-1c47c98df669.f4m",
-			screenshot:"http://media.ayyo.ru/movies/1275/video_poster/850x477.jpg",
+			url:"http://cdn.ayyo.ru/u17/2d/a6/706fbaf2-88cc-4901-b71e-18b149dfc89c.f4m",
+			screenshot:"http://media.ayyo.ru/movies/2367/video_poster/850x477.jpg",
 			player_type:"movie",
 			//assets:'{"name":"arialFontFamily","url":"./assets/fonts/arial.swf","type":"font"}',
 			buffer_size: 60
 		};
 
 		public function execute() : void {
-			var source : Object = this.contextView.view.root.loaderInfo.parameters;
-			trace("-->", "SOURCE", source.toString());
+//			var source : Object = this.contextView.view.root.loaderInfo.parameters;
+//			trace("-->", "SOURCE", source.toString());
 			if (flashvars) {
 				this.playerConfig.ready.addOnce(this.onConfigParsed);
 				this.playerConfig.initialize(flashvars);
@@ -57,7 +57,7 @@ package ayyo.player.core.commands {
 			this.playerConfig = null;
 			this.logger = null;
 			this.dispatcher = null;
-			this.contextView = null;
+//			this.contextView = null;
 		}
 	}
 }

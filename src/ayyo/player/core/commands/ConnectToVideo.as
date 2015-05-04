@@ -74,6 +74,7 @@ package ayyo.player.core.commands {
 				this.media.addEventListener(MediaErrorEvent.MEDIA_ERROR, this.onErrorOccured);
 
 				this.player.mediaPlayer.addEventListener(LoadEvent.BYTES_LOADED_CHANGE, this.onLoadedBytesChange);
+				
 				var loadTrait : LoadTrait = this.media.getTrait(MediaTraitType.LOAD) as LoadTrait;
 				loadTrait && this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.CAN_LOAD));
 				loadTrait && loadTrait.load();
@@ -84,6 +85,7 @@ package ayyo.player.core.commands {
 		}
 		
 		private function parseTrait(trait : MediaTraitBase) : void {
+			trace("--> EXECUTED", trait.traitType)
 			if (trait.traitType == MediaTraitType.ALTERNATIVE_AUDIO) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.ALTERNATIVE_AUDIO, [trait]));
 			else if (trait.traitType == MediaTraitType.AUDIO) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.AUDIO, [trait]));
 			else if (trait.traitType == MediaTraitType.PLAY) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.CAN_PLAY, [this.media]));
@@ -91,6 +93,8 @@ package ayyo.player.core.commands {
 			else if (trait is DynamicStreamTrait) {
 				this.dynamicStreamTrait = trait as DynamicStreamTrait;
 				this.dynamicStreamTrait.addEventListener(DynamicStreamEvent.SWITCHING_CHANGE, this.onDynamicStreamChange);
+				trace("--> onDSC added")
+				trace("--> i"+this.dynamicStreamTrait.currentIndex+" n"+this.dynamicStreamTrait.numDynamicStreams+" maxi"+this.dynamicStreamTrait.maxAllowedIndex)
 			} else if (trait is TimeTrait) {
 				this.timeTrait = trait as TimeTrait;
 				this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.TIME_TRAIT, [trait]));
@@ -117,7 +121,9 @@ package ayyo.player.core.commands {
 		}
 
 		private function onDynamicStreamChange(event : DynamicStreamEvent) : void {
+			trace("--> onDSC")
 			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.DYNAMIC_STREAM_CHANGE, [this.dynamicStreamTrait.getBitrateForIndex(this.dynamicStreamTrait.currentIndex)]));
+			trace("--> i"+this.dynamicStreamTrait.currentIndex+" n"+this.dynamicStreamTrait.numDynamicStreams+" maxi"+this.dynamicStreamTrait.maxAllowedIndex)
 		}
 	}
 }

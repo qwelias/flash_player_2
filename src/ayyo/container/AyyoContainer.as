@@ -87,11 +87,8 @@ package ayyo.container
 		
 		public function start():void
 		{
+			if(this.state != VideoContainerStates.READY) return;
 			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.PLAY))
-				
-//			this.player.media.hasTrait(MediaTraitType.TIME) ? dispatchSimpleEvent("HAS") : dispatchSimpleEvent("NOT_HAS");
-//			dispatchSimpleEvent("DUR"+this.player.mediaPlayer.duration);
-			
 			this.setState(VideoContainerStates.START);
 			this.setState(VideoContainerStates.VIDEO_PLAYING);
 		}
@@ -110,6 +107,7 @@ package ayyo.container
 		
 		public function pause(adAllowed:Boolean=false):void
 		{
+			if(this.state != VideoContainerStates.VIDEO_PLAYING) return;
 			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.PAUSE))
 			setState(VideoContainerStates.VIDEO_PAUSED);
 		}
@@ -292,7 +290,7 @@ package ayyo.container
 		}
 		
 		private function onLoaded(event:Event):void
-		{
+		{	
 			this._duration = this.player.mediaPlayer.duration;
 			this._bytesLoaded = this.player.mediaPlayer.bytesLoaded;
 			this.dispatchSimpleEvent("DURATION"+this.duration);
