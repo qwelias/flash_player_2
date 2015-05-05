@@ -66,10 +66,8 @@ package ayyo.player {
 
 		// Handlers
 		private function onContextReady() : void {
-			trace("--> 1")
 			this.context.	configure(PlayerInjections, PlayerMediatorsMapping, PlayerCommandsMapping).
 							configure(PlayerLaunch);
-			trace("--> 2")
 			
 //			this.resize.add(this.onStageReszied);
 			this.onStageReszied(null);

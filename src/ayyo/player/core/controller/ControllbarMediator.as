@@ -48,8 +48,9 @@ package ayyo.player.core.controller {
 		private var _activeZone : ActiveZone;
 
 		public function initialize() : void {
+			trace("--> CM")
 //			this.controlls.show();
-			this.controlls.timer.view.visible = this.playerConfig.settings.type == PlayerType.MOVIE;
+//			this.controlls.timer.view.visible = this.playerConfig.settings.type == PlayerType.MOVIE;
 			this.controlls.action.add(this.onControlAction);
 //			this.controlls.view.parent.addChildAt(this.activeZone, this.controlls.view.parent.getChildIndex(this.controlls.view));
 

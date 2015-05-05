@@ -26,6 +26,8 @@ package ayyo.player.core.commands.hooks {
 			this.player.scaleMode = ScaleMode.LETTERBOX;
 
 			this.contextView.view.addChild(this.player);
+			trace("--> iMP", this.contextView.view.visible)
+			
 
 			this.dispose();
 		}

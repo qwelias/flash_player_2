@@ -43,7 +43,6 @@ package ayyo.container
 		private var _state:String = VideoContainerStates.INACTIVE;
 		private var _volume:Number = 0.6;
 		private var _coid:String;
-		private var _seekable:Boolean = true;
 		private var _time:Number;
 		private var _duration:Number = 0;
 		private var _bytesLoaded:uint;
@@ -121,13 +120,15 @@ package ayyo.container
 		
 		public function mute():void
 		{
-			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.VOLUME, [0]));
+			this.player.mediaPlayer.volume = 0;
+//			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.VOLUME, [0]));
 			dispatchSimpleEvent(VideoContainerEvents.MUTED);
 		}
 		
 		public function unmute():void
 		{
-			this.volume = this.volume;
+			
+			this.player.mediaPlayer.volume = this.volume;
 			dispatchSimpleEvent(VideoContainerEvents.UNMUTED);
 		}
 		
@@ -144,11 +145,11 @@ package ayyo.container
 		
 		public function seek(timeInSeconds:Number):void
 		{
-			if(!isNaN(timeInSeconds) && this.seekAllowed)
+			if(!isNaN(timeInSeconds) && this.seekAllowed && this.player.mediaPlayer.canSeekTo(timeInSeconds))
 			{
 				dispatchSimpleEvent(VideoContainerEvents.BUFFERING);
 				this.player.mediaPlayer.seek(timeInSeconds);
-				this.buffering = setInterval(this.checkBuffering, 50);
+				this.buffering = setInterval(this.checkBuffering, 25);
 			}
 		}
 		private function checkBuffering():void
@@ -242,7 +243,7 @@ package ayyo.container
 		
 		public function get seekAllowed():Boolean
 		{
-			return this._seekable;
+			return this.player.mediaPlayer.canSeek;
 		}
 		
 		public function get volume():Number
@@ -252,8 +253,9 @@ package ayyo.container
 		
 		public function set volume(value:Number):void
 		{
-			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.VOLUME, [volume]));
-			this._volume = volume;
+//			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.VOLUME, [value]));
+			this.player.mediaPlayer.volume = value;
+			this._volume = value;
 			dispatchSimpleEvent(VideoContainerEvents.VOLUME_CHANGE);
 		}
 		
@@ -303,7 +305,7 @@ package ayyo.container
 				dispatchSimpleEvent("btr"+this._bitrate);
 				dispatchSimpleEvent("BT"+this.bytesTotal);
 				if(this.state == VideoContainerStates.INITIALIZED){
-					this.player.mediaPlayer.bufferTime = 60;
+					this.player.mediaPlayer.bufferTime = 20;
 					setState(VideoContainerStates.READY);
 				}
 			}

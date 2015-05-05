@@ -68,7 +68,7 @@ package ayyo.player.bundles {
 				new ModularityExtension(false, true)
 			);
 			//	configure <code>ContextView</code>
-//			context.configure(ContextViewListenerConfig);
+			context.configure(ContextViewListenerConfig);
 		}
 	}
 }
