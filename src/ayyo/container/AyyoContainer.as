@@ -1,6 +1,7 @@
 package ayyo.container
 {
 	import ayyo.player.AyyoPlayer;
+	import ayyo.player.config.impl.support.VideoSettings;
 	import ayyo.player.core.model.PlayerCommands;
 	import ayyo.player.events.*;
 	import ayyo.player.view.api.IVideoTimeline;
@@ -34,11 +35,6 @@ package ayyo.container
 		{
 			return this._player ||=this.context.injector.getInstance(MediaPlayerSprite) as MediaPlayerSprite; 
 		}
-//		private var _timeline:IVideoTimeline;
-//		private function get timeline():IVideoTimeline
-//		{
-//			return this._timeline ||=this.context.injector.getInstance(IVideoTimeline) as IVideoTimeline; 
-//		}
 		
 		private var _state:String = VideoContainerStates.INACTIVE;
 		private var _volume:Number = 0.6;
@@ -53,13 +49,17 @@ package ayyo.container
 		private var buffering:uint;
 		
 		private function dispatchSimpleEvent(eventName:String):void {
-			trace("-->", "DISPATCHING:", eventName);
+			CONFIG::DEBUG{
+				trace("-->", "DISPATCHING:", eventName);
+			}
 			dispatchEvent(new Event(eventName));
 		}
 		
 		private function setState(value:String):void {
 			if (_state == value) return;
-			trace("-->", this.state,"->",value);
+			CONFIG::DEBUG{
+				trace("-->", this.state,"->",value);
+			}
 			_state = value;
 			dispatchSimpleEvent(VideoContainerEvents.STATE_CHANGE);
 		}
@@ -81,11 +81,29 @@ package ayyo.container
 		
 		public function load(config:Object):void
 		{	
-			this._coid = config.coid;
-//			trace("--> config");
-//			for(var key:String in config){
-//				trace(key," : ",config[key]);
-//			}
+			this._coid = config.coid as String;
+			CONFIG::DEBUG{
+				trace("--> config");
+				for(var key:String in config){
+					trace(key," : ",config[key]);
+				}
+			}
+			var VS:VideoSettings = new VideoSettings();
+			var sid:String = (config.source_id as String);
+			var source:Object = {};
+			source.url = sid.substr(0, sid.indexOf("begintokensessionid"));
+			source.token = sid.substr(sid.indexOf("begintokensessionid"));
+			CONFIG::DEBUG{
+				trace("--> SOURCE");
+				for(var prop:String in source){
+					trace(prop," : ",source[prop]);
+				}
+			}
+			if(!source.url || !source.token){
+				return setState(VideoContainerStates.ERROR)
+			}
+			VS.initialize(source);
+			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.LOAD, [VS.url, VS.token]));
 		}
 		
 		public function start():void
@@ -299,15 +317,19 @@ package ayyo.container
 		{	
 			this._duration = this.player.mediaPlayer.duration;
 			this._bytesLoaded = this.player.mediaPlayer.bytesLoaded;
-			this.dispatchSimpleEvent("DURATION"+this.duration);
+			CONFIG::DEBUG{
+				this.dispatchSimpleEvent("DURATION"+this.duration);
+			}
 		}
 		private function onBitrate(event:PlayerEvent):void
 		{
 			if(event.params[0])
 			{
 				this._bitrate = event.params[0];
-				dispatchSimpleEvent("btr"+this._bitrate);
-				dispatchSimpleEvent("BT"+this.bytesTotal);
+				CONFIG::DEBUG{
+					dispatchSimpleEvent("btr"+this._bitrate);
+					dispatchSimpleEvent("BT"+this.bytesTotal);
+				}
 				if(this.state == VideoContainerStates.INITIALIZED){
 					this.player.mediaPlayer.bufferTime = 20;
 					setState(VideoContainerStates.READY);
@@ -319,21 +341,29 @@ package ayyo.container
 		private function onBytesLoaded(event:LoadEvent):void
 		{
 			if(this.state == VideoContainerStates.INITIALIZED) return; 
-			this.dispatchSimpleEvent("BL"+event.bytes);
+			CONFIG::DEBUG{
+				this.dispatchSimpleEvent("BL"+event.bytes);
+			}
 			this._bytesLoaded = event.bytes;
 		}
 		private function onBytesTotal(event:LoadEvent):void
 		{
 			if(this.state == VideoContainerStates.INITIALIZED) return; 
-			this.dispatchSimpleEvent("BT"+event.bytes);
+			CONFIG::DEBUG{
+				this.dispatchSimpleEvent("BT"+event.bytes);
+			}
 			this._bytesTotal = event.bytes;
 			this._bytesOffset = this.bytesTotal > this._bytesTotal ? this.bytesTotal - this._bytesTotal : 0;
-			this.dispatchSimpleEvent("BO"+this.bytesOffset);
+			CONFIG::DEBUG{
+				this.dispatchSimpleEvent("BO"+this.bytesOffset);
+			}
 		}
 		private function onTimeChange(event:TimeEvent):void
 		{
 			if(this.state == VideoContainerStates.INITIALIZED) return; 
-			this.dispatchSimpleEvent("TIME"+event.time);
+			CONFIG::DEBUG{
+				this.dispatchSimpleEvent("TIME"+event.time);
+			}
 			this._time = event.time;
 		}
 		//		private function onDuration(event:WrapperEvent):void

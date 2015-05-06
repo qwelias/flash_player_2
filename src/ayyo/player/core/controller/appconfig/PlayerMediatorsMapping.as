@@ -70,7 +70,6 @@ package ayyo.player.core.controller.appconfig {
 			this.volumeBar = new TypeMatcher().anyOf(IVolumeBar);
 			this.videoTimer = new TypeMatcher().anyOf(IVideoTimer);
 			this.timeline = new TypeMatcher().anyOf(IVideoTimeline);
-			trace("--> AAA", this.controllBar)
 		}
 
 		[PreDestroy]

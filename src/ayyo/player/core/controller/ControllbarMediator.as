@@ -48,7 +48,6 @@ package ayyo.player.core.controller {
 		private var _activeZone : ActiveZone;
 
 		public function initialize() : void {
-			trace("--> CM")
 //			this.controlls.show();
 //			this.controlls.timer.view.visible = this.playerConfig.settings.type == PlayerType.MOVIE;
 			this.controlls.action.add(this.onControlAction);
@@ -97,14 +96,12 @@ package ayyo.player.core.controller {
 		}
 
 		private function onControlAction(action : String) : void {
-//			trace("-->", "onControl", action)
 			if (action == PlayerCommands.PLAY
 				|| action == PlayerCommands.PAUSE) this.dispatcher.dispatchEvent(new PlayerEvent(action, [this.video]));
 			else this.dispatcher.dispatchEvent(new PlayerEvent(action));
 		}
 		private function onWrapperAction(event:WrapperEvent):void
 		{
-//			trace("-->", "onWrapper", event.type);
 //			this.controlls.playPause.state == PlayPauseState.PAUSE && event.type == WrapperEvent.PLAY && this.controlls.playPause.click()
 //				|| this.controlls.playPause.state == PlayPauseState.PLAY && event.type == WrapperEvent.PAUSE && this.controlls.playPause.click();
 			this.controlls.playPause.click();

@@ -13,7 +13,6 @@ package ayyo.player.core.controller.appconfig {
 
 		[PostConstruct]
 		public function initialize() : void {
-			trace("--> Launch")
 			this.dispatcher.dispatchEvent(new Event(ApplicationEvent.LAUNCH));
 		}
 

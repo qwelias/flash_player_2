@@ -60,19 +60,25 @@ package ayyo.player.core.commands {
 		private var lastBytesLoadedValue : Number;
 
 		public function execute() : void {
+			this.dispatcher.addEventListener(WrapperEvent.LOAD, this.onPlzLoad);
 			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.BEFORE_LOAD));
-			var resource : URLResource = new URLResource(this.playerConfig.video.url);
-			if (this.playerConfig.video.url.toLowerCase().indexOf("f4m") != -1){
-				(this.player.mediaFactory as SmoothedMediaFactory).customToken = this.playerConfig.video.token;
+		}
+		private function onPlzLoad(event:WrapperEvent):void
+		{
+			var url:String = (event.params[0] as String);
+			var token:String = (event.params[1] as String);
+			var resource:URLResource = new URLResource(url);
+			if (url.toLowerCase().indexOf("f4m") != -1){
+				(this.player.mediaFactory as SmoothedMediaFactory).customToken = token;
 			}
 			this.media = this.player.mediaFactory.createMediaElement(resource);
-
+			
 			if (!this.media) {
 				this.onError("Please check video url. It seems to be broken.");
 			} else {
 				this.media.addEventListener(MediaElementEvent.TRAIT_ADD, this.onAddMediaTrait);
 				this.media.addEventListener(MediaErrorEvent.MEDIA_ERROR, this.onErrorOccured);
-
+				
 				this.player.mediaPlayer.addEventListener(LoadEvent.BYTES_LOADED_CHANGE, this.onLoadedBytesChange);
 				
 				var loadTrait : LoadTrait = this.media.getTrait(MediaTraitType.LOAD) as LoadTrait;
@@ -80,12 +86,10 @@ package ayyo.player.core.commands {
 				loadTrait && loadTrait.load();
 				
 				this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.HIDE_PRELOADER));
-//				trace("-->", "HIDE");
 			}
 		}
 		
 		private function parseTrait(trait : MediaTraitBase) : void {
-			trace("--> EXECUTED", trait.traitType)
 			if (trait.traitType == MediaTraitType.ALTERNATIVE_AUDIO) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.ALTERNATIVE_AUDIO, [trait]));
 			else if (trait.traitType == MediaTraitType.AUDIO) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.AUDIO, [trait]));
 			else if (trait.traitType == MediaTraitType.PLAY) this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.CAN_PLAY, [this.media]));
@@ -93,8 +97,6 @@ package ayyo.player.core.commands {
 			else if (trait is DynamicStreamTrait) {
 				this.dynamicStreamTrait = trait as DynamicStreamTrait;
 				this.dynamicStreamTrait.addEventListener(DynamicStreamEvent.SWITCHING_CHANGE, this.onDynamicStreamChange);
-				trace("--> onDSC added")
-				trace("--> i"+this.dynamicStreamTrait.currentIndex+" n"+this.dynamicStreamTrait.numDynamicStreams+" maxi"+this.dynamicStreamTrait.maxAllowedIndex)
 			} else if (trait is TimeTrait) {
 				this.timeTrait = trait as TimeTrait;
 				this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.TIME_TRAIT, [trait]));
@@ -121,9 +123,7 @@ package ayyo.player.core.commands {
 		}
 
 		private function onDynamicStreamChange(event : DynamicStreamEvent) : void {
-			trace("--> onDSC")
 			this.dispatcher.dispatchEvent(new PlayerEvent(PlayerEvent.DYNAMIC_STREAM_CHANGE, [this.dynamicStreamTrait.getBitrateForIndex(this.dynamicStreamTrait.currentIndex)]));
-			trace("--> i"+this.dynamicStreamTrait.currentIndex+" n"+this.dynamicStreamTrait.numDynamicStreams+" maxi"+this.dynamicStreamTrait.maxAllowedIndex)
 		}
 	}
 }

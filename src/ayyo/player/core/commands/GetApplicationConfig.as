@@ -24,18 +24,15 @@ package ayyo.player.core.commands {
 		[Inject]
 		public var logger : ILogger;
 
-//		private var flashvars:Object = {
-//			token: "begintokensessionid%3Drepow44unrkvrgqffecisuewy9uwd54j%2Ccontentid%3D2404%2Ccountrycode%3Dru%2Cclientkey%3D6f17269e454fbbd63a1e3e9727ac89:0Dm5rQtp8CU9GWBUdNlINbu65-kendtoken",
-//			url:"http://cdn.ayyo.ru/u17/2d/a6/706fbaf2-88cc-4901-b71e-18b149dfc89c.f4m"
-//		};
+		private var flashvars:Object = {
+//			token:"begintokensessionid%3Drepow44unrkvrgqffecisuewy9uwd54j%2Ccontentid%3D2404%2Ccountrycode%3Dru%2Cclientkey%3D6f17269e454fbbd63a1e3e9727ac89:0Dm5rQtp8CU9GWBUdNlINbu65-kendtoken",
+//			url:"http://cdn.ayyo.ru/u17/2d/a6/706fbaf2-88cc-4901-b71e-18b149dfc89c.f4m",
+			player_type: "movie"
+		};
 
 		public function execute() : void {
 			var source : Object = this.contextView.view.root.loaderInfo.parameters;
-//			trace("-->", "SOURCE");
-//			for(var key:String in source){
-//				trace("-->", key, " : ", source[key]);
-//			};
-			if (source) {
+			if (flashvars) {
 				this.playerConfig.ready.addOnce(this.onConfigParsed);
 				this.playerConfig.initialize(source);
 			} else {

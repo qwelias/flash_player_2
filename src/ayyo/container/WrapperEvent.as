@@ -5,6 +5,7 @@ package ayyo.container
 	public class WrapperEvent extends Event
 	{
 		public static const BEFORE_LOAD:String = "ayyoReadyToLoad";
+		public static const LOAD:String = "ayyoPlzLoad";
 		public static const PLAYABLE:String = "ayyoReadyToPlay";
 		public static const PLAY:String = "ayyoDoPlay";
 		public static const PAUSE:String = "ayyoDoPause";
