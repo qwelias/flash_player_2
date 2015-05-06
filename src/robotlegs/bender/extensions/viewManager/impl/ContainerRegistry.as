@@ -82,7 +82,6 @@ package robotlegs.bender.extensions.viewManager.impl
 		public function findParentBinding(target:DisplayObject):ContainerBinding
 		{
 			var root:DisplayObject = target.root;
-			trace("-->", root)
 			if(target == root){
 				return null;
 			}

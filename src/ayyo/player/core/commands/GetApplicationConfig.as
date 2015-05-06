@@ -3,10 +3,10 @@ package ayyo.player.core.commands {
 	import ayyo.player.core.model.DataType;
 	import ayyo.player.events.AssetEvent;
 	import ayyo.player.events.BinDataEvent;
-
+	
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
-
+	
 	import robotlegs.bender.extensions.commandCenter.api.ICommand;
 	import robotlegs.bender.extensions.contextView.ContextView;
 	import robotlegs.bender.framework.api.ILogger;
@@ -19,28 +19,25 @@ package ayyo.player.core.commands {
 		public var playerConfig : IAyyoPlayerConfig;
 		[Inject]
 		public var dispatcher : IEventDispatcher;
-//		[Inject]
-//		public var contextView : ContextView;
+		[Inject]
+		public var contextView : ContextView;
 		[Inject]
 		public var logger : ILogger;
 
-		private var flashvars:Object = {
-//			token:"begintokensessionid%3Dyb0y6wl9ki2yqlat57ulosv55bpbe9zn%2Ccontentid%3D185%2Ccountrycode%3Dru%2Cclientkey%3D6f17269e454fbbd63a1e3e9727ac89%3ASvbwhROcR1JZE6PJUJ03cAg-Qb4endtoken",
-			token: "begintokensessionid%3Drepow44unrkvrgqffecisuewy9uwd54j%2Ccontentid%3D2404%2Ccountrycode%3Dru%2Cclientkey%3D6f17269e454fbbd63a1e3e9727ac89:0Dm5rQtp8CU9GWBUdNlINbu65-kendtoken",
-			autoplay: false,
-			url:"http://cdn.ayyo.ru/u17/2d/a6/706fbaf2-88cc-4901-b71e-18b149dfc89c.f4m",
-			screenshot:"http://media.ayyo.ru/movies/2367/video_poster/850x477.jpg",
-			player_type:"movie",
-			//assets:'{"name":"arialFontFamily","url":"./assets/fonts/arial.swf","type":"font"}',
-			buffer_size: 60
-		};
+//		private var flashvars:Object = {
+//			token: "begintokensessionid%3Drepow44unrkvrgqffecisuewy9uwd54j%2Ccontentid%3D2404%2Ccountrycode%3Dru%2Cclientkey%3D6f17269e454fbbd63a1e3e9727ac89:0Dm5rQtp8CU9GWBUdNlINbu65-kendtoken",
+//			url:"http://cdn.ayyo.ru/u17/2d/a6/706fbaf2-88cc-4901-b71e-18b149dfc89c.f4m"
+//		};
 
 		public function execute() : void {
-//			var source : Object = this.contextView.view.root.loaderInfo.parameters;
-//			trace("-->", "SOURCE", source.toString());
-			if (flashvars) {
+			var source : Object = this.contextView.view.root.loaderInfo.parameters;
+//			trace("-->", "SOURCE");
+//			for(var key:String in source){
+//				trace("-->", key, " : ", source[key]);
+//			};
+			if (source) {
 				this.playerConfig.ready.addOnce(this.onConfigParsed);
-				this.playerConfig.initialize(flashvars);
+				this.playerConfig.initialize(source);
 			} else {
 				this.logger.error("There are no any parameters for player.");
 			}
@@ -57,7 +54,7 @@ package ayyo.player.core.commands {
 			this.playerConfig = null;
 			this.logger = null;
 			this.dispatcher = null;
-//			this.contextView = null;
+			this.contextView = null;
 		}
 	}
 }

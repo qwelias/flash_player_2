@@ -81,7 +81,11 @@ package ayyo.container
 		
 		public function load(config:Object):void
 		{	
-			//TODO
+			this._coid = config.coid;
+//			trace("--> config");
+//			for(var key:String in config){
+//				trace(key," : ",config[key]);
+//			}
 		}
 		
 		public function start():void
@@ -223,7 +227,7 @@ package ayyo.container
 		
 		public function get coid():String
 		{
-			return "test" || this._coid;
+			return this._coid;
 		}
 		
 		public function get state():String

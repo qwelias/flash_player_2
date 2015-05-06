@@ -2,16 +2,14 @@ package org.osmf.media.videoClasses
 {
 	[ExcludeClass]
 	
+	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.VideoEvent;
 	import flash.geom.Rectangle;
+	import flash.media.StageVideo;
 	import flash.media.Video;
 	import flash.utils.Dictionary;
-	
-	import flash.display.Stage;
-//	CONFIG::MOCK	 import org.osmf.mock.Stage;
-	
-	import flash.media.StageVideo;
+	import ayyo.container.WrapperEvent;
 //	CONFIG::MOCK     import org.osmf.mock.StageVideo;
 
 	CONFIG::LOGGING  import org.osmf.logging.Logger;	
@@ -21,10 +19,14 @@ package org.osmf.media.videoClasses
 	 * 
 	 * VideoSurfaceManager manages the workflow related to StageVideo support.
 	 */ 
-	internal class VideoSurfaceManager
+	internal class notVideoSurfaceManager
 	{	
+		//FIX
+		private var _stageVideos:Vector<StageVideo>;
+		
 		public function registerVideoSurface(videoSurface:VideoSurface):void
 		{			
+			//TODO catch stagevids
 //			videoSurface.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 //			videoSurface.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
@@ -44,19 +46,20 @@ package org.osmf.media.videoClasses
 		
 		public function get stageVideoCount():int
 		{
-			return _stage ? _stage.stageVideos.length : 0;
+			return _stageVideos ? _stageVideos.length : 0;
 		}
 		/**
 		 * Registers the current stage.
 		 * VideoSurfaceManager object will monitor the changes in StageVideo availability
 		 * and trigger for each available VideoSurface the switch to appropiate mode.
 		 */
-		internal function registerStage(stage:Stage):void
+		internal function registerStage(stageVideos:Vector<StageVideo>):void
 		{
-			_stage = stage;
-			_stage.addEventListener("stageVideoAvailability", onStageVideoAvailability);
+			_stageVideos = stageVideos;
+//			_stage.addEventListener("stageVideoAvailability", onStageVideoAvailability);
 			
-			stageVideoIsAvailable = _stage.hasOwnProperty("stageVideos") && _stage.stageVideos.length > 0;
+			stageVideoIsAvailable = _stageVideos.length > 0;
+			onStageVideoAvailability(new Event());
 		}		
 	
 		internal function provideRenderer(videoSurface:VideoSurface):void
@@ -80,42 +83,16 @@ package org.osmf.media.videoClasses
 		 */
 		private function onStageVideoAvailability(event:Event):void
 		{	
-			if (!event.hasOwnProperty(AVAILABILITY))
+			for (var key:* in activeVideoSurfaces)
 			{
-				// If the event has no AVAILABILITY property then
-				// we should ignore it.
-				CONFIG::LOGGING
+				var videoSurface:VideoSurface = key as VideoSurface;
+				if (videoSurface != null && videoSurface.info.stageVideoInUse != stageVideoIsAvailable)
 				{
-					logger.warn("stageVideoAvailability event received. No {0} property", AVAILABILITY);
+					// If the VideoSurface is in StageVideo mode but the StageVideo is not available
+					// anymore then switch to Video. If the StageVideo is not used but the StageVideo
+					// has become available, then switch to StageVideo.
+					switchRenderer(videoSurface);	
 				}
-				return;
-			}
-			else
-			{
-				// Check if stageVideoAvailability has been changed 
-				// If yes we will need to go through all existing VideoSurface 
-				// objects and force a manual switch to the correct mode.
-				var currentStageVideoIsAvailable:Boolean = event[AVAILABILITY] == AVAILABLE;
-				if (stageVideoIsAvailable != currentStageVideoIsAvailable)
-				{
-					CONFIG::LOGGING
-					{
-						logger.info("stageVideoAvailability changed. Previous value = {0}; Current value = {1}", stageVideoIsAvailable, currentStageVideoIsAvailable);
-					}
-					
-					stageVideoIsAvailable = currentStageVideoIsAvailable;
-					for (var key:* in activeVideoSurfaces)
-					{
-						var videoSurface:VideoSurface = key as VideoSurface;
-						if (videoSurface != null && videoSurface.info.stageVideoInUse != stageVideoIsAvailable)
-						{
-							// If the VideoSurface is in StageVideo mode but the StageVideo is not available
-							// anymore then switch to Video. If the StageVideo is not used but the StageVideo
-							// has become available, then switch to StageVideo.
-							switchRenderer(videoSurface);	
-						}
-					}
-				}	
 			}
 		}
 		
@@ -125,16 +102,16 @@ package org.osmf.media.videoClasses
 		 * When VideoSurface objects are added to stage, the VideoSurfaceManager 
 		 * will try to switch VideoSurface direclty in StageVideo mode.
 		 */
-		private function onAddedToStage(event:Event):void
+		private function onAddedToStage(event:WrapperEvent):void
 		{			
-			if (_stage == null)
+			if (_stageVideos == null)
 			{				
-				registerStage(event.target.stage);
+				registerStage(event.params[0]);
 			}
 			
 			// When added to Stage, try to use the StageVideo mode 
 			// directly, without waiting for availability event.
-			provideRenderer(event.target as VideoSurface);		
+			provideRenderer(event.params[1] as VideoSurface);		
 		}
 		
 		/**
