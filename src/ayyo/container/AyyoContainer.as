@@ -4,8 +4,6 @@ package ayyo.container
 	import ayyo.player.config.impl.support.VideoSettings;
 	import ayyo.player.core.model.PlayerCommands;
 	import ayyo.player.events.*;
-	import ayyo.player.view.api.IVideoTimeline;
-	import ayyo.player.view.impl.controllbar.VideoTimeline;
 	
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
@@ -42,7 +40,8 @@ package ayyo.container
 		private var _time:Number;
 		private var _duration:Number = 0;
 		private var _bytesLoaded:uint;
-		private var _bytesOffset:uint;
+		private var _bytesSkipped:uint = 0;
+		private var _timeOffset:Number;
 		private var _bytesTotal:uint;
 		private var _bitrate:Number = 0;
 		
@@ -64,10 +63,6 @@ package ayyo.container
 			dispatchSimpleEvent(VideoContainerEvents.STATE_CHANGE);
 		}
 		
-		
-		
-		
-		
 		public function AyyoContainer()
 		{
 			Security.allowDomain("*");
@@ -88,20 +83,16 @@ package ayyo.container
 					trace(key," : ",config[key]);
 				}
 			}
-			var VS:VideoSettings = new VideoSettings();
-			var sid:String = (config.source_id as String);
 			var source:Object = {};
-			source.url = sid.substr(0, sid.indexOf("begintokensessionid"));
-			source.token = sid.substr(sid.indexOf("begintokensessionid"));
+			source.url = "http://cdn.ayyo.ru/"+(config.source_id as String)+".f4m";
+			source.token = (config.token as String);
 			CONFIG::DEBUG{
 				trace("--> SOURCE");
 				for(var prop:String in source){
 					trace(prop," : ",source[prop]);
 				}
 			}
-			if(!source.url || !source.token){
-				return setState(VideoContainerStates.ERROR)
-			}
+			var VS:VideoSettings = new VideoSettings();
 			VS.initialize(source);
 			this.dispatcher.dispatchEvent(new WrapperEvent(WrapperEvent.LOAD, [VS.url, VS.token]));
 		}
@@ -116,12 +107,16 @@ package ayyo.container
 		
 		public function setAgeConfirmed(confirmed:Boolean):void
 		{
-			//TODO
+			if(confirmed){
+				this.start();
+			}else{
+				this.stop();
+			}
 		}
 		
 		public function stop():void
 		{
-			//TODO
+			this.player.mediaPlayer.stop();
 			setState(VideoContainerStates.VIDEO_ENDED);
 			setState(VideoContainerStates.END);
 		}
@@ -169,6 +164,11 @@ package ayyo.container
 		{
 			if(!isNaN(timeInSeconds) && this.seekAllowed && this.player.mediaPlayer.canSeekTo(timeInSeconds))
 			{
+				this._timeOffset = this.time;
+				this._bytesSkipped = this._bytesLoaded;
+				CONFIG::DEBUG{
+					dispatchSimpleEvent("BO"+this.bytesOffset+" BL"+this.bytesLoaded);
+				}
 				dispatchSimpleEvent(VideoContainerEvents.BUFFERING);
 				this.player.mediaPlayer.seek(timeInSeconds);
 				this.buffering = setInterval(this.checkBuffering, 25);
@@ -288,12 +288,12 @@ package ayyo.container
 		
 		public function get bytesOffset():uint
 		{
-			return this._bytesOffset;
+			return this._bitrate * this._timeOffset / 8 * 1024;
 		}
 		
 		public function get bytesLoaded():uint
 		{
-			return this._bytesLoaded;
+			return this._bytesLoaded - this._bytesSkipped;
 		}
 		
 		//Handlers
@@ -307,7 +307,7 @@ package ayyo.container
 			if(this.state == VideoContainerStates.INACTIVE
 				|| this.state == VideoContainerStates.END){			
 				this.player.mediaPlayer.addEventListener(LoadEvent.BYTES_LOADED_CHANGE, this.onBytesLoaded);
-				this.player.mediaPlayer.addEventListener(LoadEvent.BYTES_TOTAL_CHANGE, this.onBytesTotal);
+//				this.player.mediaPlayer.addEventListener(LoadEvent.BYTES_TOTAL_CHANGE, this.onBytesTotal); bytesTotal not working
 				this.player.mediaPlayer.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, this.onTimeChange);
 				this.setState(VideoContainerStates.INITIALIZED);
 			}
@@ -341,23 +341,23 @@ package ayyo.container
 		private function onBytesLoaded(event:LoadEvent):void
 		{
 			if(this.state == VideoContainerStates.INITIALIZED) return; 
-			CONFIG::DEBUG{
-				this.dispatchSimpleEvent("BL"+event.bytes);
-			}
 			this._bytesLoaded = event.bytes;
-		}
-		private function onBytesTotal(event:LoadEvent):void
-		{
-			if(this.state == VideoContainerStates.INITIALIZED) return; 
 			CONFIG::DEBUG{
-				this.dispatchSimpleEvent("BT"+event.bytes);
-			}
-			this._bytesTotal = event.bytes;
-			this._bytesOffset = this.bytesTotal > this._bytesTotal ? this.bytesTotal - this._bytesTotal : 0;
-			CONFIG::DEBUG{
-				this.dispatchSimpleEvent("BO"+this.bytesOffset);
+				this.dispatchSimpleEvent("ABL"+event.bytes+" BL"+this.bytesLoaded);
 			}
 		}
+//		private function onBytesTotal(event:LoadEvent):void //not in use
+//		{
+//			if(this.state == VideoContainerStates.INITIALIZED) return; 
+//			CONFIG::DEBUG{
+//				this.dispatchSimpleEvent("BT"+event.bytes);
+//			}
+//			this._bytesTotal = event.bytes;
+//			this._bytesOffset = this.bytesTotal > this._bytesTotal ? this.bytesTotal - this._bytesTotal : 0;
+//			CONFIG::DEBUG{
+//				this.dispatchSimpleEvent("BO"+this.bytesOffset);
+//			}
+//		}
 		private function onTimeChange(event:TimeEvent):void
 		{
 			if(this.state == VideoContainerStates.INITIALIZED) return; 
@@ -366,10 +366,5 @@ package ayyo.container
 			}
 			this._time = event.time;
 		}
-		//		private function onDuration(event:WrapperEvent):void
-		//		{
-		//			this._duration = event.params[0];
-		//			this.dispatchSimpleEvent("DURATION"+this.duration);
-		//		}
 	}
 }

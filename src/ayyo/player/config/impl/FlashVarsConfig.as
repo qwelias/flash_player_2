@@ -64,6 +64,11 @@ package ayyo.player.config.impl {
 
 			videoSource["url"] = source["url"];
 			videoSource["token"] = source["token"];
+			
+			videoSource["sessionid"] = source["sessionid"];
+			videoSource["contentid"] = source["contentid"];
+			videoSource["countrycode"] = source["countrycode"];
+			videoSource["clientkey"] = source["clientkey"];
 
 			tooltipSource["playButton"] = source["tooltip_play_button"];
 			tooltipSource["pauseButton"] = source["tooltip_pause_button"];

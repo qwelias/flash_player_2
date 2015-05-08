@@ -1,0 +1,10 @@
+url=http%3A%2F%2Fcdn.ayyo.ru%2Fu3%2Ff4%2F37%2F7beab580-6006-4dd0-af5a-50a521066c4b.f4m
+
+token=begintokensessionid%3Drepow44unrkvrgqffecisuewy9uwd54j%2Ccontentid%3D2405%2Ccountrycode%3Dru%2Cclientkey%3D6f17269e454fbbd63a1e3e9727ac89%3AfJg7qmphTdaUc2S08cpUm56agGAendtoken
+
+begintoken
+	sessionid=repow44unrkvrgqffecisuewy9uwd54j,
+	contentid=2405,
+	countrycode=ru,
+	clientkey=6f17269e454fbbd63a1e3e9727ac89:fJg7qmphTdaUc2S08cpUm56agGA
+endtoken

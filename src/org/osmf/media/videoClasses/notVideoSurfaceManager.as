@@ -64,9 +64,7 @@ package org.osmf.media.videoClasses
 	
 		internal function provideRenderer(videoSurface:VideoSurface):void
 		{
-			if (videoSurface == null)
-				return;
-				
+			if (videoSurface == null)return;
 			switchRenderer(videoSurface);
 		}
 
