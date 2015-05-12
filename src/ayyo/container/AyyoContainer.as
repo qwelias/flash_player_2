@@ -86,6 +86,8 @@ package ayyo.container
 			var source:Object = {};
 			source.url = "http://cdn.ayyo.ru/"+(config.source_id as String)+".f4m";
 			source.token = (config.token as String);
+//			source.url = "http://cdn.ayyo.ru/u6/68/da/c8255b34-cd6b-40bb-bc44-5926617e8998.f4m";
+//			source.token = "begintokensessionid=repow44unrkvrgqffecisuewy9uwd54j,contentid=2418,countrycode=ru,clientkey=6f17269e454fbbd63a1e3e9727ac89:CjZq3ENwpnfcnKvBs2WLXVROgfcendtoken";
 			CONFIG::DEBUG{
 				trace("--> SOURCE");
 				for(var prop:String in source){
@@ -188,6 +190,14 @@ package ayyo.container
 		
 		public function setStageVideoAvailable(available:String, reason:String, stageVideos:Vector.<StageVideo>):void
 		{
+			CONFIG::DEBUG{
+				trace("--> stageVideos availible: ", available, reason, stageVideos.length);
+			}
+			var stage:Object = {
+				stageVideos: stageVideos
+			};
+			this.player.mediaPlayer.displayObject.dispatchEvent(new WrapperEvent(WrapperEvent.STAGE, [stage]));
+
 		}
 		
 		public function setSize(width:Number, height:Number):void

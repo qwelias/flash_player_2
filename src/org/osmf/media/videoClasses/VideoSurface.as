@@ -34,6 +34,7 @@ package org.osmf.media.videoClasses
 			// This is done in order to make a VideoSurface object behave
 			// like a Video object (handles double click events).
 			this.doubleClickEnabled = true;
+			trace("-->", "VS CONSTRUCT")
 			
 			if (createVideo != null)
 			{
@@ -43,15 +44,13 @@ package org.osmf.media.videoClasses
 			{
 				this.createVideo = function():Video{return new Video();};
 			}
-			
+			switchRenderer(this.createVideo());
 			if (useStageVideo)
 			{
 				// Be carefull, this code needs to be in a different function.
 				// See the method docs for details.
 				register();
-			}
-			else
-			{
+			}else{
 				switchRenderer(this.createVideo());
 			}
 		}
@@ -289,6 +288,7 @@ package org.osmf.media.videoClasses
 		
 		internal function switchRenderer(renderer:*):void
 		{
+			trace("-->", "VS SR")
 			if (currentVideoRenderer == renderer)
 			{
 				CONFIG::LOGGING

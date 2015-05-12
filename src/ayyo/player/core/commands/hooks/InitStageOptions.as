@@ -28,7 +28,7 @@ package ayyo.player.core.commands.hooks {
 //			stage.showDefaultContextMenu = false;
 			
 //			OSMFSettings.supportsStageVideo && (OSMFSettings.enableStageVideo = true);
-			OSMFSettings.enableStageVideo = false;
+			OSMFSettings.enableStageVideo = true;
 
 			this.dispose();
 		}
