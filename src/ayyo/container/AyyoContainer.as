@@ -365,6 +365,9 @@ package ayyo.container
 				this.dispatchSimpleEvent("TIME"+event.time);
 			}
 			this._time = event.time;
+			if(this.duration - this.time <= 0.5){
+				this.stop();
+			}
 		}
 	}
 }
