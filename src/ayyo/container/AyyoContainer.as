@@ -173,7 +173,7 @@ package ayyo.container
 				}
 				dispatchSimpleEvent(VideoContainerEvents.BUFFERING);
 				this.player.mediaPlayer.seek(timeInSeconds);
-				if(!this.buffering){
+				if(this.buffering != 0){
 					this.buffering = setInterval(this.checkBuffering, 25);
 				}
 			}
@@ -182,6 +182,7 @@ package ayyo.container
 		{
 			if(!this.player.mediaPlayer.buffering){
 				clearInterval(this.buffering);
+				this.buffering = 0;
 				dispatchSimpleEvent(VideoContainerEvents.BUFFERED);
 			}
 		}
